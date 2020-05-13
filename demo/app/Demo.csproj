@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Laconic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Chance.NET" Version="2.2.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0-preview.3.20214.6" />
+  </ItemGroup>
+</Project>
