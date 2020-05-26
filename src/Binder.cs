@@ -10,11 +10,14 @@ namespace Laconic
     public class Binder<TState>
     {
         readonly Func<TState, Signal, TState> _mainReducer;
+        Func<MiddlewareContext<TState>, Func<MiddlewareContext<TState>,
+            MiddlewareContext<TState>>, MiddlewareContext<TState>> _middlewarePipeline;
 
         internal Binder(TState initialState, Func<TState, Signal, TState> mainReducer)
         {
             State = initialState;
             _mainReducer = mainReducer;
+            _middlewarePipeline = (c, n) => n(c);
         }
 
         public TState State { get; private set; }
@@ -52,21 +55,41 @@ namespace Laconic
 
         public void Dispatch(Signal signal)
         {
-            var newState = _mainReducer(State, signal);
-            State = newState;
+            var context = _middlewarePipeline(new MiddlewareContext<TState>(State, signal), c => 
+                new MiddlewareContext<TState>(_mainReducer(c.State, signal), signal));
 
+            State = context.State;
+            
             var items = _trackedElements.ToArray();
             for (var i = 0; i < items.Length; i++)
             {
-                var (realView, virtualView, viewFunction) = items[i];
-                var newVirtualView = viewFunction(newState);
-                var diff = Diff.Calculate(virtualView, newVirtualView);
+                var (realView, blueprint, blueprintFunc) = items[i];
+                var newBlueprint = blueprintFunc(State);
+                var diff = Diff.Calculate(blueprint, newBlueprint);
                 Patch.Apply(realView, diff, Dispatch);
-                _trackedElements[i] = (realView, newVirtualView, viewFunction);
+                _trackedElements[i] = (realView, newBlueprint, blueprintFunc);
             }
+        }
+
+        public void UseMiddleware(Func<MiddlewareContext<TState>, 
+            Func<MiddlewareContext<TState>,  MiddlewareContext<TState>>, 
+            MiddlewareContext<TState>> middleware)
+        {
+            var oldPipeline = _middlewarePipeline;
+            _middlewarePipeline = (c, n) => oldPipeline(c, c1 => middleware(c1, n));
         }
     }
 
+    public class MiddlewareContext<TState>
+    {
+        internal MiddlewareContext(TState state, Signal signal) => (State, Signal) = (state, signal);
+
+        public readonly TState State;
+        public readonly Signal Signal;
+        
+        public MiddlewareContext<TState> WithState(TState state) => new MiddlewareContext<TState>(state, Signal);
+    }
+    
     public static class Binder
     {
         public static Binder<TState> Create<TState>(TState initialState, Func<TState, Signal, TState> mainReducer)
