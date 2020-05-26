@@ -7,18 +7,14 @@ namespace Laconic
     public static class ToViewListExtensions
     {
         public static Dictionary<Key, View> ToViewList<T>(this IEnumerable<T> source,
-            Func<T, Key> keySelector, Func<T, View> itemSelector)
-        {
-            return source.ToDictionary(keySelector, itemSelector);
-        }
+            Func<T, Key> keySelector, Func<T, View> itemSelector) =>
+            source.ToDictionary(keySelector, itemSelector);
 
-        public static Dictionary<(Key, int Row, int Column), View> ToViewList<T>(this IEnumerable<T> source,
-            Func<T, (Key Key, int Row, int Column)> keySelector, Func<T, View> itemSelector)
-        {
-            return source.ToDictionary(keySelector, itemSelector);
-        }
+        public static Dictionary<(Key, int Row, int Column), View> ToGridViewList<T>(this IEnumerable<T> source,
+            Func<T, (Key Key, int Row, int Column)> keySelector, Func<T, View> itemSelector) =>
+            source.ToDictionary(keySelector, itemSelector);
 
-        public static ItemsViewList ToViewList<T>(this IEnumerable<T> source,
+        public static ItemsViewList ToItemsList<T>(this IEnumerable<T> source,
             Func<T, string> reuseKeySelector, Func<T, Key> keySelector, Func<T, View> viewSelector)
         {
             var res = new ItemsViewList();

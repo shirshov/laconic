@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using xf = Xamarin.Forms;
 
@@ -50,6 +51,21 @@ namespace Laconic
             set => SetEvent(nameof(DateSelected), value,
                 (ctl, handler) => ctl.DateSelected += handler,
                 (ctl, handler) => ctl.DateSelected -= handler);
+        }
+    }
+
+    public partial class Picker
+    {
+        public IList<string> Items
+        {
+            set => SetValue(xf.Picker.ItemsSourceProperty, value);
+        }
+        
+        public Expression<Func<int, Signal>> SelectedIndexChanged
+        {
+            set => SetEvent(nameof(SelectedIndexChanged), value, 
+                (ctl, handler) => ctl.SelectedIndexChanged += (s, e) => handler(s, ((xf.Picker)s).SelectedIndex),
+                (ctl, handler) => ctl.SelectedIndexChanged -= (s, e) => handler(s, ((xf.Picker)s).SelectedIndex));
         }
     }
 }

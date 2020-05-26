@@ -66,7 +66,7 @@ namespace Laconic.Demo
             ColumnSpacing = 1,
             Children = bars
                 .Select((b, i) => (Bar: b, Column: i))
-                .ToViewList(
+                .ToGridViewList(
                     x => (x.Column, 0, x.Column),
                     x => new BoxView
                     {

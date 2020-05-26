@@ -14,7 +14,15 @@ namespace Laconic
             {
                 if (existingValues.TryGetValue(p.Key, out var val))
                 {
-                    if (!val.Equals(p.Value))
+                    // Picker doesn't like items being changed while SelectedIndexChanged is being fired
+                    if (p.Key == xf.Picker.ItemsSourceProperty)
+                    {
+                        var oldItems = (IList<string>) val;
+                        var newItems = (IList<string>) p.Value;
+                        if (!newItems.SequenceEqual(oldItems))
+                            yield return new SetProperty(p.Key, p.Value);
+                    }
+                    else if (!val.Equals(p.Value))
                         yield return new SetProperty(p.Key, p.Value);
                 }
                 else

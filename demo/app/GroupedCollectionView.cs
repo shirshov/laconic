@@ -78,7 +78,7 @@ namespace Laconic.Demo
             {
                 ["list"] = new CollectionView
                 {
-                    Items = GroupedItems(state).ToViewList(x => x.ReuseKey, x => x.Key, x => x.View)
+                    Items = GroupedItems(state).ToItemsList(x => x.ReuseKey, x => x.Key, x => x.View)
                 }
             });
         }

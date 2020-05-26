@@ -7,7 +7,7 @@
         public static Signal Send(object p1, object p2) => new Signal(p1, p2);
 
         public Signal(object payload) => Payload = payload;
-        Signal(object p1, object p2) => Payload = (p1, p2);
+        public Signal(object p1, object p2) => Payload = (p1, p2);
 
         public void Deconstruct(out object p1, out object p2)
         {

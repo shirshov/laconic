@@ -115,7 +115,9 @@ namespace Laconic.CodeGen
             [typeof(OpenGLView)] = NotUsed,
             [typeof(Page)] = All.TakeGenericParameter().WithoutBaseDeclaration(),
             [typeof(PanGestureRecognizer)] = NotUsed,
-            [typeof(Picker)] = All,
+            [typeof(Picker)] = All
+                .ExceptNotUsed(Picker.ItemsSourceProperty)
+                .ExceptManuallyWrittenEvents(nameof(Picker.SelectedIndexChanged)),
             [typeof(PinchGestureRecognizer)] = NotUsed,
             [typeof(ProgressBar)] = All,
             [typeof(RefreshView)] = NotUsed,

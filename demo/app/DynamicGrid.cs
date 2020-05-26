@@ -31,7 +31,7 @@ namespace Laconic.Demo
                 Children = (from r in Enumerable.Range(0, state.Rows)
                         from c in Enumerable.Range(0, state.Columns)
                         select (Row: r, Column: c))
-                    .ToViewList(x => (x.Row * state.Columns + x.Column, x.Row, x.Column),
+                    .ToGridViewList(x => (x.Row * state.Columns + x.Column, x.Row, x.Column),
                         x => new Label
                         {
                             Text = $"R{x.Row}C{x.Column}",
