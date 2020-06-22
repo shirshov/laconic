@@ -33,6 +33,6 @@ namespace Laconic.Tests
             Should.Throw<ArgumentException>(() =>
             {
                 var _ = new StackLayout {["1"] = new Label(), ["1"] = new Label()};
-            }).Message.ShouldBe("An item with the same key has already been added. Key: Key: 1");
+            }).Message.ShouldBe("An item with the same key has already been added. Key: 1");
     }
 }

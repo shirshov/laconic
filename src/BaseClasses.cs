@@ -66,6 +66,9 @@ namespace Laconic
 
         public bool Equals(Element other)
         {
+            if (other.GetType() != GetType())
+                return false;
+            
             if (ProvidedValues.Count != other.ProvidedValues.Count)
                 return false;
 

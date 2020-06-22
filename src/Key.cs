@@ -8,14 +8,14 @@ namespace Laconic
 
         // TODO: overloads for allowed types
         public Key(object value) => _value = value;
-
+        
         public bool Equals(Key other) => _value.Equals(other._value);
 
         public override bool Equals(object other) => other is Key key && this.Equals(key);
 
         public override int GetHashCode() => _value.GetHashCode();
 
-        public override string ToString() => $"Key: {_value}";
+        public override string ToString() => _value.ToString();
 
         public static bool operator ==(Key lhs, Key rhs) => lhs._value.Equals(rhs._value);
         public static bool operator !=(Key lhs, Key rhs) => !lhs._value.Equals(rhs._value);
