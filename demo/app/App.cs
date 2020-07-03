@@ -1,11 +1,15 @@
 ﻿using xf = Xamarin.Forms;
 
+[assembly: xf.ExportFont("DIN Condensed Bold.ttf", Alias = "DINBold")]
+    
 namespace Laconic.Demo
 {
     public class App : xf.Application
     {
         public App()
         {
+            xf.Device.SetFlags(new[] { "Shapes_Experimental", "AppTheme_Experimental" });
+            
             var shell = new xf.Shell();
             xf.Shell.SetForegroundColor(shell, xf.Color.Chocolate);
 
@@ -24,6 +28,8 @@ namespace Laconic.Demo
             AddSample<DynamicGrid>("Dynamic Grid");
             AddSample<GroupedCollectionView>("Collection View");
             AddSample<DancingBars>("Dancing Bars");
+            AddSample<Shapes>("Shapes");
+            AddSample<LoginShape>("Shapes - Login Page");
         }
     }
 }

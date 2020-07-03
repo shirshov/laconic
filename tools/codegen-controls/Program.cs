@@ -102,6 +102,7 @@ namespace Laconic.CodeGen
                     + "using System.Collections;\n"
                     + "using System.Linq.Expressions;\n"
                     + "using xf = Xamarin.Forms;\n"
+                    + "using Laconic.Shapes;\n"
                     + "// ReSharper disable all\n\n"
                     + "namespace Laconic \n{";
 

@@ -84,7 +84,6 @@ namespace Laconic.CodeGen
             [typeof(IndicatorView)] = All
                 .ExceptNotUsed(
                     IndicatorView.IndicatorTemplateProperty,
-                    IndicatorView.ItemsSourceByProperty,
                     IndicatorView.ItemsSourceProperty),
             [typeof(InputView)] = NotUsed,
             [typeof(ItemsLayout)] = NotUsed,

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq.Expressions;
 using xf = Xamarin.Forms;
+using Laconic.Shapes;
 // ReSharper disable all
 
 namespace Laconic
@@ -13,7 +14,6 @@ namespace Laconic
             get => GetValue<xf.Color>(xf.BoxView.ColorProperty);
             set => SetValue(xf.BoxView.ColorProperty, value);
         }
-
         public xf.CornerRadius CornerRadius
         {
             get => GetValue<xf.CornerRadius>(xf.BoxView.CornerRadiusProperty);
@@ -934,6 +934,11 @@ namespace Laconic
             get => GetValue<xf.Color>(xf.VisualElement.BackgroundColorProperty);
             set => SetValue(xf.VisualElement.BackgroundColorProperty, value);
         }
+        public Geometry Clip
+        {
+            get => GetValue<Geometry>(xf.VisualElement.ClipProperty);
+            set => SetValue(xf.VisualElement.ClipProperty, value);
+        }
         public xf.FlowDirection FlowDirection
         {
             get => GetValue<xf.FlowDirection>(xf.VisualElement.FlowDirectionProperty);
@@ -1040,5 +1045,4 @@ namespace Laconic
             set => SetValue(xf.VisualElement.WidthRequestProperty, value);
         }
     }
-
 }

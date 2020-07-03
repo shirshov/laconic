@@ -21,6 +21,6 @@ namespace Laconic
                 (ctl, handler) => ctl.Tapped -= handler);
         }
 
-        internal override xf.Element CreateReal() => new xf.TapGestureRecognizer();
+        internal override xf.BindableObject CreateReal() => new xf.TapGestureRecognizer();
     }
 }

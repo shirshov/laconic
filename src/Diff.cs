@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Laconic.Shapes;
 using xf = Xamarin.Forms;
 using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object>;
 using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInfo>;
@@ -10,23 +11,23 @@ namespace Laconic
     {
         static IEnumerable<IDiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues)
         {
-            foreach (var p in newValues)
-            {
-                if (existingValues.TryGetValue(p.Key, out var val))
-                {
+            foreach (var p in newValues) {
+                if (existingValues.TryGetValue(p.Key, out var val)) {
                     // Picker doesn't like items being changed while SelectedIndexChanged is being fired
-                    if (p.Key == xf.Picker.ItemsSourceProperty)
-                    {
+                    if (p.Key == xf.Picker.ItemsSourceProperty) {
                         var oldItems = (IList<string>) val;
                         var newItems = (IList<string>) p.Value;
                         if (!newItems.SequenceEqual(oldItems))
                             yield return new SetProperty(p.Key, p.Value);
                     }
+                    else if (p.Key == xf.VisualElement.ClipProperty && !val.Equals(p.Value))
+                        yield return new SetClip((Geometry) p.Value);
                     else if (!val.Equals(p.Value))
                         yield return new SetProperty(p.Key, p.Value);
                 }
-                else
-                {
+                else {
+                    if (p.Key == xf.VisualElement.ClipProperty)
+                        yield return new SetClip((Geometry) p.Value);
                     yield return (new SetProperty(p.Key, p.Value));
                 }
             }
@@ -37,15 +38,12 @@ namespace Laconic
 
         static IEnumerable<IDiffOperation> CalcEventDiff(EventDict existingEvents, EventDict newEvents)
         {
-            foreach (var evt in newEvents)
-            {
-                if (existingEvents.TryGetValue(evt.Key, out var val))
-                {
+            foreach (var evt in newEvents) {
+                if (existingEvents.TryGetValue(evt.Key, out var val)) {
                     if (val.ToString() != evt.Value.ToString())
                         yield return new SetEvent(evt.Key, evt.Value);
                 }
-                else
-                {
+                else {
                     yield return new SetEvent(evt.Key, evt.Value);
                 }
             }
@@ -78,14 +76,11 @@ namespace Laconic
                     (existingElement as View)?.GestureRecognizers ?? new List<IGestureRecognizer>(),
                     v.GestureRecognizers));
 
-            switch (newElement)
-            {
-                case IContentHost newViewAsContainer:
-                {
+            switch (newElement) {
+                case IContentHost newViewAsContainer: {
                     var oldContent = (existingElement as IContentHost)?.Content;
                     var newContent = newViewAsContainer.Content;
-                    IDiffOperation? op = (oldContent, newContent) switch
-                    {
+                    IDiffOperation? op = (oldContent, newContent) switch {
                         (null, null) => null,
                         (null, var n) => new SetContent(n, Calculate(null, n)),
                         (_, null) => new RemoveContent(),
@@ -96,15 +91,13 @@ namespace Laconic
                         operations.Add(op);
                     break;
                 }
-                case ILayout l:
-                {
+                case ILayout l: {
                     var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children);
                     if (diff.Count > 0)
                         operations.Add(new UpdateChildren(diff));
                     break;
                 }
-                case CollectionView c:
-                {
+                case CollectionView c: {
                     var op = new UpdateItems(
                         ViewListDiff.Calculate((existingElement as CollectionView)?.Items, c.Items));
                     operations.Add(op);
@@ -112,8 +105,7 @@ namespace Laconic
                 }
             }
 
-            if (newElement is Grid g)
-            {
+            if (newElement is Grid g) {
                 var rowDefDiff = GridDiff.CalculateRowDefinitionsDiff(existingElement as Grid, g);
                 if (rowDefDiff != null)
                     operations.Add(rowDefDiff);
@@ -194,5 +186,12 @@ namespace Laconic
         public readonly string EventName;
 
         public UnsetEvent(string eventName) => EventName = eventName;
+    }
+
+    class SetClip : IDiffOperation
+    {
+        public readonly Geometry Geometry;
+
+        public SetClip(Geometry geometry) => Geometry = geometry;
     }
 }

@@ -19,13 +19,13 @@ namespace Laconic
                     UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () =>
                     {
-                        var real = (xf.View) Patch.CreateRealView((Element) rc.NewView);
+                        var real = (xf.View) Patch.CreateReal((Element) rc.NewView);
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
                     AddChild acv => () =>
                     {
-                        var real = Patch.CreateRealView((Element) acv.View);
+                        var real = Patch.CreateReal((Element) acv.View);
                         Patch.Apply(real, acv.Operations, dispatch);
                         list.Insert(acv.Index, (xf.View) real);
                     },
@@ -113,7 +113,7 @@ namespace Laconic
             {
                 var template = new xf.DataTemplate(() =>
                 {
-                    var newRealView = Patch.CreateRealView((Element) bindingContextItem.View);
+                    var newRealView = Patch.CreateReal((Element) bindingContextItem.View);
                     newRealView.BindingContextChanged += OnBindingContextChanged;
                     return newRealView;
                 });

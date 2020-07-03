@@ -9,9 +9,9 @@ namespace Laconic
     public class EventInfo : IEquatable<EventInfo>
     {
         readonly string _expressionText;
-        public readonly Action<xf.Element, Action<Signal>> Subscribe;
+        public readonly Action<xf.BindableObject, Action<Signal>> Subscribe;
 
-        public EventInfo(string expressionText, Action<xf.Element, Action<Signal>> subscribe)
+        public EventInfo(string expressionText, Action<xf.BindableObject, Action<Signal>> subscribe)
         {
             _expressionText = expressionText;
             Subscribe = subscribe;
@@ -23,8 +23,7 @@ namespace Laconic
 
         public override int GetHashCode()
         {
-            unchecked
-            {
+            unchecked {
                 return (_expressionText != null ? _expressionText.GetHashCode() : 0) * 397;
             }
         }
@@ -48,19 +47,17 @@ namespace Laconic
         protected void SetValue(Xamarin.Forms.BindableProperty property, object value) =>
             ProvidedValues[property] = value;
 
-        public string AutomationId
-        {
+        public string AutomationId {
             get => GetValue<string>(Xamarin.Forms.Element.AutomationIdProperty);
             set => SetValue(Xamarin.Forms.Element.AutomationIdProperty, value);
         }
 
-        public string ClassId
-        {
+        public string ClassId {
             get => GetValue<string>(Xamarin.Forms.Element.ClassIdProperty);
             set => SetValue(Xamarin.Forms.Element.ClassIdProperty, value);
         }
 
-        internal abstract Xamarin.Forms.Element CreateReal();
+        internal abstract Xamarin.Forms.BindableObject CreateReal();
 
         public override bool Equals(object other) => other is Element el && Equals(el);
 
@@ -68,15 +65,14 @@ namespace Laconic
         {
             if (other.GetType() != GetType())
                 return false;
-            
+
             if (ProvidedValues.Count != other.ProvidedValues.Count)
                 return false;
 
             if (Events.Count != other.Events.Count)
                 return false;
 
-            foreach (var item in other.ProvidedValues)
-            {
+            foreach (var item in other.ProvidedValues) {
                 if (!ProvidedValues.TryGetValue(item.Key, out var val))
                     return false;
 
@@ -84,8 +80,7 @@ namespace Laconic
                     return false;
             }
 
-            foreach (var evt in other.Events)
-            {
+            foreach (var evt in other.Events) {
                 if (!Events.TryGetValue(evt.Key, out var val))
                     return false;
 
@@ -96,8 +91,7 @@ namespace Laconic
             return true;
         }
 
-        public static bool operator ==(Element lhs, Element rhs) => (lhs, rhs) switch
-        {
+        public static bool operator ==(Element lhs, Element rhs) => (lhs, rhs) switch {
             (null, null) => true,
             (_, null) => false,
             (null, _) => false,
@@ -108,8 +102,7 @@ namespace Laconic
 
         public override int GetHashCode()
         {
-            unchecked
-            {
+            unchecked {
                 var hash = 17;
                 foreach (var p in ProvidedValues)
                     hash = hash * 23 + p.GetHashCode();
@@ -120,7 +113,7 @@ namespace Laconic
         }
     }
 
-    public abstract class Element<T> : Element where T : xf.BindableObject, new()
+    public abstract class Element<T> : Element where T : xf.BindableObject
     {
         protected void SetEvent(string eventName, Expression<Func<Signal>> expression,
             Action<T, EventHandler> subscribe,
@@ -130,8 +123,7 @@ namespace Laconic
             void SetUpControlEvent(xf.BindableObject real, Action<Signal> send)
             {
                 var compiled = expression.Compile();
-                subscribe((T) real, (sender, e) =>
-                {
+                subscribe((T) real, (sender, e) => {
                     var signal = compiled();
                     send(signal);
                 });
@@ -149,8 +141,7 @@ namespace Laconic
             {
                 var compiled = expression.Compile();
 
-                subscribe((T) real, (sender, e) =>
-                {
+                subscribe((T) real, (sender, e) => {
                     var signal = compiled(e);
                     send(signal);
                 });
@@ -163,26 +154,23 @@ namespace Laconic
     public abstract partial class VisualElement<T> : Element<T> where T : xf.VisualElement, new()
     {
         // TODO: why is it here, and not on Element<T>?
-        internal override xf.Element CreateReal() => new T();
+        internal override xf.BindableObject CreateReal() => new T();
         public IList<IGestureRecognizer> GestureRecognizers { get; } = new List<IGestureRecognizer>();
     }
 
     public abstract class View<T> : VisualElement<T>, View where T : xf.View, new()
     {
-        public xf.LayoutOptions HorizontalOptions
-        {
+        public xf.LayoutOptions HorizontalOptions {
             get => GetValue<xf.LayoutOptions>(xf.View.HorizontalOptionsProperty);
             set => SetValue(xf.View.HorizontalOptionsProperty, value);
         }
 
-        public xf.LayoutOptions VerticalOptions
-        {
+        public xf.LayoutOptions VerticalOptions {
             get => GetValue<xf.LayoutOptions>(xf.View.VerticalOptionsProperty);
             set => SetValue(xf.View.VerticalOptionsProperty, value);
         }
 
-        public xf.Thickness Margin
-        {
+        public xf.Thickness Margin {
             get => GetValue<xf.Thickness>(xf.View.MarginProperty);
             set => SetValue(xf.View.MarginProperty, value);
         }

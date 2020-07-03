@@ -19,4 +19,9 @@
     <PackageReference Include="Chance.NET" Version="2.2.0" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0-preview.3.20214.6" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DIN Condensed Bold.ttf" />
+    <EmbeddedResource Include="DIN Condensed Bold.ttf" />
+  </ItemGroup>
 </Project>
