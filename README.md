@@ -7,18 +7,16 @@ Code written with Laconic is:
 
 - **Declarative**: Your code simply declares how the
 app views should look, given the current state of the app, 
-and Laconic figures the most efficient way of updating 
+and Laconic figures out the most efficient way of updating 
 the actual views.
 
 - **Functional**: Laconic gently pushes you towards functional programming,
 with a strong emphasis on immutable state and pure functions. 
-This code is easier to test, debug, and understand.
+Code that is written in this style is easier to test, debug, and understand.
 
 - **Familiar**: Code that uses Laconic consists
-mostly of collection and property initializers, LINQ and tertiary expressions.
-No DSL, no new semantics. The API for creating
-blueprints is practically identical to that of creating 
-actual Xamarin.Forms views.
+mostly of collection and property initializers, LINQ and switch expressions.
+No DSL, no new semantics. The API is very similar to the API of Xamarin.Forms.
 
 ## Key Concepts
 
@@ -26,7 +24,7 @@ actual Xamarin.Forms views.
     <img src="assets/flow-with-middleware.png">
 </div>
 
-_(Blue elements is the app code, usually in the form of pure functions)_
+_(Blue elements is the app code, usually in the form of pure functions; middleware is optional)_
 
 ### State
 
@@ -50,7 +48,8 @@ in the app. Signals are tiny objects that usually carry a payload.
 ### Reducer
 
 Reducer is a pure function that receives the current state, a signal,
-and calculates the new state. 
+and calculates the new state. In most cases the reducer is a big
+`switch` expression.
 
 ### Binder
 
@@ -98,7 +97,7 @@ namespace Laconic.Demo
         static int Reducer(int state, Signal signal) => signal.Payload switch
         {
             "inc" => state + 1,
-            "dec" => throw new NotImplementedException(), // Left as an exercise for for reader
+            "dec" => throw new NotImplementedException(), // Left as an exercise for the reader
             _ => state
         };
 
