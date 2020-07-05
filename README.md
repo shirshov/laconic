@@ -1,5 +1,7 @@
 ## Introduction
 
+[![Join the chat at https://gitter.im/laconiclib/community](https://badges.gitter.im/laconiclib/community.svg)](https://gitter.im/laconiclib/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Laconic is an MVU library for writing apps with Xamarin.Forms in
  plain C#, using React + Redux approach.
 
