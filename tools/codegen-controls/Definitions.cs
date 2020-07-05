@@ -78,7 +78,9 @@ namespace Laconic.CodeGen
             [typeof(GroupableItemsView)] = NotUsed,
             [typeof(HtmlWebViewSource)] = NotUsed,
             [typeof(Image)] = All,
-            [typeof(ImageButton)] = NotUsed,
+            [typeof(ImageButton)] = All.ExceptNotUsed(
+                ImageButton.CommandProperty,
+                ImageButton.CommandParameterProperty),
             [typeof(ImageCell)] = NotUsed,
             [typeof(ImageSource)] = NotUsed,
             [typeof(IndicatorView)] = All

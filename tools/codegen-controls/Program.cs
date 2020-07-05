@@ -108,7 +108,7 @@ namespace Laconic.CodeGen
 
             s += GetDef();
 
-            s += "\n}";
+            s += "}";
 
             File.WriteAllText("../../src/Controls.Generated.cs", s);
         }

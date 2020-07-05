@@ -17,3 +17,5 @@ Resource.Designer.cs
 *.user
 *.targets.overrides
 *.orig
+.fake
+.ionide

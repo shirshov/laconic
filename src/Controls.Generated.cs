@@ -397,6 +397,57 @@ namespace Laconic
         }
     }
 
+    public partial class ImageButton : View<xf.ImageButton>
+    {
+        public xf.Aspect Aspect
+        {
+            get => GetValue<xf.Aspect>(xf.ImageButton.AspectProperty);
+            set => SetValue(xf.ImageButton.AspectProperty, value);
+        }
+        public xf.Color BorderColor
+        {
+            get => GetValue<xf.Color>(xf.ImageButton.BorderColorProperty);
+            set => SetValue(xf.ImageButton.BorderColorProperty, value);
+        }
+        public Double BorderWidth
+        {
+            get => GetValue<Double>(xf.ImageButton.BorderWidthProperty);
+            set => SetValue(xf.ImageButton.BorderWidthProperty, value);
+        }
+        public Int32 CornerRadius
+        {
+            get => GetValue<Int32>(xf.ImageButton.CornerRadiusProperty);
+            set => SetValue(xf.ImageButton.CornerRadiusProperty, value);
+        }
+        public Boolean IsOpaque
+        {
+            get => GetValue<Boolean>(xf.ImageButton.IsOpaqueProperty);
+            set => SetValue(xf.ImageButton.IsOpaqueProperty, value);
+        }
+        public xf.Thickness Padding
+        {
+            get => GetValue<xf.Thickness>(xf.ImageButton.PaddingProperty);
+            set => SetValue(xf.ImageButton.PaddingProperty, value);
+        }
+        public xf.ImageSource Source
+        {
+            get => GetValue<xf.ImageSource>(xf.ImageButton.SourceProperty);
+            set => SetValue(xf.ImageButton.SourceProperty, value);
+        }
+        public Expression<Func<Signal>> Clicked
+        {
+            set => SetEvent(nameof(Clicked), value, (ctl, handler) => ctl.Clicked += handler, (ctl, handler) => ctl.Clicked -= handler);
+        }
+        public Expression<Func<Signal>> Pressed
+        {
+            set => SetEvent(nameof(Pressed), value, (ctl, handler) => ctl.Pressed += handler, (ctl, handler) => ctl.Pressed -= handler);
+        }
+        public Expression<Func<Signal>> Released
+        {
+            set => SetEvent(nameof(Released), value, (ctl, handler) => ctl.Released += handler, (ctl, handler) => ctl.Released -= handler);
+        }
+    }
+
     public partial class IndicatorView : View<xf.IndicatorView>
     {
         public Int32 Count
