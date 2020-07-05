@@ -124,3 +124,5 @@ to Laconic of a sample app (UI only) by Steven Thewissen.
 to Laconic of a sample app by Xamarin.
 
 
+[![Join the chat at https://gitter.im/laconiclib/community](https://badges.gitter.im/laconiclib/community.svg)](https://gitter.im/laconiclib/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
