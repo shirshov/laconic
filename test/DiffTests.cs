@@ -187,6 +187,29 @@ namespace Laconic.Tests
             diff[0].ShouldBeOfType<UnsetEvent>().EventName.ShouldBe("Clicked");
         }
 
+        
+        [Fact]
+        public void empty_diff_if_Grid_ColumnDefinitions_identical()
+        {
+            var diff = Diff.Calculate(
+                new Grid { ColumnDefinitions = "1, 2" },
+                new Grid { ColumnDefinitions = "1, 2" }
+            );
+            
+            diff.ShouldBeEmpty();
+        }
+        
+        [Fact]
+        public void empty_diff_if_Grid_RowDefinitions_identical()
+        {
+            var diff = Diff.Calculate(
+                new Grid { RowDefinitions = "1, 2" },
+                new Grid { RowDefinitions = "1, 2" }
+            );
+            
+            diff.ShouldBeEmpty();
+        }
+        
         [Fact]
         public void set_new_grid_children_positions()
         {

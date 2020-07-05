@@ -47,7 +47,7 @@ namespace Laconic
         {
             (_, null) => null,
             (null, _) => new RowDefinitionsChange(newGrid.RowDefinitions),
-            var (e, n) when n.RowDefinitions.SequenceEqual(e.RowDefinitions) => null,
+            var (e, n) when n.RowDefinitions.Equals(e.RowDefinitions) => null,
             (_, _) => new RowDefinitionsChange(newGrid.RowDefinitions)
         };
 
@@ -56,7 +56,7 @@ namespace Laconic
         {
             (_, null) => null,
             (null, _) => new ColumnDefinitionsChange(newGrid.ColumnDefinitions),
-            var (e, n) when n.ColumnDefinitions.SequenceEqual(e.ColumnDefinitions) => null,
+            var (e, n) when n.ColumnDefinitions.Equals(e.ColumnDefinitions) => null,
             (_, _) => new ColumnDefinitionsChange(newGrid.ColumnDefinitions)
         };
 

@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using xf = Xamarin.Forms;
 using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
 namespace Laconic
 {
-    public abstract class Layout<T> : View<T> where T : Xamarin.Forms.Layout, new()
+    public abstract class Layout<T> : View<T> where T : xf.Layout, new()
     {
-        public Xamarin.Forms.Thickness Padding
+        public xf.Thickness Padding
         {
-            get => GetValue<Xamarin.Forms.Thickness>(Xamarin.Forms.Layout.PaddingProperty);
-            set => SetValue(Xamarin.Forms.Layout.PaddingProperty, value);
+            get => GetValue<xf.Thickness>(xf.Layout.PaddingProperty);
+            set => SetValue(xf.Layout.PaddingProperty, value);
         }
+
+		public bool IsClippedToBounds {
+			set => SetValue(xf.Layout.IsClippedToBoundsProperty, value);
+		}
     }
 
     public interface IContentHost
@@ -82,6 +87,19 @@ namespace Laconic
 
             return res;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is RowDefinitionCollection other)) return false;
+            
+            if (other.Count != this.Count)
+                return false;
+            for(var i = 0; other.Count < 0; i++)
+                if (!other[i].Height.Equals(this[i].Height))
+                    return false;
+
+            return true;
+        }
     }
 
     public class ColumnDefinitionCollection : List<xf.ColumnDefinition>
@@ -114,6 +132,20 @@ namespace Laconic
 
             return res;
         }
+        
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ColumnDefinitionCollection other)) return false;
+            
+            if (other.Count != this.Count)
+                return false;
+            for(var i = 0; other.Count < 0; i++)
+                if (!other[i].Width.Equals(this[i].Width))
+                    return false;
+
+            return true;
+        }
+
     }
 
     public partial class Grid : Layout<xf.Grid>, ILayout
