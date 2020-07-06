@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using xf = Xamarin.Forms;
 using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
@@ -145,7 +144,6 @@ namespace Laconic
 
             return true;
         }
-
     }
 
     public partial class Grid : Layout<xf.Grid>, ILayout

@@ -273,5 +273,20 @@ namespace Laconic.Tests
             buttonPosChanges[1].Type.ShouldBe(GridPositionChangeType.ColumnSpan);
             buttonPosChanges[1].Value.ShouldBe(2);
         }
+
+        [Fact]
+        public void calc_diff_for_ToolbarItems()
+        {
+            var diff = Diff.Calculate(
+                new ContentPage {
+                    ToolbarItems = {[1] = new ToolbarItem {IconImageSource = "foo"}}
+                },
+                new ContentPage {
+                    ToolbarItems = {[1] = new ToolbarItem {IconImageSource = "bar"}}
+                }
+            );
+            
+            diff.First().ShouldBeOfType<SetToolbarItems>();
+        }
     }
 }

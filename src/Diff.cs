@@ -75,6 +75,10 @@ namespace Laconic
                 operations.AddRange(CalcGestureRecognizerDiff(
                     (existingElement as View)?.GestureRecognizers ?? new List<IGestureRecognizer>(),
                     v.GestureRecognizers));
+            
+            if (newElement is ContentPage p && p.ToolbarItems.Count > 0) {
+                operations.Add(new SetToolbarItems(p.ToolbarItems.Select(x => x.Value).ToList()));
+            }
 
             switch (newElement) {
                 case IContentHost newViewAsContainer: {
@@ -130,6 +134,12 @@ namespace Laconic
         public SetGestureRecognizers(IList<IGestureRecognizer> recognizers) => Recognizers = recognizers;
     }
 
+    class SetToolbarItems : IDiffOperation
+    {
+        public readonly IList<ToolbarItem> Items;
+
+        public SetToolbarItems(IList<ToolbarItem> items) => Items = items;
+    }
     class SetProperty : IDiffOperation
     {
         public readonly xf.BindableProperty Property;

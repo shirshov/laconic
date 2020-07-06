@@ -34,5 +34,20 @@ namespace Laconic.Tests
             {
                 var _ = new StackLayout {["1"] = new Label(), ["1"] = new Label()};
             }).Message.ShouldBe("An item with the same key has already been added. Key: 1");
+
+        [Fact]
+        public void Signal_deconstruction()
+        {
+            var g1 = new Signal("a", "b");
+            var (a, b) = g1;
+            a.ShouldBe("a");
+            b.ShouldBe("b");
+            
+            // TODO: Does it even make sense?
+            var g2 = new Signal("c");
+            var (c, d) = g2;
+            c.ShouldBe("c");
+            d.ShouldBeNull();
+        }
     }
 }

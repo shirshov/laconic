@@ -71,7 +71,9 @@ namespace Laconic
                         change(element, gpc.Value);
                     },
                     SetEvent evt => () => evt.Handler.Subscribe(element, dispatch),
-                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, dispatch),
+                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, g => {
+                        dispatch(g);
+                    }),
                     SetGestureRecognizers rec => () => {
                         var view = (xf.View) element;
                         view.GestureRecognizers.Clear();
@@ -93,6 +95,16 @@ namespace Laconic
                         foreach (var p in geomEl.ProvidedValues)
                             realGeom.SetValue(p.Key, p.Value);
                         element.SetValue(xf.VisualElement.ClipProperty, realGeom);
+                    },
+                    SetToolbarItems tb => () => {
+                        var p = (xf.ContentPage) element;
+                        p.ToolbarItems.Clear();
+                        foreach (var item in tb.Items) {
+                            var real = new xf.ToolbarItem { IconImageSource = (xf.ImageSource)item.ProvidedValues[xf.MenuItem.IconImageSourceProperty]};
+                            if (item.Events.ContainsKey("Clicked"))
+                                item.Events["Clicked"].Subscribe(real, dispatch);
+                            p.ToolbarItems.Add(real);
+                        }
                     },
                     _ => throw new InvalidOperationException("Diff operation not supported: " + op)
                 };

@@ -203,5 +203,19 @@ namespace Laconic.Tests
 
             real.Children[1].ShouldBeOfType<xf.Entry>();
         }
+
+        [Fact]
+        public void set_ToolbarItems()
+        {
+            var contentPage = new xf.ContentPage();
+            Patch.Apply(contentPage, 
+                new [] {
+                    new SetToolbarItems(
+                        new [] {
+                            new ToolbarItem { IconImageSource = "foo" }
+                        })}, null);
+            
+            contentPage.ToolbarItems.Count.ShouldBe(1);
+        }
     }
 }
