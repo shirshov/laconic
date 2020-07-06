@@ -714,6 +714,25 @@ namespace Laconic
         }
     }
 
+    public partial class RefreshView : Layout<xf.RefreshView>, IContentHost
+    {
+        public Boolean IsRefreshing
+        {
+            get => GetValue<Boolean>(xf.RefreshView.IsRefreshingProperty);
+            set => SetValue(xf.RefreshView.IsRefreshingProperty, value);
+        }
+        public xf.Color RefreshColor
+        {
+            get => GetValue<xf.Color>(xf.RefreshView.RefreshColorProperty);
+            set => SetValue(xf.RefreshView.RefreshColorProperty, value);
+        }
+        public Expression<Func<Signal>> Refreshing
+        {
+            set => SetEvent(nameof(Refreshing), value, (ctl, handler) => ctl.Refreshing += handler, (ctl, handler) => ctl.Refreshing -= handler);
+        }
+        public View? Content { get; set; }
+    }
+
     public partial class ScrollView
     {
         public xf.ScrollBarVisibility HorizontalScrollBarVisibility

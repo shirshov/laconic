@@ -121,7 +121,9 @@ namespace Laconic.CodeGen
                 .ExceptManuallyWrittenEvents(nameof(Picker.SelectedIndexChanged)),
             [typeof(PinchGestureRecognizer)] = NotUsed,
             [typeof(ProgressBar)] = All,
-            [typeof(RefreshView)] = NotUsed,
+            [typeof(RefreshView)] = All.ExceptNotUsed(
+                RefreshView.CommandProperty,
+                RefreshView.CommandParameterProperty),
             [typeof(RowDefinition)] = NotUsed,
             [typeof(ScrollView)] = All
                 .WithoutBaseDeclaration()
