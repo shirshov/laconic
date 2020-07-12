@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using xf = Xamarin.Forms;
 
@@ -60,7 +59,6 @@ namespace Laconic
                             if (!uc.Operations.Any())
                                 return;
                             source[uc.Index].UpdateView(uc.View);
-							// System.Diagnostics.Debug.WriteLine($"UpdateChild: Index={uc.Index}");
                         },
                         ReplaceChild _ => () =>
                             throw new InvalidOperationException("ItemsViewList should never replace child views"),
@@ -84,20 +82,17 @@ namespace Laconic
             Blueprint = view;
         }
 
-        public Action<BindingContextItem>? DiffPatch;
+        public Action<BindingContextItem, View>? UpdateRenderedView;
         
         public void UpdateView(View blueprint)
         {
             Blueprint = blueprint;
-            DiffPatch?.Invoke(this);
+            UpdateRenderedView?.Invoke(this, blueprint);
         }
     }
 
     class ItemsViewTemplateSelector : xf.DataTemplateSelector
     {
-        // static readonly xf.BindableProperty RenderedBlueprintProperty = xf.BindableProperty.CreateAttached(
-        //     nameof(RenderedBlueprintProperty), typeof(View), typeof(xf.View), null);
-
         readonly Dictionary<xf.VisualElement, View> _renderedBlueprints = new Dictionary<xf.VisualElement, View>();
         
         readonly Action<Signal> _dispatch;
@@ -136,13 +131,22 @@ namespace Laconic
             var realView = (xf.VisualElement) sender;
 
             var contextItem = (BindingContextItem) realView.BindingContext;
-            _renderedBlueprints.TryGetValue(realView, out var renderedBlueprint); //(View) realView.GetValue(RenderedBlueprintProperty);
-
-             if (renderedBlueprint != null && renderedBlueprint != contextItem.Blueprint) {
-                var diff = Diff.Calculate(renderedBlueprint, contextItem.Blueprint);
-                Patch.Apply(realView, diff, _dispatch);
+            _renderedBlueprints.TryGetValue(realView, out var renderedBlueprint);
+			
+            if (renderedBlueprint != null && renderedBlueprint != contextItem.Blueprint) {
+                Patch.Apply(realView, Diff.Calculate(renderedBlueprint, contextItem.Blueprint), _dispatch);
                 _renderedBlueprints[realView] = contextItem.Blueprint;
-             }
+            }
+
+            contextItem.UpdateRenderedView = (item, newBlueprint) =>
+            {
+				var rendered = _renderedBlueprints[realView];
+                if (ReferenceEquals(newBlueprint, rendered))
+                    return;
+
+                Patch.Apply(realView, Diff.Calculate(rendered, newBlueprint), _dispatch);
+				_renderedBlueprints[realView] = newBlueprint;
+            };
         }
     }
 }
