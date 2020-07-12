@@ -4,6 +4,30 @@ using xf = Xamarin.Forms;
 
 namespace Laconic
 {
+    class EventSubscription
+    {
+        public static readonly xf.BindableProperty EventSubscriptionsProperty = xf.BindableProperty.CreateAttached(
+            nameof(EventSubscriptionsProperty), 
+            typeof(Dictionary<string, EventSubscription>), 
+            typeof(EventSubscription), null);
+
+        readonly Action<Signal> _dispatch;
+        public Func<EventArgs, Signal> SignalMaker;
+        
+        public EventSubscription(Func<EventArgs, Signal> signalMaker, Action<Signal> dispatch)
+        {
+            SignalMaker = signalMaker;
+            _dispatch = dispatch;
+        }
+        // public string EventName;
+
+        public void EventHandler(object sender, EventArgs e)
+        {
+            var signal = SignalMaker(e);
+            _dispatch(signal);
+        }
+    }
+    
     static class Patch
     {
         internal static void Apply(xf.BindableObject element, IEnumerable<IDiffOperation> operations,
@@ -70,24 +94,40 @@ namespace Laconic
                         };
                         change(element, gpc.Value);
                     },
-                    SetEvent evt => () => evt.Handler.Subscribe(element, dispatch),
-                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, g => {
-                        dispatch(g);
-                    }),
-                    SetGestureRecognizers rec => () => {
-                        var view = (xf.View) element;
-                        view.GestureRecognizers.Clear();
-                        foreach (Element gestureRecognizer in rec.Recognizers) {
-                            var r = gestureRecognizer;
-                            var newRec = r.CreateReal();
-                            foreach (var p in r.ProvidedValues)
-                                newRec.SetValue(p.Key, p.Value);
-
-                            foreach (var e in r.Events)
-                                e.Value.Subscribe(newRec, dispatch);
-
-                            view.GestureRecognizers.Add((xf.GestureRecognizer) newRec);
+                    WireEvent evt => () => {
+                        var subs = (Dictionary<string, EventSubscription>)element.GetValue(EventSubscription.EventSubscriptionsProperty);
+                        if (subs == null) {
+                            subs = new Dictionary<string, EventSubscription>();
+                            element.SetValue(EventSubscription.EventSubscriptionsProperty, subs);
                         }
+
+                        if (!subs.TryGetValue(evt.EventName, out var sub)) {
+                           sub = new EventSubscription(evt.SignalMaker, dispatch);
+                           evt.Subscribe(element, sub.EventHandler);
+                           subs[evt.EventName] = sub;
+                        }
+                        sub.SignalMaker = evt.SignalMaker;
+                    },
+                    UnwireEvent evt => () => {
+                        var subs = (Dictionary<string, EventSubscription>)element.GetValue(EventSubscription.EventSubscriptionsProperty);
+                        var sub = subs[evt.EventName];
+                        evt.Unsubscribe(element, sub.EventHandler);
+                    },
+                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, dispatch),
+                    AddGestureRecognizer agr => () => {
+                        var view = (xf.View) element;
+                        var realRec = agr.Blueprint.CreateReal();
+                        Apply(realRec, agr.Operations, dispatch);
+                        view.GestureRecognizers.Add((xf.IGestureRecognizer)realRec);
+                    },
+                    RemoveGestureRecognizer rm => () => {
+                        var view = (xf.View)element;
+                        // TODO: unsubscribe
+                        view.GestureRecognizers.RemoveAt(rm.Index);
+                    },
+                    UpdateGestureRecognizer ugr => () => {
+                        var view = (xf.View) element;
+                        Apply((xf.BindableObject) view.GestureRecognizers[ugr.Index], ugr.Operations, dispatch);
                     },
                     SetClip sc => () => {
                         var geomEl = (Element) sc.Geometry;
@@ -96,15 +136,19 @@ namespace Laconic
                             realGeom.SetValue(p.Key, p.Value);
                         element.SetValue(xf.VisualElement.ClipProperty, realGeom);
                     },
-                    SetToolbarItems tb => () => {
-                        var p = (xf.ContentPage) element;
-                        p.ToolbarItems.Clear();
-                        foreach (var item in tb.Items) {
-                            var real = new xf.ToolbarItem { IconImageSource = (xf.ImageSource)item.ProvidedValues[xf.MenuItem.IconImageSourceProperty]};
-                            if (item.Events.ContainsKey("Clicked"))
-                                item.Events["Clicked"].Subscribe(real, dispatch);
-                            p.ToolbarItems.Add(real);
-                        }
+                    AddToolbarItem tb => () => {
+                         var real = (xf.ToolbarItem)tb.Blueprint.CreateReal();
+                         Apply(real, tb.Operations, dispatch);
+                         var page = (xf.ContentPage) element;
+                         page.ToolbarItems.Add(real);
+                    },
+                    RemoveToolbarItem tb => () => {
+                         var page = (xf.ContentPage) element;
+                         page.ToolbarItems.RemoveAt(tb.Index);
+                    },
+                    UpdateToolbarItem tb => () => {
+                         var page = (xf.ContentPage) element;
+                         Apply(page.ToolbarItems[tb.Index], tb.Operations, dispatch);
                     },
                     _ => throw new InvalidOperationException("Diff operation not supported: " + op)
                 };

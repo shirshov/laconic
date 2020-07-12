@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Xunit;
 using Shouldly;
@@ -141,30 +142,26 @@ namespace Laconic.Tests
             var sl = new xf.StackLayout();
             Patch.Apply(sl,
                 Diff.Calculate(null,
-                    new StackLayout
-                    {
-                        GestureRecognizers =
-                        {
-                            new TapGestureRecognizer
-                            {
-                                NumberOfTapsRequired = 2, Tapped = () => Signal.Send("foo")
-                            }
+                    new StackLayout {
+                        GestureRecognizers = { [0] = new TapGestureRecognizer {
+                            NumberOfTapsRequired = 2, Tapped = () => Signal.Send("foo")
                         }
-                    }), _ => { });
+                    }
+                }), 
+                _ => { }
+            );
 
             sl.GestureRecognizers.Count.ShouldBe(1);
             sl.GestureRecognizers.First().ShouldBeOfType<xf.TapGestureRecognizer>().NumberOfTapsRequired.ShouldBe(2);
         }
 
         [Fact]
-        public void do_not_replace__GestureRecognizer_if_identical()
+        public void do_not_replace_GestureRecognizer_if_identical()
         {
             var sl = new xf.StackLayout();
-            var blueprint = new StackLayout
-            {
-                GestureRecognizers =
-                {
-                    new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => Signal.Send("foo")}
+            var blueprint = new StackLayout {
+                GestureRecognizers = {
+                    [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => Signal.Send("foo")}
                 }
             };
             Patch.Apply(sl, Diff.Calculate(null, blueprint), _ => { });
@@ -173,21 +170,34 @@ namespace Laconic.Tests
 
             Patch.Apply(sl,
                 Diff.Calculate(blueprint,
-                    new StackLayout
-                    {
-                        GestureRecognizers =
-                        {
-                            new TapGestureRecognizer
-                            {
+                    new StackLayout { 
+                        GestureRecognizers = {
+                            [0] = new TapGestureRecognizer {
                                 NumberOfTapsRequired = 1, Tapped = () => Signal.Send("foo")
                             }
                         }
-                    }), _ => { });
+                    }), 
+                _ => { });
 
             sl.GestureRecognizers.Count.ShouldBe(1);
             sl.GestureRecognizers[0].ShouldBe(recognizer);
         }
 
+        [Fact]
+        public void add_ToolbarItem()
+        {
+            var page = new xf.ContentPage();
+            Patch.Apply(page,
+                Diff.Calculate(null,
+                    new ContentPage {ToolbarItems = { [0] = new ToolbarItem()}
+                }), 
+                _ => { }
+            );
+
+            page.ToolbarItems.Count.ShouldBe(1);
+            page.ToolbarItems.First().ShouldBeOfType<xf.ToolbarItem>();
+        }
+        
         [Fact]
         public void should_insert_child_view()
         {
@@ -205,17 +215,46 @@ namespace Laconic.Tests
         }
 
         [Fact]
-        public void set_ToolbarItems()
+        public void wire_event()
         {
-            var contentPage = new xf.ContentPage();
-            Patch.Apply(contentPage, 
-                new [] {
-                    new SetToolbarItems(
-                        new [] {
-                            new ToolbarItem { IconImageSource = "foo" }
-                        })}, null);
+            var val = "initial";
+
+            var binder = Binder.Create("state", (s, g) => {
+                val = "modified";
+                return s;
+            });
+            var real = binder.CreateView(s =>
+                new RefreshView {Refreshing = () => new Signal(s)}
+            );
+
+            real.IsRefreshing = true;
             
-            contentPage.ToolbarItems.Count.ShouldBe(1);
+            val.ShouldBe("modified");
         }
+        
+        [Fact]
+        public void unwire_event()
+        {
+            // var val = 0;
+
+            var binder = Binder.Create(0, (s, g) => ++s);
+            
+            var real = binder.CreateView(s => new RefreshView {
+                Refreshing = s == 0 ? () => new Signal("") : (Func<Signal>)null 
+            });
+            
+            real.IsRefreshing = true;
+             real.IsRefreshing = false;
+            
+            binder.State.ShouldBe(1);
+            
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+            
+            binder.State.ShouldBe(1);
+        }
+        
     }
 }

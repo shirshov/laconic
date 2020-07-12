@@ -1,31 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using xf = Xamarin.Forms;
-using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
 namespace Laconic
 {
-    public class EventInfo : IEquatable<EventInfo>
+    public class EventInfo
     {
-        readonly string _expressionText;
-        public readonly Action<xf.BindableObject, Action<Signal>> Subscribe;
+        public readonly Func<EventArgs, Signal> SignalMaker;
+        public readonly Action<xf.BindableObject, EventHandler> Subscribe;
+        public readonly Action<xf.BindableObject, EventHandler> Unsubscribe;
 
-        public EventInfo(string expressionText, Action<xf.BindableObject, Action<Signal>> subscribe)
+        public EventInfo(Func<EventArgs, Signal> signalMaker, 
+            Action<xf.BindableObject, EventHandler> subscribe,
+            Action<xf.BindableObject, EventHandler> unsubscribe)
         {
-            _expressionText = expressionText;
+            SignalMaker = signalMaker;
             Subscribe = subscribe;
-        }
-
-        public override bool Equals(object obj) => Equals((EventInfo) obj);
-
-        public bool Equals(EventInfo other) => _expressionText == other._expressionText;
-
-        public override int GetHashCode()
-        {
-            unchecked {
-                return (_expressionText != null ? _expressionText.GetHashCode() : 0) * 397;
-            }
+            Unsubscribe = unsubscribe;
         }
     }
 
@@ -37,27 +28,27 @@ namespace Laconic
 
     public abstract class Element : IEquatable<Element>, IElement
     {
-        public Dictionary<Xamarin.Forms.BindableProperty, object> ProvidedValues { get; } =
-            new Dictionary<Xamarin.Forms.BindableProperty, object>();
+        public Dictionary<xf.BindableProperty, object> ProvidedValues { get; } =
+            new Dictionary<xf.BindableProperty, object>();
 
         public Dictionary<string, EventInfo> Events { get; } = new Dictionary<string, EventInfo>();
 
-        protected T GetValue<T>(Xamarin.Forms.BindableProperty property) => (T) ProvidedValues[property];
+        protected T GetValue<T>(xf.BindableProperty property) => (T) ProvidedValues[property];
 
-        protected void SetValue(Xamarin.Forms.BindableProperty property, object value) =>
+        protected void SetValue(xf.BindableProperty property, object value) =>
             ProvidedValues[property] = value;
 
         public string AutomationId {
-            get => GetValue<string>(Xamarin.Forms.Element.AutomationIdProperty);
-            set => SetValue(Xamarin.Forms.Element.AutomationIdProperty, value);
+            get => GetValue<string>(xf.Element.AutomationIdProperty);
+            set => SetValue(xf.Element.AutomationIdProperty, value);
         }
 
         public string ClassId {
-            get => GetValue<string>(Xamarin.Forms.Element.ClassIdProperty);
-            set => SetValue(Xamarin.Forms.Element.ClassIdProperty, value);
+            get => GetValue<string>(xf.Element.ClassIdProperty);
+            set => SetValue(xf.Element.ClassIdProperty, value);
         }
 
-        internal abstract Xamarin.Forms.BindableObject CreateReal();
+        internal abstract xf.BindableObject CreateReal();
 
         public override bool Equals(object other) => other is Element el && Equals(el);
 
@@ -79,75 +70,47 @@ namespace Laconic
                 if (!val.Equals(item.Value))
                     return false;
             }
-
-            foreach (var evt in other.Events) {
-                if (!Events.TryGetValue(evt.Key, out var val))
-                    return false;
-
-                if (!val.Equals((evt.Value)))
-                    return false;
-            }
-
             return true;
         }
-
-        public static bool operator ==(Element lhs, Element rhs) => (lhs, rhs) switch {
-            (null, null) => true,
-            (_, null) => false,
-            (null, _) => false,
-            (_, _) => lhs.Equals(rhs)
-        };
-
-        public static bool operator !=(Element lhs, Element rhs) => !(lhs?.Equals(rhs) ?? false);
-
-        public override int GetHashCode()
-        {
-            unchecked {
-                var hash = 17;
-                foreach (var p in ProvidedValues)
-                    hash = hash * 23 + p.GetHashCode();
-                foreach (var e in Events)
-                    hash = hash * 23 + e.GetHashCode();
-                return hash;
-            }
-        }
+        
+        public static bool operator ==(Element lhs, Element rhs) => lhs.Equals(rhs);
+        public static bool operator !=(Element lhs, Element rhs) => !lhs.Equals(rhs);
     }
-
+    
     public abstract class Element<T> : Element where T : xf.BindableObject
     {
-        protected void SetEvent(string eventName, Expression<Func<Signal>> expression,
+        protected void SetEvent(
+            string eventName, 
+            Func<Signal>? signalMaker,
             Action<T, EventHandler> subscribe,
             Action<T, EventHandler> unsubscribe)
         {
-            // Called from patcher
-            void SetUpControlEvent(xf.BindableObject real, Action<Signal> send)
-            {
-                var compiled = expression.Compile();
-                subscribe((T) real, (sender, e) => {
-                    var signal = compiled();
-                    send(signal);
-                });
+            if (signalMaker != null) {
+                Events[eventName] = new EventInfo(
+                    e => signalMaker(), 
+                    (ctl, handler) => subscribe((T) ctl, handler),
+                    (ctl, handler) => unsubscribe((T)ctl, handler)
+                );
             }
-
-            Events[eventName] = new EventInfo(expression.ToString(), SetUpControlEvent);
+            else if (Events.ContainsKey(eventName)) {
+                Events.Remove(eventName);
+            }
         }
 
-        protected void SetEvent<TEventArgs>(string eventName, Expression<Func<TEventArgs, Signal>> expression,
+        protected void SetEvent<TEventArgs>(string eventName, Func<TEventArgs, Signal> signalMaker,
             Action<T, EventHandler<TEventArgs>> subscribe,
-            Action<T, EventHandler<TEventArgs>> unsubscribe)
+            Action<T, EventHandler<TEventArgs>> unsubscribe) where TEventArgs : EventArgs
         {
-            // Called from patcher
-            void SetUpControlEvent(xf.BindableObject real, Action<Signal> send)
-            {
-                var compiled = expression.Compile();
-
-                subscribe((T) real, (sender, e) => {
-                    var signal = compiled(e);
-                    send(signal);
-                });
+            if (signalMaker != null) {
+                Events[eventName] = new EventInfo(
+                    e => signalMaker((TEventArgs)e),
+                    (ctl, handler) => subscribe((T)ctl, (s, e) => handler(s, e)),
+                    (ctl, handler) => unsubscribe((T)ctl, (s, e) => handler(s, e))
+                );
             }
-
-            Events[eventName] = new EventInfo(expression.ToString(), SetUpControlEvent);
+            else if (Events.ContainsKey(eventName)) {
+                Events.Remove(eventName);
+            }
         }
     }
 
@@ -155,7 +118,8 @@ namespace Laconic
     {
         // TODO: why is it here, and not on Element<T>?
         internal override xf.BindableObject CreateReal() => new T();
-        public IList<IGestureRecognizer> GestureRecognizers { get; } = new List<IGestureRecognizer>();
+        
+        public Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; } = new Dictionary<Key, IGestureRecognizer>();
     }
 
     public abstract class View<T> : VisualElement<T>, View where T : xf.View, new()
@@ -178,6 +142,6 @@ namespace Laconic
 
     public interface View : IElement
     {
-        IList<IGestureRecognizer> GestureRecognizers { get; }
+        Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; }
     }
-}
+}		

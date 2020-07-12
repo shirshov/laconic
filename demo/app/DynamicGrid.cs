@@ -9,8 +9,8 @@ namespace Laconic.Demo
     {
         static (int Rows, int Columns) Reducer((int Rows, int Columns) state, Signal signal) => signal switch
         {
-            ("r", double val) => ((int) Math.Round(val), state.Columns),
-            ("c", double val) => (state.Rows, (int) Math.Round(val)),
+            ("r", double val) => ((int)Math.Round(val), state.Columns),
+            ("c", double val) => (state.Rows, (int)Math.Round(val)),
             _ => throw new NotImplementedException()
         };
 
@@ -44,7 +44,7 @@ namespace Laconic.Demo
             },
         };
 
-        Binder<(int Rows, int Columns)> _binder;
+        readonly Binder<(int Rows, int Columns)> _binder;
 
         public DynamicGrid()
         {

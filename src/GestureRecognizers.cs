@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using xf = Xamarin.Forms;
-using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
 namespace Laconic
 {
     public interface IGestureRecognizer
     {
+        Dictionary<string, EventInfo> Events { get; }
     }
 
     public class TapGestureRecognizer : Element<xf.TapGestureRecognizer>, IGestureRecognizer
@@ -14,7 +15,7 @@ namespace Laconic
             set => SetValue(xf.TapGestureRecognizer.NumberOfTapsRequiredProperty, value);
         }
 
-        public Evt Tapped
+        public System.Func<Signal> Tapped
         {
             set => SetEvent(nameof(Tapped), value,
                 (ctl, handler) => ctl.Tapped += handler,

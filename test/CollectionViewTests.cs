@@ -19,8 +19,8 @@ namespace Laconic.Tests
                     }), _ => { });
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
-            source[0].View.ShouldBeOfType<Label>().Text.ShouldBe("One");
-            source[1].View.ShouldBeOfType<Label>().Text.ShouldBe("Two");
+            source[0].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("One");
+            source[1].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("Two");
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace Laconic.Tests
 
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
-            source[0].View.ShouldBeOfType<Label>().Text.ShouldBe("One");
-            source[1].View.ShouldBeOfType<Label>().Text.ShouldBe("Two");
+            source[0].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("One");
+            source[1].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("Two");
         }
 
         [Fact]
@@ -62,8 +62,8 @@ namespace Laconic.Tests
 
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
-            source[0].View.ShouldBeOfType<Label>().Text.ShouldBe("One");
-            source[1].View.ShouldBeOfType<Label>().Text.ShouldBe("Two updated");
+            source[0].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("One");
+            source[1].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("Two updated");
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Laconic.Tests
                 _ => { });
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
-            source[0].View.ShouldBeOfType<Label>();
+            source[0].Blueprint.ShouldBeOfType<Label>();
             source[0].ReuseKey.ShouldBe("label");
             source[1].ReuseKey.ShouldBe("button");
         }

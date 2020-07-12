@@ -7,8 +7,7 @@ namespace Laconic
 {
     public partial class Button
     {
-        public xf.Button.ButtonContentLayout ContentLayout
-        {
+        public xf.Button.ButtonContentLayout ContentLayout {
             get => GetValue<xf.Button.ButtonContentLayout>(xf.Button.ContentLayoutProperty);
             set => SetValue(xf.Button.ContentLayoutProperty, value);
         }
@@ -16,8 +15,7 @@ namespace Laconic
 
     public partial class Switch
     {
-        public Expression<Func<xf.ToggledEventArgs, Signal>> Toggled
-        {
+        public Func<xf.ToggledEventArgs, Signal> Toggled {
             set => SetEvent(nameof(Toggled), value,
                 (ctl, handler) => ctl.Toggled += handler,
                 (ctl, handler) => ctl.Toggled -= handler);
@@ -26,8 +24,7 @@ namespace Laconic
 
     public partial class Slider
     {
-        public Expression<Func<xf.ValueChangedEventArgs, Signal>> ValueChanged
-        {
+        public Func<xf.ValueChangedEventArgs, Signal> ValueChanged {
             set => SetEvent(nameof(ValueChanged), value,
                 (ctl, handler) => ctl.ValueChanged += handler,
                 (ctl, handler) => ctl.ValueChanged -= handler);
@@ -36,8 +33,7 @@ namespace Laconic
 
     public partial class CheckBox : View<xf.CheckBox>
     {
-        public Expression<Func<xf.CheckedChangedEventArgs, Signal>> CheckedChanged
-        {
+        public Func<xf.CheckedChangedEventArgs, Signal> CheckedChanged {
             set => SetEvent(nameof(CheckedChanged), value,
                 (ctl, handler) => ctl.CheckedChanged += handler,
                 (ctl, handler) => ctl.CheckedChanged -= handler);
@@ -46,14 +42,19 @@ namespace Laconic
 
     public partial class DatePicker
     {
-        public Expression<Func<xf.DateChangedEventArgs, Signal>> DateSelected
-        {
+        public Func<xf.DateChangedEventArgs, Signal> DateSelected {
             set => SetEvent(nameof(DateSelected), value,
                 (ctl, handler) => ctl.DateSelected += handler,
                 (ctl, handler) => ctl.DateSelected -= handler);
         }
     }
 
+    public class SelectedIndexChangedEventArgs : EventArgs
+    {
+        public int SelectedIndex { get; }
+        public SelectedIndexChangedEventArgs(int selectedIndex) => SelectedIndex = selectedIndex;
+    }
+    
     public partial class Picker
     {
         public IList<string> Items
@@ -61,11 +62,12 @@ namespace Laconic
             set => SetValue(xf.Picker.ItemsSourceProperty, value);
         }
         
-        public Expression<Func<int, Signal>> SelectedIndexChanged
-        {
+        public Func<SelectedIndexChangedEventArgs, Signal> SelectedIndexChanged {
             set => SetEvent(nameof(SelectedIndexChanged), value, 
-                (ctl, handler) => ctl.SelectedIndexChanged += (s, e) => handler(s, ((xf.Picker)s).SelectedIndex),
-                (ctl, handler) => ctl.SelectedIndexChanged -= (s, e) => handler(s, ((xf.Picker)s).SelectedIndex));
+                (ctl, handler) => ctl.SelectedIndexChanged += (s, e) => 
+                    handler(s, new SelectedIndexChangedEventArgs( ((xf.Picker)s).SelectedIndex)),
+                (ctl, handler) => ctl.SelectedIndexChanged -= (s, e) => 
+                    handler(s, new SelectedIndexChangedEventArgs( ((xf.Picker)s).SelectedIndex)));
         }
     }
 }

@@ -24,12 +24,12 @@ namespace Laconic
     class AddChild : IListOperation
     {
         public readonly int Index;
-        public readonly View View;
+        public readonly View Blueprint;
         public readonly IReadOnlyList<IDiffOperation> Operations;
         public readonly string ReuseKey;
 
         public AddChild(int index, View view, IEnumerable<IDiffOperation> operations, string reuseKey) =>
-            (Index, View, Operations, ReuseKey) = (index, view, operations.ToList(), reuseKey);
+            (Index, Blueprint, Operations, ReuseKey) = (index, view, operations.ToList(), reuseKey);
     }
 
     class RemoveChild : IListOperation

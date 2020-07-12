@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Laconic.Shapes;
@@ -38,30 +39,91 @@ namespace Laconic
 
         static IEnumerable<IDiffOperation> CalcEventDiff(EventDict existingEvents, EventDict newEvents)
         {
-            foreach (var evt in newEvents) {
-                if (existingEvents.TryGetValue(evt.Key, out var val)) {
-                    if (val.ToString() != evt.Value.ToString())
-                        yield return new SetEvent(evt.Key, evt.Value);
-                }
-                else {
-                    yield return new SetEvent(evt.Key, evt.Value);
-                }
+            var diffs = new List<IDiffOperation>();
+
+            foreach (var pair in existingEvents) {
+                if (!newEvents.ContainsKey(pair.Key) || newEvents[pair.Key] == null)
+                    diffs.Add(new UnwireEvent(pair.Key, pair.Value.Unsubscribe));
+            }
+            foreach (var pair in newEvents.Where(x => x.Value != null)) {
+                var (eventName, newEvt) = (pair.Key, pair.Value);
+                diffs.Add(new WireEvent(eventName, newEvt.SignalMaker, newEvt.Subscribe));
             }
 
-            foreach (var existing in existingEvents.Where(evt => !newEvents.ContainsKey(evt.Key)))
-                yield return new UnsetEvent(existing.Key);
+            return diffs;
         }
 
-        static IEnumerable<IDiffOperation> CalcGestureRecognizerDiff(IList<IGestureRecognizer> existingRecognizers,
-            IList<IGestureRecognizer> newRecognizers)
-
+        static IEnumerable<IDiffOperation> CalcGestureRecognizerDiff(
+            Dictionary<Key, IGestureRecognizer> existingRecognizers,
+            Dictionary<Key, IGestureRecognizer> newRecognizers)
         {
-            if (newRecognizers.SequenceEqual(existingRecognizers))
-                return new IDiffOperation[0];
+            if (existingRecognizers.Count == 0) {
+                foreach (var rec in newRecognizers.Values) {
+                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec));
+                }
+            }
+            else {
+                var listDiff = new ListDiff<Key, Key>(
+                    existingRecognizers.Keys,
+                    newRecognizers.Select(x => x.Key).ToArray());
 
-            return new[] {new SetGestureRecognizers(newRecognizers)};
+                var index = 0;
+                foreach (var action in listDiff.Actions) {
+                    if (action.ActionType == ListDiffActionType.Add) {
+                        index++;
+                        var newRecog = newRecognizers[action.DestinationItem];
+                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog));
+                    }
+                    else if (action.ActionType == ListDiffActionType.Remove) {
+                        yield return new RemoveGestureRecognizer(index);
+                    }
+                    else {
+                        var existingRecog = existingRecognizers[action.DestinationItem];
+                        var newRecog = newRecognizers[action.DestinationItem];
+                        var ops = Calculate((Element) existingRecog, (Element) newRecog);
+                        if (ops.Any())
+                            yield return new UpdateGestureRecognizer(index, ops);
+                        index++;
+                    }
+                }
+            }
         }
 
+        static IEnumerable<IDiffOperation> CalcToolbarItemsDiff(IDictionary<Key, ToolbarItem> existingItems, 
+            IDictionary<Key, ToolbarItem> newItems)
+        {
+            if (existingItems.Count == 0) {
+                foreach (var tb in newItems.Values) {
+                    yield return new AddToolbarItem(tb, Calculate(null, tb));
+                }
+            }
+            else {
+                var listDiff = new ListDiff<Key, Key>(
+                    existingItems.Keys,
+                    newItems.Select(x => x.Key).ToArray());
+
+                var index = 0;
+                foreach (var action in listDiff.Actions) {
+                    if (action.ActionType == ListDiffActionType.Add) {
+                        index++;
+                        var newItem = newItems[action.DestinationItem];
+                        yield return new AddToolbarItem(newItem, Calculate(null, newItem));
+                    }
+                    else if (action.ActionType == ListDiffActionType.Remove) {
+                        yield return new RemoveToolbarItem(index);
+                    }
+                    else {
+                        var existingItem = existingItems[action.DestinationItem];
+                        var newItem = newItems[action.DestinationItem];
+                        var ops = Calculate(existingItem, newItem);
+                        if (ops.Any())
+                            yield return new UpdateToolbarItem(index, ops);
+                        index++;
+                    }
+                }
+            }
+        }
+        
         public static IEnumerable<IDiffOperation> Calculate(IElement? existingElement, IElement newElement)
         {
             var operations = new List<IDiffOperation>();
@@ -73,11 +135,14 @@ namespace Laconic
             operations.AddRange(CalcEventDiff(existingElement?.Events ?? new EventDict(), newElement.Events));
             if (newElement is View v)
                 operations.AddRange(CalcGestureRecognizerDiff(
-                    (existingElement as View)?.GestureRecognizers ?? new List<IGestureRecognizer>(),
+                    (existingElement as View)?.GestureRecognizers ?? new Dictionary<Key, IGestureRecognizer>(),
                     v.GestureRecognizers));
-            
-            if (newElement is ContentPage p && p.ToolbarItems.Count > 0) {
-                operations.Add(new SetToolbarItems(p.ToolbarItems.Select(x => x.Value).ToList()));
+
+            if (newElement is ContentPage p) {
+                operations.AddRange(CalcToolbarItemsDiff(
+                    (existingElement as ContentPage)?.ToolbarItems ?? new Dictionary<Key, ToolbarItem>(),
+                    p.ToolbarItems
+                ));
             }
 
             switch (newElement) {
@@ -102,9 +167,9 @@ namespace Laconic
                     break;
                 }
                 case CollectionView c: {
-                    var op = new UpdateItems(
-                        ViewListDiff.Calculate((existingElement as CollectionView)?.Items, c.Items));
-                    operations.Add(op);
+                    var diff = ViewListDiff.Calculate((existingElement as CollectionView)?.Items, c.Items);
+                    if (diff.Any())
+                        operations.Add(new UpdateItems(diff));
                     break;
                 }
             }
@@ -127,19 +192,56 @@ namespace Laconic
     {
     }
 
-    class SetGestureRecognizers : IDiffOperation
+    class AddGestureRecognizer : IDiffOperation
     {
-        public readonly IList<IGestureRecognizer> Recognizers;
+        public readonly Element Blueprint;
+        public readonly IEnumerable<IDiffOperation> Operations;
 
-        public SetGestureRecognizers(IList<IGestureRecognizer> recognizers) => Recognizers = recognizers;
+        public AddGestureRecognizer(IGestureRecognizer blueprint, IEnumerable<IDiffOperation> operations) =>
+            (Blueprint, Operations) = ((Element) blueprint, operations);
     }
 
-    class SetToolbarItems : IDiffOperation
+    class RemoveGestureRecognizer : IDiffOperation
     {
-        public readonly IList<ToolbarItem> Items;
+        public readonly int Index;
 
-        public SetToolbarItems(IList<ToolbarItem> items) => Items = items;
+        public RemoveGestureRecognizer(int index) => Index = index;
     }
+
+    class UpdateGestureRecognizer : IDiffOperation
+    {
+        public readonly int Index;
+        public readonly IEnumerable<IDiffOperation> Operations;
+
+        public UpdateGestureRecognizer(int index, IEnumerable<IDiffOperation> operations) =>
+            (Index, Operations) = (index, operations);
+    }
+
+    class AddToolbarItem : IDiffOperation
+    {
+        public readonly ToolbarItem Blueprint;
+        public readonly IEnumerable<IDiffOperation> Operations;
+
+        public AddToolbarItem(ToolbarItem blueprint, IEnumerable<IDiffOperation> operations) =>
+            (Blueprint, Operations) = (blueprint, operations);
+    }
+
+    class RemoveToolbarItem : IDiffOperation
+    {
+        public readonly int Index;
+
+        public RemoveToolbarItem(int index) => Index = index;
+    }
+
+    class UpdateToolbarItem : IDiffOperation
+    {
+        public readonly int Index;
+        public readonly IEnumerable<IDiffOperation> Operations;
+
+        public UpdateToolbarItem(int index, IEnumerable<IDiffOperation> operations) =>
+            (Index, Operations) = (index, operations);
+    }
+    
     class SetProperty : IDiffOperation
     {
         public readonly xf.BindableProperty Property;
@@ -179,23 +281,28 @@ namespace Laconic
     {
     }
 
-    class SetEvent : IDiffOperation
+    class WireEvent : IDiffOperation
     {
         public readonly string EventName;
-        public readonly EventInfo Handler;
+        public readonly Func<EventArgs, Signal> SignalMaker;
+        public readonly Action<xf.BindableObject, EventHandler> Subscribe;
 
-        public SetEvent(string eventName, EventInfo handler)
+        public WireEvent( string eventName, Func<EventArgs, Signal> signalMaker, 
+            Action<xf.BindableObject, EventHandler> subscribe)
         {
-            Handler = handler;
             EventName = eventName;
+            SignalMaker = signalMaker;
+            Subscribe = subscribe;
         }
     }
-
-    class UnsetEvent : IDiffOperation
+    
+    class UnwireEvent : IDiffOperation
     {
         public readonly string EventName;
+        public readonly Action<xf.BindableObject, EventHandler> Unsubscribe;
 
-        public UnsetEvent(string eventName) => EventName = eventName;
+        public UnwireEvent(string eventName, Action<xf.BindableObject, EventHandler> unsubscribe) => 
+            (EventName, Unsubscribe) = (eventName, unsubscribe);
     }
 
     class SetClip : IDiffOperation

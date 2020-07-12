@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using xf = Xamarin.Forms;
-using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
 namespace Laconic
 {
@@ -11,7 +10,7 @@ namespace Laconic
 			set => SetValue(xf.MenuItem.IconImageSourceProperty, value);
 		}
 
-        public Evt Clicked
+        public System.Func<Signal> Clicked
         {
             set => SetEvent(nameof(Clicked), value,
                 (ctl, handler) => ctl.Clicked += handler,

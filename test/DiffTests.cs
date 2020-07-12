@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Xunit;
 using Shouldly;
@@ -147,11 +148,11 @@ namespace Laconic.Tests
 
             var addOne = updateChildren.Operations[0].ShouldBeOfType<AddChild>();
             addOne.Index.ShouldBe(0);
-            addOne.View.ShouldBeOfType<Label>();
+            addOne.Blueprint.ShouldBeOfType<Label>();
 
             var addTwo = updateChildren.Operations[1].ShouldBeOfType<AddChild>();
             addTwo.Index.ShouldBe(1);
-            addTwo.View.ShouldBeOfType<Label>();
+            addTwo.Blueprint.ShouldBeOfType<Label>();
         }
 
         [Fact]
@@ -174,7 +175,7 @@ namespace Laconic.Tests
                 new Button(),
                 new Button {Clicked = () => new Signal<string>("")}).ToArray();
 
-            diff[0].ShouldBeOfType<SetEvent>().EventName.ShouldBe("Clicked");
+            diff[0].ShouldBeOfType<WireEvent>();
         }
 
         [Fact]
@@ -182,11 +183,29 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new Button {Clicked = () => new Signal<string>("")},
-                new Button()).ToArray();
+                new Button()
+            ).ToArray();
 
-            diff[0].ShouldBeOfType<UnsetEvent>().EventName.ShouldBe("Clicked");
+            diff[0].ShouldBeOfType<UnwireEvent>();
         }
-
+        
+        [Fact]
+        public void transfer_event_subscription_on_diffing()
+        {
+            var binder = Binder.Create(new StateWrapper(1), (s, g) => {
+                g.Payload.ShouldBe(s);
+                return new StateWrapper(s.Value + 1);
+            });
+            var real = binder.CreateView(s =>
+                new RefreshView {Refreshing = () => new Signal(s)}
+            );
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+        }
         
         [Fact]
         public void empty_diff_if_Grid_ColumnDefinitions_identical()
@@ -224,7 +243,7 @@ namespace Laconic.Tests
 
             var ops = diff[0].ShouldBeOfType<UpdateChildren>().Operations;
 
-            ops[0].ShouldBeOfType<AddChild>().View.ShouldBeOfType<Label>();
+            ops[0].ShouldBeOfType<AddChild>().Blueprint.ShouldBeOfType<Label>();
             var labelPos = ops[0].ShouldBeOfType<AddChild>().Operations[0].ShouldBeOfType<GridPositionChange>();
             labelPos.Type.ShouldBe(GridPositionChangeType.Column);
             labelPos.Value.ShouldBe(1);
@@ -239,7 +258,7 @@ namespace Laconic.Tests
             ).ToArray();
 
             var ops = diff[0].ShouldBeOfType<UpdateChildren>().Operations;
-            ops[0].ShouldBeOfType<AddChild>().View.ShouldBeOfType<Label>();
+            ops[0].ShouldBeOfType<AddChild>().Blueprint.ShouldBeOfType<Label>();
         }
 
         [Fact]
@@ -275,18 +294,132 @@ namespace Laconic.Tests
         }
 
         [Fact]
-        public void calc_diff_for_ToolbarItems()
+        public void add_GestureRecognizer()
+        {
+            var diff = Diff.Calculate(
+                new ContentView(),
+                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer() }}
+            );
+            
+            diff.First().ShouldBeOfType<AddGestureRecognizer>();
+        }
+
+        [Fact]
+        public void remove_GestureRecognizer()
+        {
+            var diff = Diff.Calculate(
+                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer() }},
+                new ContentView()
+            );
+            
+            diff.First().ShouldBeOfType<RemoveGestureRecognizer>();
+        }
+
+        [Fact]
+        public void update_GestureRecognizer()
+        {
+            var diff = Diff.Calculate(
+                new ContentView {
+                    GestureRecognizers = {
+                        [0] = new TapGestureRecognizer(),
+                        [1] = new TapGestureRecognizer { NumberOfTapsRequired = 1 },
+                    }
+                },
+                new ContentView {
+                    GestureRecognizers = {
+                        [0] = new TapGestureRecognizer(),
+                        [1] = new TapGestureRecognizer { NumberOfTapsRequired = 2 },
+                    }
+                }
+            );
+
+            var upd = diff.First().ShouldBeOfType<UpdateGestureRecognizer>();
+            upd.Index.ShouldBe(1);
+            upd.Operations.First().ShouldBeOfType<SetProperty>().Value.ShouldBe(2);
+        }
+
+        [Fact]
+        public void add_ToolbarItem()
+        {
+            var diff = Diff.Calculate(
+                new ContentPage(),
+                new ContentPage { ToolbarItems = { [0] = new ToolbarItem() }}
+            );
+            
+            diff.First().ShouldBeOfType<AddToolbarItem>();
+        }
+
+        [Fact]
+        public void remove_ToolbarItem()
+        {
+            var diff = Diff.Calculate(
+                new ContentPage {ToolbarItems = {[0] = new ToolbarItem()}},
+                new ContentPage()
+            );
+            
+            diff.First().ShouldBeOfType<RemoveToolbarItem>().Index.ShouldBe(0);
+        }
+
+        [Fact]
+        public void update_ToolbarItem()
         {
             var diff = Diff.Calculate(
                 new ContentPage {
-                    ToolbarItems = {[1] = new ToolbarItem {IconImageSource = "foo"}}
+                    ToolbarItems = {
+                        [0] = new ToolbarItem(),
+                        [1] = new ToolbarItem { IconImageSource = "foo" },
+                    }
                 },
                 new ContentPage {
-                    ToolbarItems = {[1] = new ToolbarItem {IconImageSource = "bar"}}
+                    ToolbarItems = {
+                        [0] = new ToolbarItem(),
+                        [1] = new ToolbarItem { IconImageSource = "bar"},
+                    }
                 }
             );
+
+            var upd = diff.First().ShouldBeOfType<UpdateToolbarItem>();
+            upd.Index.ShouldBe(1);
+            upd.Operations.First().ShouldBeOfType<SetProperty>().Value.ToString().ShouldBe("File: bar");
+        }
+
+        [Fact]
+        public void no_diff_if_GestureRecognizer_is_not_changed()
+        {
+            var diff = Diff.Calculate(
+                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer { NumberOfTapsRequired = 2} } },
+                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer { NumberOfTapsRequired = 2} } }
+            );
+
+            diff.Count().ShouldBe(0);
+        }
+
+        class StateWrapper
+        {
+            public readonly int Value;
+            public StateWrapper(int val) => Value = val;
+        }
+
+        [Fact]
+        public void transfer_GestureRecognizer_subscription()
+        {
+            var binder = Binder.Create(new StateWrapper(1), (s, g) => 
+                new StateWrapper(s.Value + (int)g.Payload)
+            );
             
-            diff.First().ShouldBeOfType<SetToolbarItems>();
+            var view = binder.CreateView(s => new ContentView {
+                GestureRecognizers = {
+                    [0] = new TapGestureRecognizer {
+                        Tapped = () => new Signal(s.Value)
+                    }
+                }
+            });
+
+            (view.GestureRecognizers[0] as xf.TapGestureRecognizer).SendTapped(view);
+            binder.State.Value.ShouldBe(2);
+            
+            (view.GestureRecognizers[0] as xf.TapGestureRecognizer).SendTapped(view);
+            binder.State.Value.ShouldBe(4);
         }
     }
 }

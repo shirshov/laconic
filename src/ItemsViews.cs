@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using xf = Xamarin.Forms;
 
 namespace Laconic
 {
     public abstract partial class ItemsView<T> : View<T> where T : xf.ItemsView, new()
     {
-        public Expression<Func<Signal>> RemainingItemsThresholdReached
+        public Func<Signal> RemainingItemsThresholdReached
         {
             set => SetEvent(nameof(RemainingItemsThresholdReached), value,
                 (ctl, handler) => ctl.RemainingItemsThresholdReached += handler,
@@ -17,14 +16,14 @@ namespace Laconic
 
     public partial class CarouselView : ItemsView<xf.CarouselView>
     {
-        public Expression<Func<xf.CurrentItemChangedEventArgs, Signal>> CurrentItemChanged
+        public Func<xf.CurrentItemChangedEventArgs, Signal> CurrentItemChanged
         {
             set => SetEvent(nameof(CurrentItemChanged), value,
                 (ctl, handler) => ctl.CurrentItemChanged += handler,
                 (ctl, handler) => ctl.CurrentItemChanged -= handler);
         }
 
-        public Expression<Func<xf.PositionChangedEventArgs, Signal>> PositionChanged
+        public Func<xf.PositionChangedEventArgs, Signal> PositionChanged
         {
             set => SetEvent(nameof(PositionChanged), value,
                 (ctl, handler) => ctl.PositionChanged += handler,
@@ -67,14 +66,14 @@ namespace Laconic
     {
         public ItemsViewList Items { get; set; } = new ItemsViewList();
 
-        public Expression<Func<xf.ItemsViewScrolledEventArgs, Signal>> Scrolled
+        public Func<xf.ItemsViewScrolledEventArgs, Signal> Scrolled
         {
             set => SetEvent(nameof(Scrolled), value,
                 (ctl, handler) => ctl.Scrolled += handler,
                 (ctl, handler) => ctl.Scrolled -= handler);
         }
 
-        public Expression<Func<xf.ScrollToRequestEventArgs, Signal>> ScrollToRequested
+        public Func<xf.ScrollToRequestEventArgs, Signal> ScrollToRequested
         {
             set => SetEvent(nameof(ScrollToRequested), value,
                 (ctl, handler) => ctl.ScrollToRequested += handler,

@@ -83,15 +83,15 @@ namespace Laconic
             get => GetValue<String>(xf.Button.TextProperty);
             set => SetValue(xf.Button.TextProperty, value);
         }
-        public Expression<Func<Signal>> Clicked
+        public Func<Signal> Clicked
         {
             set => SetEvent(nameof(Clicked), value, (ctl, handler) => ctl.Clicked += handler, (ctl, handler) => ctl.Clicked -= handler);
         }
-        public Expression<Func<Signal>> Pressed
+        public Func<Signal> Pressed
         {
             set => SetEvent(nameof(Pressed), value, (ctl, handler) => ctl.Pressed += handler, (ctl, handler) => ctl.Pressed -= handler);
         }
-        public Expression<Func<Signal>> Released
+        public Func<Signal> Released
         {
             set => SetEvent(nameof(Released), value, (ctl, handler) => ctl.Released += handler, (ctl, handler) => ctl.Released -= handler);
         }
@@ -246,7 +246,7 @@ namespace Laconic
             get => GetValue<String>(xf.Editor.TextProperty);
             set => SetValue(xf.Editor.TextProperty, value);
         }
-        public Expression<Func<Signal>> Completed
+        public Func<Signal> Completed
         {
             set => SetEvent(nameof(Completed), value, (ctl, handler) => ctl.Completed += handler, (ctl, handler) => ctl.Completed -= handler);
         }
@@ -334,7 +334,7 @@ namespace Laconic
             get => GetValue<xf.TextAlignment>(xf.Entry.VerticalTextAlignmentProperty);
             set => SetValue(xf.Entry.VerticalTextAlignmentProperty, value);
         }
-        public Expression<Func<Signal>> Completed
+        public Func<Signal> Completed
         {
             set => SetEvent(nameof(Completed), value, (ctl, handler) => ctl.Completed += handler, (ctl, handler) => ctl.Completed -= handler);
         }
@@ -434,15 +434,15 @@ namespace Laconic
             get => GetValue<xf.ImageSource>(xf.ImageButton.SourceProperty);
             set => SetValue(xf.ImageButton.SourceProperty, value);
         }
-        public Expression<Func<Signal>> Clicked
+        public Func<Signal> Clicked
         {
             set => SetEvent(nameof(Clicked), value, (ctl, handler) => ctl.Clicked += handler, (ctl, handler) => ctl.Clicked -= handler);
         }
-        public Expression<Func<Signal>> Pressed
+        public Func<Signal> Pressed
         {
             set => SetEvent(nameof(Pressed), value, (ctl, handler) => ctl.Pressed += handler, (ctl, handler) => ctl.Pressed -= handler);
         }
-        public Expression<Func<Signal>> Released
+        public Func<Signal> Released
         {
             set => SetEvent(nameof(Released), value, (ctl, handler) => ctl.Released += handler, (ctl, handler) => ctl.Released -= handler);
         }
@@ -637,15 +637,15 @@ namespace Laconic
             get => GetValue<String>(xf.Page.TitleProperty);
             set => SetValue(xf.Page.TitleProperty, value);
         }
-        public Expression<Func<Signal>> Appearing
+        public Func<Signal> Appearing
         {
             set => SetEvent(nameof(Appearing), value, (ctl, handler) => ctl.Appearing += handler, (ctl, handler) => ctl.Appearing -= handler);
         }
-        public Expression<Func<Signal>> Disappearing
+        public Func<Signal> Disappearing
         {
             set => SetEvent(nameof(Disappearing), value, (ctl, handler) => ctl.Disappearing += handler, (ctl, handler) => ctl.Disappearing -= handler);
         }
-        public Expression<Func<Signal>> LayoutChanged
+        public Func<Signal> LayoutChanged
         {
             set => SetEvent(nameof(LayoutChanged), value, (ctl, handler) => ctl.LayoutChanged += handler, (ctl, handler) => ctl.LayoutChanged -= handler);
         }
@@ -726,7 +726,7 @@ namespace Laconic
             get => GetValue<xf.Color>(xf.RefreshView.RefreshColorProperty);
             set => SetValue(xf.RefreshView.RefreshColorProperty, value);
         }
-        public Expression<Func<Signal>> Refreshing
+        public Func<Signal> Refreshing
         {
             set => SetEvent(nameof(Refreshing), value, (ctl, handler) => ctl.Refreshing += handler, (ctl, handler) => ctl.Refreshing -= handler);
         }
@@ -814,7 +814,7 @@ namespace Laconic
             get => GetValue<xf.TextAlignment>(xf.SearchBar.VerticalTextAlignmentProperty);
             set => SetValue(xf.SearchBar.VerticalTextAlignmentProperty, value);
         }
-        public Expression<Func<Signal>> SearchButtonPressed
+        public Func<Signal> SearchButtonPressed
         {
             set => SetEvent(nameof(SearchButtonPressed), value, (ctl, handler) => ctl.SearchButtonPressed += handler, (ctl, handler) => ctl.SearchButtonPressed -= handler);
         }
@@ -871,11 +871,11 @@ namespace Laconic
             get => GetValue<Double>(xf.Slider.ValueProperty);
             set => SetValue(xf.Slider.ValueProperty, value);
         }
-        public Expression<Func<Signal>> DragCompleted
+        public Func<Signal> DragCompleted
         {
             set => SetEvent(nameof(DragCompleted), value, (ctl, handler) => ctl.DragCompleted += handler, (ctl, handler) => ctl.DragCompleted -= handler);
         }
-        public Expression<Func<Signal>> DragStarted
+        public Func<Signal> DragStarted
         {
             set => SetEvent(nameof(DragStarted), value, (ctl, handler) => ctl.DragStarted += handler, (ctl, handler) => ctl.DragStarted -= handler);
         }
