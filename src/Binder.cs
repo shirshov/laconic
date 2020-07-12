@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using xf = Xamarin.Forms;
 using System.Runtime.CompilerServices;
 
