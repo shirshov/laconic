@@ -10,20 +10,16 @@ namespace Laconic
     {
         internal static void Apply(IList<xf.View> list, IEnumerable<IListOperation> operations, Action<Signal> dispatch)
         {
-            foreach (var op in operations)
-            {
-                Action patchAction = op switch
-                {
+            foreach (var op in operations) {
+                Action patchAction = op switch {
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
                     UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
-                    ReplaceChild rc => () =>
-                    {
+                    ReplaceChild rc => () => {
                         var real = (xf.View) Patch.CreateReal((Element) rc.NewView);
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
-                    AddChild acv => () =>
-                    {
+                    AddChild acv => () => {
                         var real = Patch.CreateReal((Element) acv.Blueprint);
                         Patch.Apply(real, acv.Operations, dispatch);
                         list.Insert(acv.Index, (xf.View) real);
@@ -34,35 +30,30 @@ namespace Laconic
             }
         }
 
-        internal static void PatchItemsSource(xf.ItemsView view, UpdateItems update, Action<Signal> dispatch)
+        internal static void PatchItemsSource(xf.ItemsView itemsView, UpdateItems update, Action<Signal> dispatch)
         {
-            if (view.ItemsSource == null)
-            {
+            if (itemsView.ItemsSource == null) {
                 var source = new ObservableCollection<BindingContextItem>();
 
                 foreach (var op in update.Operations.OfType<AddChild>())
-                    source.Add(new BindingContextItem(op.ReuseKey, op.Blueprint));
+                    source.Add(new BindingContextItem(op.ReuseKey, op.Key, op.Blueprint));
 
-                view.ItemTemplate = new ItemsViewTemplateSelector(dispatch);
-                view.ItemsSource = source;
+                itemsView.ItemTemplate = new ItemsViewTemplateSelector(dispatch);
+                itemsView.ItemsSource = source;
             }
-            else
-            {
-                var source = (ObservableCollection<BindingContextItem>) view.ItemsSource;
-                foreach (var op in update.Operations)
-                {
-                    Action patchAction = op switch
-                    {
+            else {
+                var source = (ObservableCollection<BindingContextItem>) itemsView.ItemsSource;
+                foreach (var op in update.Operations) {
+                    Action patchAction = op switch {
+                        AddChild ac => () => source.Add(new BindingContextItem(ac.ReuseKey, ac.Key, ac.Blueprint)),
                         RemoveChild rc => () => source.RemoveAt(rc.Index),
-                        UpdateChild uc => () =>
-                        {
-                            if (!uc.Operations.Any())
-                                return;
-                            source[uc.Index].UpdateView(uc.View);
+                        UpdateChild uc => () => {
+                            var selector = (ItemsViewTemplateSelector) itemsView.ItemTemplate;
+                            selector.UpdateRendered(uc.Key, uc.Blueprint);
+                            source[uc.Index].Blueprint = uc.Blueprint;
                         },
-                        ReplaceChild _ => () =>
-                            throw new InvalidOperationException("ItemsViewList should never replace child views"),
-                        AddChild acv => () => source.Add(new BindingContextItem(acv.ReuseKey, acv.Blueprint)),
+                        ReplaceChild _ => () => throw new InvalidOperationException("ItemsViewList should never" +
+                            " replace child views"),
                         _ => () => throw new InvalidOperationException($"Unknown Diff operation: {op.GetType()}")
                     };
                     patchAction();
@@ -74,34 +65,27 @@ namespace Laconic
     class BindingContextItem
     {
         public readonly string ReuseKey;
+        public readonly Key Key;
         public View Blueprint;
 
-        public BindingContextItem(string reuseKey, View view)
+        public BindingContextItem(string reuseKey, Key key, View blueprint)
         {
             ReuseKey = reuseKey;
-            Blueprint = view;
-        }
-
-        public Action<BindingContextItem, View>? UpdateRenderedView;
-        
-        public void UpdateView(View blueprint)
-        {
+            Key = key;
             Blueprint = blueprint;
-            UpdateRenderedView?.Invoke(this, blueprint);
         }
     }
 
     class ItemsViewTemplateSelector : xf.DataTemplateSelector
     {
-        readonly Dictionary<xf.VisualElement, View> _renderedBlueprints = new Dictionary<xf.VisualElement, View>();
-        
+        readonly Dictionary<xf.VisualElement, (Key Key, View Blueprint)> _renderedBlueprints
+            = new Dictionary<xf.VisualElement, (Key, View)>();
+
         readonly Action<Signal> _dispatch;
         readonly Dictionary<string, xf.DataTemplate> _templates = new Dictionary<string, xf.DataTemplate>();
 
         internal ItemsViewTemplateSelector(Action<Signal> dispatch) => _dispatch = dispatch;
 
-        int templateNo = 1;
-        
         protected override xf.DataTemplate OnSelectTemplate(object item, xf.BindableObject container)
         {
             // TODO: trow:
@@ -109,15 +93,13 @@ namespace Laconic
             // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/templates/data-templates/selector
 
             var contextItem = (BindingContextItem) item;
-            if (!_templates.ContainsKey(contextItem.ReuseKey))
-            {
-                var template = new xf.DataTemplate(() =>
-                {
-                    var newRealView = (xf.View)Patch.CreateReal((Element) contextItem.Blueprint);
+            if (!_templates.ContainsKey(contextItem.ReuseKey)) {
+                var template = new xf.DataTemplate(() => {
+                    var newRealView = (xf.View) Patch.CreateReal((Element) contextItem.Blueprint);
                     var diff = Diff.Calculate(null, contextItem.Blueprint);
                     Patch.Apply(newRealView, diff, _dispatch);
                     newRealView.BindingContextChanged += OnBindingContextChanged;
-                    _renderedBlueprints[newRealView] = contextItem.Blueprint;
+                    _renderedBlueprints[newRealView] = (contextItem.Key, contextItem.Blueprint);
                     return newRealView;
                 });
                 _templates.Add(contextItem.ReuseKey, template);
@@ -131,22 +113,21 @@ namespace Laconic
             var realView = (xf.VisualElement) sender;
 
             var contextItem = (BindingContextItem) realView.BindingContext;
-            _renderedBlueprints.TryGetValue(realView, out var renderedBlueprint);
-			
-            if (renderedBlueprint != null && renderedBlueprint != contextItem.Blueprint) {
-                Patch.Apply(realView, Diff.Calculate(renderedBlueprint, contextItem.Blueprint), _dispatch);
-                _renderedBlueprints[realView] = contextItem.Blueprint;
+            _renderedBlueprints.TryGetValue(realView, out var value);
+
+            Patch.Apply(realView, Diff.Calculate(value.Blueprint, contextItem.Blueprint), _dispatch);
+            _renderedBlueprints[realView] = (contextItem.Key, contextItem.Blueprint);
+        }
+
+        public void UpdateRendered(Key key, View newBlueprint)
+        {
+            foreach (var (view, rendered) in _renderedBlueprints.Select(x => (x.Key, x.Value)).ToArray()) {
+                if (rendered.Key == key) {
+                    var diff = Diff.Calculate(rendered.Blueprint, newBlueprint);
+                    Patch.Apply(view, diff, _dispatch);
+                    _renderedBlueprints[view] = (key, newBlueprint);
+                }
             }
-
-            contextItem.UpdateRenderedView = (item, newBlueprint) =>
-            {
-				var rendered = _renderedBlueprints[realView];
-                if (ReferenceEquals(newBlueprint, rendered))
-                    return;
-
-                Patch.Apply(realView, Diff.Calculate(rendered, newBlueprint), _dispatch);
-				_renderedBlueprints[realView] = newBlueprint;
-            };
         }
     }
 }

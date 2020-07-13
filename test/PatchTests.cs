@@ -50,7 +50,7 @@ namespace Laconic.Tests
         public void add_child_view()
         {
             var sl = new xf.StackLayout();
-            var diff = new[] {new AddChild(0, new Label(), new IDiffOperation[0], "")};
+            var diff = new[] {new AddChild("a", 0, new Label(), new IDiffOperation[0], "")};
             Patch.Apply(sl, new[] {new UpdateChildren(diff)}, _ => { });
 
             sl.Children.Count.ShouldBe(1);
@@ -108,10 +108,10 @@ namespace Laconic.Tests
                 {
                     new UpdateChildren(new[]
                     {
-                        new AddChild(0, new Label(), new IDiffOperation[0], ""),
-                        new AddChild(1, new BoxView(),
+                        new AddChild("a", 0, new Label(), new IDiffOperation[0], ""),
+                        new AddChild("b", 1, new BoxView(),
                             new[] {new GridPositionChange(GridPositionChangeType.Column, 1)}, ""),
-                        new AddChild(2, new Button(),
+                        new AddChild("c", 2, new Button(),
                             new[]
                             {
                                 new GridPositionChange(GridPositionChangeType.Row, 1),
@@ -235,8 +235,6 @@ namespace Laconic.Tests
         [Fact]
         public void unwire_event()
         {
-            // var val = 0;
-
             var binder = Binder.Create(0, (s, g) => ++s);
             
             var real = binder.CreateView(s => new RefreshView {

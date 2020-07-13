@@ -23,13 +23,14 @@ namespace Laconic
 
     class AddChild : IListOperation
     {
+        public readonly Key Key;
         public readonly int Index;
         public readonly View Blueprint;
         public readonly IReadOnlyList<IDiffOperation> Operations;
         public readonly string ReuseKey;
 
-        public AddChild(int index, View view, IEnumerable<IDiffOperation> operations, string reuseKey) =>
-            (Index, Blueprint, Operations, ReuseKey) = (index, view, operations.ToList(), reuseKey);
+        public AddChild(Key key, int index, View view, IEnumerable<IDiffOperation> operations, string reuseKey) =>
+            (Key, Index, Blueprint, Operations, ReuseKey) = (key, index, view, operations.ToList(), reuseKey);
     }
 
     class RemoveChild : IListOperation
@@ -40,12 +41,13 @@ namespace Laconic
 
     class UpdateChild : IListOperation
     {
+        public readonly Key Key;
         public readonly int Index;
-        public readonly View View;
+        public readonly View Blueprint;
         public readonly IEnumerable<IDiffOperation> Operations;
 
-        public UpdateChild(int index, View view, IEnumerable<IDiffOperation> operations) =>
-            (Index, View, Operations) = (index, view, operations);
+        public UpdateChild(Key key, int index, View view, IEnumerable<IDiffOperation> operations) =>
+            (Key, Index, Blueprint, Operations) = (key, index, view, operations);
 
         public override string ToString()
         {
@@ -96,7 +98,7 @@ namespace Laconic
             if (existingItems == null || existingItems.Count == 0)
             {
                 foreach (var item in newItems.Where(p => p.Value != null))
-                    res.Add(new AddChild(res.Count, item.Value,
+                    res.Add(new AddChild(item.Key, res.Count, item.Value,
                         Diff.Calculate(null, item.Value)
                             .Concat(GridDiff.CalculateGridLayoutDiff(item.Key, existingItems, newItems)),
                         GetReuseKey(item.Key)));
@@ -113,7 +115,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add)
                     {
                         var newItem = newItems[action.DestinationItem];
-                        res.Add(new AddChild(index, newItem, Diff.Calculate(null, newItem)
+                        res.Add(new AddChild(action.DestinationItem, index, newItem, Diff.Calculate(null, newItem)
                                 .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, existingItems,
                                     newItems)),
                             GetReuseKey(action.DestinationItem)));
@@ -129,7 +131,7 @@ namespace Laconic
                         var newView = newItems[action.SourceItem];
                         if (existingView == null)
                         {
-                            res.Add(new AddChild(index, newView, Diff.Calculate(null, newView)
+                            res.Add(new AddChild(action.SourceItem, index, newView, Diff.Calculate(null, newView)
                                     .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, existingItems,
                                         newItems)),
                                 GetReuseKey(action.DestinationItem)));
@@ -145,7 +147,7 @@ namespace Laconic
                                 .Concat(GridDiff.CalculateGridLayoutDiff(action.SourceItem, existingItems, newItems))
                                 .ToArray();
                             if (patch.Length != 0)
-                                res.Add(new UpdateChild(index, newView, patch));
+                                res.Add(new UpdateChild(action.DestinationItem, index, newView, patch));
                         }
 
                         index++;
