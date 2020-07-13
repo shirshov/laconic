@@ -1,6 +1,6 @@
+#nullable enable
 using System;
 using System.Collections;
-using System.Linq.Expressions;
 using xf = Xamarin.Forms;
 using Laconic.Shapes;
 // ReSharper disable all
@@ -714,7 +714,7 @@ namespace Laconic
         }
     }
 
-    public partial class RefreshView : Layout<xf.RefreshView>, IContentHost
+    public partial class RefreshView
     {
         public Boolean IsRefreshing
         {
@@ -730,7 +730,6 @@ namespace Laconic
         {
             set => SetEvent(nameof(Refreshing), value, (ctl, handler) => ctl.Refreshing += handler, (ctl, handler) => ctl.Refreshing -= handler);
         }
-        public View? Content { get; set; }
     }
 
     public partial class ScrollView

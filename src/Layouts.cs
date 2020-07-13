@@ -165,4 +165,9 @@ namespace Laconic
         public RowDefinitionCollection RowDefinitions { get; set; } = new RowDefinitionCollection();
         public ColumnDefinitionCollection ColumnDefinitions { get; set; } = new ColumnDefinitionCollection();
     }
+    
+    public partial class RefreshView : Layout<xf.RefreshView>, IContentHost
+    {
+        public View? Content { get; set; }
+    } 
 }

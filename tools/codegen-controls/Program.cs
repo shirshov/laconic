@@ -82,7 +82,7 @@ namespace Laconic.CodeGen
                         }
 
                         // var parameter = genTypes.Length == 0 ? "" : $"xf.{genTypes[0].DeclaringType == null ? "+", } {genTypes[0].Name}, ";
-                        yield return $"    public Expression<Func<{genericParam}Signal>> {e.Name} {{";
+                        yield return $"    public Func<{genericParam}Signal> {e.Name} {{";
                         //yield return $"       get => (Expression<Func<{genericParam}Signal>>)Events[nameof({e.Name})];";
                         yield return
                             $"       set => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
@@ -98,9 +98,9 @@ namespace Laconic.CodeGen
 
         static void Main(string[] args)
         {
-            var s = "using System;\n"
+            var s = "#nullable enable\n"
+                    + "using System;\n"
                     + "using System.Collections;\n"
-                    + "using System.Linq.Expressions;\n"
                     + "using xf = Xamarin.Forms;\n"
                     + "using Laconic.Shapes;\n"
                     + "// ReSharper disable all\n\n"
