@@ -254,5 +254,23 @@ namespace Laconic.Tests
             binder.State.ShouldBe(1);
         }
         
+
+        [Fact]
+        public void captured_value_in_event()
+        {
+            var binder = Binder.Create(0, (s, g) => {
+                g.Payload.ShouldBe(s);
+                return s + 1;
+            });
+            var real = binder.CreateView(s =>
+                new RefreshView {Refreshing = () => new Signal(s)}
+            );
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+            real.IsRefreshing = true;
+            real.IsRefreshing = false;
+        }
     }
 }
