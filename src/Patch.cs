@@ -19,7 +19,6 @@ namespace Laconic
             SignalMaker = signalMaker;
             _dispatch = dispatch;
         }
-        // public string EventName;
 
         public void EventHandler(object sender, EventArgs e)
         {
