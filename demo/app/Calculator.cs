@@ -44,28 +44,23 @@ namespace Laconic.Demo.Calculator
             _ => state
         };
 
-        static State MainReducer(State state, Signal signal)
-        {
-            var s1 = state;
-            
-            return signal switch {
-                ClearSignal _ => new Initial(),
-                DigitSignal (int digit, null) => state switch {
-                    var s when s is Initial || s is Error || s is Result => new Operand(digit),
-                    Operand op => new Operand(op.Value * 10 + digit),
-                    OperandOperator (var operand, var @operator) => new OperandOperatorOperand(operand, @operator, digit),
-                    OperandOperatorOperand(var op1, var @operator, var op2) => new OperandOperatorOperand(op1, @operator, op2 * 10 + digit)
-                },
-                OperatorSignal (Operator @operator, _) => state switch {
-                    var s when s is Initial || s is Error => state,
-                    Result r => new OperandOperator(r.Value, @operator), // TODO: single value records should be implicitly cast?
-                    Operand operand => new OperandOperator(operand.Value, @operator),
-                    OperandOperator(var operand, _) => new OperandOperator(operand, @operator),
-                    OperandOperatorOperand _ => Calculate(state, signal),
-                },
-                EqualsSignal _ => Calculate(state, signal)
-            };
-        }
+        static State MainReducer(State state, Signal signal) => signal switch {
+            ClearSignal _ => new Initial(),
+            DigitSignal (int digit, null) => state switch {
+                var s when s is Initial || s is Error || s is Result => new Operand(digit),
+                Operand op => new Operand(op.Value * 10 + digit),
+                OperandOperator (var operand, var @operator) => new OperandOperatorOperand(operand, @operator, digit),
+                OperandOperatorOperand(var op1, var @operator, var op2) => new OperandOperatorOperand(op1, @operator, op2 * 10 + digit)
+            },
+            OperatorSignal (Operator @operator, _) => state switch {
+                var s when s is Initial || s is Error => state,
+                Result r => new OperandOperator(r.Value, @operator), // TODO: single value records should be implicitly cast?
+                Operand operand => new OperandOperator(operand.Value, @operator),
+                OperandOperator(var operand, _) => new OperandOperator(operand, @operator),
+                OperandOperatorOperand _ => Calculate(state, signal),
+            },
+            EqualsSignal _ => Calculate(state, signal)
+        };
 
         static string Display(State state) => state switch {
             Initial _ => "0",
