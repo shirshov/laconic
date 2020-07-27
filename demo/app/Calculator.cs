@@ -2,7 +2,11 @@ using System;
 using Laconic.CodeGen;
 using xf = Xamarin.Forms;
 
+// The UI code is ported from here:
 //  https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/layouts/grid
+
+// The logic is ported from here:
+// https://github.com/fsprojects/Fabulous/blob/master/Fabulous.XamarinForms/samples/Calculator/Calculator/Calculator.fs
 
 namespace Laconic.Demo.Calculator
 {
@@ -77,14 +81,14 @@ namespace Laconic.Demo.Calculator
             var darkerButtonColor = xf.Color.FromHex("ddd");
             var orangeButtonColor = xf.Color.FromHex("E8AD00");
 
-            Button CalcButton(string text, Func<Signal> signalMaker, xf.Color backgroundColor, xf.Color? textColor = null
+            Button CalcButton(string text, Signal signal, xf.Color backgroundColor, xf.Color? textColor = null
                 ) => new Button {
                 Text = text,
                 BackgroundColor = backgroundColor,
                 TextColor = textColor ?? xf.Color.Black,
                 CornerRadius = 0,
                 FontSize = 40,
-                Clicked = signalMaker
+                Clicked = () => signal
             };
 
             BackgroundColor = xf.Color.FromHex("404040");
@@ -105,25 +109,25 @@ namespace Laconic.Demo.Calculator
                         TextColor = xf.Color.White,
                         FontSize = 60
                     },
-                ["C", 1] = CalcButton("C", () => new ClearSignal(), darkerButtonColor),
+                ["C", 1] = CalcButton("C", new ClearSignal(), darkerButtonColor),
                 ["+/-", 1, 1] = CalcButton("+/-", null, darkerButtonColor),
                 ["%", 1, 2] = CalcButton("%", null, darkerButtonColor),
-                ["div", 1, 3] = CalcButton("div", () => new OperatorSignal(Operator.Divide), orangeButtonColor, xf.Color.White),
-                ["7", 2] = CalcButton("7", () => new DigitSignal(7),  plainButtonColor),
-                ["8", 2, 1] = CalcButton("8", () => new DigitSignal(8), plainButtonColor),
-                ["9", 2, 2] = CalcButton("9", () => new DigitSignal(9), plainButtonColor),
-                ["X", 2, 3] = CalcButton("X", () => new OperatorSignal(Operator.Multiply), orangeButtonColor, xf.Color.White),
-                ["4", 3] = CalcButton("4", () => new DigitSignal(4), plainButtonColor),
-                ["5", 3, 1] = CalcButton("5",() => new DigitSignal(5), plainButtonColor),
-                ["6", 3, 2] = CalcButton("6", () => new DigitSignal(6), plainButtonColor),
-                ["-", 3, 3] = CalcButton("-", () => new OperatorSignal(Operator.Subtract), orangeButtonColor, xf.Color.White),
-                ["1", 4] = CalcButton("1", () => new DigitSignal(1), plainButtonColor),
-                ["2", 4, 1] = CalcButton("2",() => new DigitSignal(2), plainButtonColor),
-                ["3", 4, 2] = CalcButton("3", () => new DigitSignal(3), plainButtonColor),
-                ["+", 4, 3] = CalcButton("+", () => new OperatorSignal(Operator.Add), orangeButtonColor, xf.Color.White),
-                [".", 5, 2] = CalcButton(".", () => new EqualsSignal(), plainButtonColor),
-                ["=", 5, 3] = CalcButton("=", () => new EqualsSignal(), orangeButtonColor, xf.Color.White),
-                ["0", 5, 0, columnSpan: 2] = CalcButton("0", () => new DigitSignal(0), plainButtonColor)
+                ["div", 1, 3] = CalcButton("div", new OperatorSignal(Operator.Divide), orangeButtonColor, xf.Color.White),
+                ["7", 2] = CalcButton("7", new DigitSignal(7),  plainButtonColor),
+                ["8", 2, 1] = CalcButton("8", new DigitSignal(8), plainButtonColor),
+                ["9", 2, 2] = CalcButton("9", new DigitSignal(9), plainButtonColor),
+                ["X", 2, 3] = CalcButton("X", new OperatorSignal(Operator.Multiply), orangeButtonColor, xf.Color.White),
+                ["4", 3] = CalcButton("4", new DigitSignal(4), plainButtonColor),
+                ["5", 3, 1] = CalcButton("5",new DigitSignal(5), plainButtonColor),
+                ["6", 3, 2] = CalcButton("6", new DigitSignal(6), plainButtonColor),
+                ["-", 3, 3] = CalcButton("-", new OperatorSignal(Operator.Subtract), orangeButtonColor, xf.Color.White),
+                ["1", 4] = CalcButton("1", new DigitSignal(1), plainButtonColor),
+                ["2", 4, 1] = CalcButton("2", new DigitSignal(2), plainButtonColor),
+                ["3", 4, 2] = CalcButton("3", new DigitSignal(3), plainButtonColor),
+                ["+", 4, 3] = CalcButton("+", new OperatorSignal(Operator.Add), orangeButtonColor, xf.Color.White),
+                [".", 5, 2] = CalcButton(".", new EqualsSignal(), plainButtonColor),
+                ["=", 5, 3] = CalcButton("=", new EqualsSignal(), orangeButtonColor, xf.Color.White),
+                ["0", 5, 0, columnSpan: 2] = CalcButton("0", new DigitSignal(0), plainButtonColor)
             });
         }
     }
