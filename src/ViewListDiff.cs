@@ -1,90 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
+using Laconic.CodeGen;
 
 namespace Laconic
 {
-    interface IListOperation
+    [Union]
+    interface __ListOperation
     {
-    }
-
-    class UpdateChildren : IDiffOperation
-    {
-        public readonly IReadOnlyList<IListOperation> Operations;
-        public UpdateChildren(IReadOnlyList<IListOperation> operations) => Operations = operations;
-
-        public override string ToString()
-        {
-            var res = "UpdateChildren:\n";
-            foreach (var op in Operations)
-                res += "  " + op + "\n";
-            return res;
-        }
-    }
-
-    class AddChild : IListOperation
-    {
-        public readonly Key Key;
-        public readonly int Index;
-        public readonly View Blueprint;
-        public readonly IReadOnlyList<IDiffOperation> Operations;
-        public readonly string ReuseKey;
-
-        public AddChild(Key key, int index, View view, IEnumerable<IDiffOperation> operations, string reuseKey) =>
-            (Key, Index, Blueprint, Operations, ReuseKey) = (key, index, view, operations.ToList(), reuseKey);
-    }
-
-    class RemoveChild : IListOperation
-    {
-        public readonly int Index;
-        public RemoveChild(int index) => Index = index;
-    }
-
-    class UpdateChild : IListOperation
-    {
-        public readonly Key Key;
-        public readonly int Index;
-        public readonly View Blueprint;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public UpdateChild(Key key, int index, View view, IEnumerable<IDiffOperation> operations) =>
-            (Key, Index, Blueprint, Operations) = (key, index, view, operations);
-
-        public override string ToString()
-        {
-            var res = $"UpdateChild: [{Index}]\n";
-            foreach (var op in Operations)
-                res += "  " + op + "\n";
-            return res;
-        }
-    }
-
-    class ReplaceChild : IListOperation
-    {
-        public readonly int Index;
-        public readonly View NewView;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public ReplaceChild(int index, View newView, IEnumerable<IDiffOperation> operations) =>
-            (Index, NewView, Operations) = (index, newView, operations);
-    }
-
-    class UpdateItems : IDiffOperation
-    {
-        public readonly IReadOnlyList<IListOperation> Operations;
-        public UpdateItems(IReadOnlyList<IListOperation> operations) => Operations = operations;
-
-        public override string ToString()
-        {
-            var res = "UpdateItems:\n";
-            foreach (var op in Operations)
-                res += "  " + op + "\n";
-            return res;
-        }
+        record AddChild(Key key, string reuseKey, int index, View blueprint, DiffOperation[] operations);
+        record RemoveChild(int index);
+        record UpdateChild(Key key, int index, View blueprint, IEnumerable<DiffOperation> operations);
+        record ReplaceChild(int index, View newView, IEnumerable<DiffOperation> operations);
     }
 
     static class ViewListDiff
     {
-        public static IReadOnlyList<IListOperation> Calculate(ViewList? existingItems, ViewList newItems)
+        public static IReadOnlyList<ListOperation> Calculate(ViewList? existingItems, ViewList newItems)
         {
             string GetReuseKey(Key key)
             {
@@ -94,14 +25,14 @@ namespace Laconic
                 return reuseKey ?? "SAME_REUSE_KEY";
             }
 
-            var res = new List<IListOperation>();
+            var res = new List<ListOperation>();
             if (existingItems == null || existingItems.Count == 0)
             {
                 foreach (var item in newItems.Where(p => p.Value != null))
-                    res.Add(new AddChild(item.Key, res.Count, item.Value,
+                    res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, item.Value,
                         Diff.Calculate(null, item.Value)
-                            .Concat(GridDiff.CalculateGridLayoutDiff(item.Key, existingItems, newItems)),
-                        GetReuseKey(item.Key)));
+                            .Concat(GridDiff.CalculateGridLayoutDiff(item.Key, existingItems, newItems)).ToArray()
+                        ));
             }
             else
             {
@@ -115,10 +46,14 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add)
                     {
                         var newItem = newItems[action.DestinationItem];
-                        res.Add(new AddChild(action.DestinationItem, index, newItem, Diff.Calculate(null, newItem)
-                                .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, existingItems,
-                                    newItems)),
-                            GetReuseKey(action.DestinationItem)));
+                        var childOps = Diff.Calculate(null, newItem)
+                            .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, existingItems, newItems));
+                        res.Add(
+                                new AddChild(action.DestinationItem, 
+                                    GetReuseKey(action.DestinationItem), 
+                                    index, 
+                                    newItem, childOps.ToArray())
+                        ); 
                         index++;
                     }
                     else if (action.ActionType == ListDiffActionType.Remove)
@@ -129,12 +64,16 @@ namespace Laconic
                     {
                         var existingView = existingItems[action.SourceItem];
                         var newView = newItems[action.SourceItem];
-                        if (existingView == null)
-                        {
-                            res.Add(new AddChild(action.SourceItem, index, newView, Diff.Calculate(null, newView)
-                                    .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, existingItems,
-                                        newItems)),
-                                GetReuseKey(action.DestinationItem)));
+                        if (existingView == null) {
+                            var items = Diff
+                                .Calculate(null, newView)
+                                .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, 
+                                    existingItems,
+                                    newItems));
+                                res.Add(new AddChild(action.SourceItem, 
+                                    GetReuseKey(action.DestinationItem), 
+                                    index, newView, items.ToArray())
+                                );
                         }
                         else if (existingView.GetType() != newView.GetType())
                         {

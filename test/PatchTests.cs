@@ -12,7 +12,7 @@ namespace Laconic.Tests
         public void set_content_view()
         {
             var contentView = new xf.ContentView();
-            var diff = new[] {new SetContent(new Label(), new IDiffOperation[0])};
+            var diff = new[] {new SetContent(new Label(), new DiffOperation[0])};
             Patch.Apply(contentView, diff, _ => { });
             contentView.Content.ShouldBeOfType<xf.Label>();
         }
@@ -50,7 +50,7 @@ namespace Laconic.Tests
         public void add_child_view()
         {
             var sl = new xf.StackLayout();
-            var diff = new[] {new AddChild("a", 0, new Label(), new IDiffOperation[0], "")};
+            var diff = new[] {new AddChild("a", "reuseKey", 0, new Label(), new DiffOperation[0])};
             Patch.Apply(sl, new[] {new UpdateChildren(diff)}, _ => { });
 
             sl.Children.Count.ShouldBe(1);
@@ -108,16 +108,16 @@ namespace Laconic.Tests
                 {
                     new UpdateChildren(new[]
                     {
-                        new AddChild("a", 0, new Label(), new IDiffOperation[0], ""),
-                        new AddChild("b", 1, new BoxView(),
-                            new[] {new GridPositionChange(GridPositionChangeType.Column, 1)}, ""),
-                        new AddChild("c", 2, new Button(),
+                        new AddChild("a", "reuseKey", 0, new Label(), new DiffOperation[0]),
+                        new AddChild("b", "reuseKey", 1, new BoxView(),
+                            new[] {new GridPositionChange(GridPositionChangeType.Column, 1)}),
+                        new AddChild("c", "reuseKey", 2, new Button(),
                             new[]
                             {
                                 new GridPositionChange(GridPositionChangeType.Row, 1),
                                 new GridPositionChange(GridPositionChangeType.ColumnSpan, 2),
                                 new GridPositionChange(GridPositionChangeType.RowSpan, 2)
-                            }, "")
+                            })
                     })
                 }, _ => { });
 

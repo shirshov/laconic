@@ -29,7 +29,7 @@ namespace Laconic
     
     static class Patch
     {
-        internal static void Apply(xf.BindableObject element, IEnumerable<IDiffOperation> operations,
+        internal static void Apply(xf.BindableObject element, IEnumerable<DiffOperation> operations,
             Action<Signal> dispatch)
         {
             xf.View GetRealViewContent() => element switch {

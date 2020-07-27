@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Laconic.CodeGen;
 using Laconic.Shapes;
 using xf = Xamarin.Forms;
 using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object>;
@@ -10,7 +11,7 @@ namespace Laconic
 {
     static class Diff
     {
-        static IEnumerable<IDiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues)
+        static IEnumerable<DiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues)
         {
             foreach (var p in newValues) {
                 if (existingValues.TryGetValue(p.Key, out var val)) {
@@ -37,9 +38,9 @@ namespace Laconic
                 yield return new ResetProperty(existing.Key);
         }
 
-        static IEnumerable<IDiffOperation> CalcEventDiff(EventDict existingEvents, EventDict newEvents)
+        static IEnumerable<DiffOperation> CalcEventDiff(EventDict existingEvents, EventDict newEvents)
         {
-            var diffs = new List<IDiffOperation>();
+            var diffs = new List<DiffOperation>();
 
             foreach (var pair in existingEvents) {
                 if (!newEvents.ContainsKey(pair.Key) || newEvents[pair.Key] == null)
@@ -53,13 +54,13 @@ namespace Laconic
             return diffs;
         }
 
-        static IEnumerable<IDiffOperation> CalcGestureRecognizerDiff(
+        static IEnumerable<DiffOperation> CalcGestureRecognizerDiff(
             Dictionary<Key, IGestureRecognizer> existingRecognizers,
             Dictionary<Key, IGestureRecognizer> newRecognizers)
         {
             if (existingRecognizers.Count == 0) {
                 foreach (var rec in newRecognizers.Values) {
-                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec));
+                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec).ToArray());
                 }
             }
             else {
@@ -72,7 +73,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add) {
                         index++;
                         var newRecog = newRecognizers[action.DestinationItem];
-                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog));
+                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog).ToArray());
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
                         yield return new RemoveGestureRecognizer(index);
@@ -82,14 +83,14 @@ namespace Laconic
                         var newRecog = newRecognizers[action.DestinationItem];
                         var ops = Calculate((Element) existingRecog, (Element) newRecog);
                         if (ops.Any())
-                            yield return new UpdateGestureRecognizer(index, ops);
+                            yield return new UpdateGestureRecognizer(index, ops.ToArray());
                         index++;
                     }
                 }
             }
         }
 
-        static IEnumerable<IDiffOperation> CalcToolbarItemsDiff(IDictionary<Key, ToolbarItem> existingItems, 
+        static IEnumerable<DiffOperation> CalcToolbarItemsDiff(IDictionary<Key, ToolbarItem> existingItems, 
             IDictionary<Key, ToolbarItem> newItems)
         {
             if (existingItems.Count == 0) {
@@ -124,9 +125,9 @@ namespace Laconic
             }
         }
         
-        public static IEnumerable<IDiffOperation> Calculate(IElement? existingElement, IElement newElement)
+        public static IEnumerable<DiffOperation> Calculate(IElement? existingElement, IElement newElement)
         {
-            var operations = new List<IDiffOperation>();
+            var operations = new List<DiffOperation>();
             if (newElement == null)
                 return operations;
 
@@ -149,9 +150,9 @@ namespace Laconic
                 case IContentHost newViewAsContainer: {
                     var oldContent = (existingElement as IContentHost)?.Content;
                     var newContent = newViewAsContainer.Content;
-                    IDiffOperation? op = (oldContent, newContent) switch {
+                    DiffOperation? op = (oldContent, newContent) switch {
                         (null, null) => null,
-                        (null, var n) => new SetContent(n, Calculate(null, n)),
+                        (null, var n) => new SetContent(n, Calculate(null, n).ToArray()),
                         (_, null) => new RemoveContent(),
                         var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, n)),
                         var (o, n) => new UpdateContent(Calculate(o, n))
@@ -188,127 +189,27 @@ namespace Laconic
         }
     }
 
-    interface IDiffOperation
+    [Union]
+    interface __DiffOperation
     {
-    }
-
-    class AddGestureRecognizer : IDiffOperation
-    {
-        public readonly Element Blueprint;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public AddGestureRecognizer(IGestureRecognizer blueprint, IEnumerable<IDiffOperation> operations) =>
-            (Blueprint, Operations) = ((Element) blueprint, operations);
-    }
-
-    class RemoveGestureRecognizer : IDiffOperation
-    {
-        public readonly int Index;
-
-        public RemoveGestureRecognizer(int index) => Index = index;
-    }
-
-    class UpdateGestureRecognizer : IDiffOperation
-    {
-        public readonly int Index;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public UpdateGestureRecognizer(int index, IEnumerable<IDiffOperation> operations) =>
-            (Index, Operations) = (index, operations);
-    }
-
-    class AddToolbarItem : IDiffOperation
-    {
-        public readonly ToolbarItem Blueprint;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public AddToolbarItem(ToolbarItem blueprint, IEnumerable<IDiffOperation> operations) =>
-            (Blueprint, Operations) = (blueprint, operations);
-    }
-
-    class RemoveToolbarItem : IDiffOperation
-    {
-        public readonly int Index;
-
-        public RemoveToolbarItem(int index) => Index = index;
-    }
-
-    class UpdateToolbarItem : IDiffOperation
-    {
-        public readonly int Index;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public UpdateToolbarItem(int index, IEnumerable<IDiffOperation> operations) =>
-            (Index, Operations) = (index, operations);
-    }
-    
-    class SetProperty : IDiffOperation
-    {
-        public readonly xf.BindableProperty Property;
-        public readonly object Value;
-
-        internal SetProperty(xf.BindableProperty property, object value)
-        {
-            Property = property;
-            Value = value;
-        }
-
-        public override string ToString() => $"SetProperty: Property={Property}, Value={Value}";
-    }
-
-    class ResetProperty : IDiffOperation
-    {
-        public readonly xf.BindableProperty Property;
-        internal ResetProperty(xf.BindableProperty property) => Property = property;
-    }
-
-    class SetContent : IDiffOperation
-    {
-        public readonly View ContentView;
-        public readonly IEnumerable<IDiffOperation> Operations;
-
-        public SetContent(View contentView, IEnumerable<IDiffOperation> operations) =>
-            (ContentView, Operations) = (contentView, operations);
-    }
-
-    class UpdateContent : IDiffOperation
-    {
-        public readonly IEnumerable<IDiffOperation> Operations;
-        public UpdateContent(IEnumerable<IDiffOperation> operations) => Operations = operations;
-    }
-
-    class RemoveContent : IDiffOperation
-    {
-    }
-
-    class WireEvent : IDiffOperation
-    {
-        public readonly string EventName;
-        public readonly Func<EventArgs, Signal> SignalMaker;
-        public readonly Action<xf.BindableObject, EventHandler> Subscribe;
-
-        public WireEvent( string eventName, Func<EventArgs, Signal> signalMaker, 
-            Action<xf.BindableObject, EventHandler> subscribe)
-        {
-            EventName = eventName;
-            SignalMaker = signalMaker;
-            Subscribe = subscribe;
-        }
-    }
-    
-    class UnwireEvent : IDiffOperation
-    {
-        public readonly string EventName;
-        public readonly Action<xf.BindableObject, EventHandler> Unsubscribe;
-
-        public UnwireEvent(string eventName, Action<xf.BindableObject, EventHandler> unsubscribe) => 
-            (EventName, Unsubscribe) = (eventName, unsubscribe);
-    }
-
-    class SetClip : IDiffOperation
-    {
-        public readonly Geometry Geometry;
-
-        public SetClip(Geometry geometry) => Geometry = geometry;
+        record AddGestureRecognizer(IGestureRecognizer blueprint, params DiffOperation[] operations);
+        record RemoveGestureRecognizer(int index);
+        record UpdateGestureRecognizer(int index, params DiffOperation[] operations);
+        record AddToolbarItem(ToolbarItem blueprint, IEnumerable<DiffOperation> operations);
+        record RemoveToolbarItem(int index);
+        record UpdateToolbarItem(int index, IEnumerable<DiffOperation> operations);
+        record SetProperty(xf.BindableProperty property, object value);
+        record ResetProperty(xf.BindableProperty property);
+        record SetContent(View contentView, IEnumerable<DiffOperation> operations);
+        record UpdateContent(IEnumerable<DiffOperation> operations);
+        record RemoveContent();
+        record WireEvent(string eventName, Func<EventArgs, Signal> signalMaker, Action<xf.BindableObject, EventHandler> subscribe);
+        record UnwireEvent(string eventName, Action<xf.BindableObject, EventHandler> unsubscribe);
+        record SetClip(Geometry geometry);
+        record UpdateChildren(IReadOnlyList<ListOperation> operations);
+        record UpdateItems(IReadOnlyList<ListOperation> operations);
+        record GridPositionChange(GridPositionChangeType type, int value);
+        record RowDefinitionsChange(List<xf.RowDefinition> definitions);
+        record ColumnDefinitionsChange(List<xf.ColumnDefinition> definitions);
     }
 }

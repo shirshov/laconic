@@ -8,7 +8,7 @@ namespace Laconic
 {
     static class ViewListPatch
     {
-        internal static void Apply(IList<xf.View> list, IEnumerable<IListOperation> operations, Action<Signal> dispatch)
+        internal static void Apply(IList<xf.View> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
         {
             foreach (var op in operations) {
                 Action patchAction = op switch {
