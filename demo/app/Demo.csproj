@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\codegen\src\attributes\CodeGen.Attributes.csproj" />
     <ProjectReference Include="..\..\src\Laconic.csproj" />
     <PackageReference Include="CodeGeneration.Roslyn.Tool" Version="0.7.63" PrivateAssets="all" />
-    <ProjectReference Include="..\..\codegen\src\generators\CodeGen.Generators.csproj" OutputItemType="CodeGenerationRoslynPlugin"/>
+    <ProjectReference Include="..\..\codegen\src\generators\CodeGen.Generators.csproj" OutputItemType="CodeGenerationRoslynPlugin" />
   </ItemGroup>
 
   <ItemGroup>

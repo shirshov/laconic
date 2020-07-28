@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaconicTests", "test\Laconi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laconic", "src\Laconic.csproj", "{CD1227A5-2A32-4083-B3C3-7D0AD2EC2A99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Counter", "demo\app\Demo.csproj", "{FA3D35C6-C4CA-475E-B4FC-38B4C4784CBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "demo\app\Demo.csproj", "{FA3D35C6-C4CA-475E-B4FC-38B4C4784CBD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.iOS", "demo\ios\Demo.iOS.csproj", "{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}"
 EndProject
@@ -152,5 +152,36 @@ Global
 		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x64.Build.0 = Release|Any CPU
 		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x86.ActiveCfg = Release|Any CPU
 		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $2
+		$2.FileWidth = 80
+		$2.TabsToSpaces = True
+		$2.NoTabsAfterNonTabs = True
+		$2.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $3
+		$3.scope = text/x-csharp
+		$0.TextStylePolicy = $4
+		$4.FileWidth = 80
+		$4.TabsToSpaces = True
+		$4.NoTabsAfterNonTabs = True
+		$4.scope = text/plain
+		$0.TextStylePolicy = $5
+		$5.inheritsSet = null
+		$5.scope = application/vnd.apple-xcode-storyboard
+		$0.XmlFormattingPolicy = $6
+		$6.inheritsSet = null
+		$6.scope = application/vnd.apple-xcode-storyboard
+		$0.TextStylePolicy = $7
+		$7.inheritsSet = null
+		$7.scope = application/xml
+		$0.XmlFormattingPolicy = $8
+		$8.DefaultFormat = $9
+		$9.AttributesInNewLine = True
+		$9.MaxAttributesPerLine = 1
+		$8.scope = application/xml
 	EndGlobalSection
 EndGlobal
