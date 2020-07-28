@@ -1,21 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Sdk Name="CodeGeneration.Roslyn.Plugin.Sdk" Version="0.7.63" />
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Laconic.CodeGen.Generators</AssemblyName>
-    <RootNamespace>Laconic.CodeGen</RootNamespace>
+    <PackageId>Laconic.CodeGen.Generators</PackageId>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <PackageVersion>1.0.0</PackageVersion>
-    <PackageId>Laconic.CodeGen.Generators</PackageId>
-    <Title>Laconic.CodeGen</Title>
-    <Summary>Records and Unions for C# 8</Summary>
-    <Description>Compile-time code generation of records and discriminated unions for C# 8</Description>
-    <Authors>Alex Shirshov</Authors>
-    <Copyright>Copyright (c) Alex Shirshov. All rights reserved.</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/shirshov/laconic</PackageProjectUrl>
   </PropertyGroup>
 </Project>

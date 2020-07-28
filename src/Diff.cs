@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Laconic.CodeGen;
+using Laconic.CodeGeneration;
 using Laconic.Shapes;
 using xf = Xamarin.Forms;
 using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object>;

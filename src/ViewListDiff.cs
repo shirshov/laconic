@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Laconic.CodeGen;
+using Laconic.CodeGeneration;
 
 namespace Laconic
 {

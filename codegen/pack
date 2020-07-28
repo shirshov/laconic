@@ -1,0 +1,5 @@
+#!/bin/bash
+
+dotnet pack src/generators -o ./packages
+dotnet pack src/attributes -o ./packages
+dotnet pack src/metapackage -o ./packages

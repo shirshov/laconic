@@ -1,4 +1,4 @@
-namespace Laconic.CodeGen
+namespace Laconic.CodeGeneration
 {
     public interface record {}
 }

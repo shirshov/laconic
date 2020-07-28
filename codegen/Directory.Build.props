@@ -1,0 +1,12 @@
+<Project>
+    <PropertyGroup>
+        <AssemblyVersion>0.9.2</AssemblyVersion>
+        <PackageVersion>0.9.2-beta</PackageVersion>
+        <Authors>Alex Shirshov</Authors>
+        <Summary>Records and Unions for C# 8</Summary>
+        <Description>Compile-time code generation of records and discriminated unions for C# 8</Description>
+        <Copyright>Copyright (c) Alex Shirshov. All rights reserved.</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/shirshov/laconic</PackageProjectUrl>
+    </PropertyGroup>
+</Project>

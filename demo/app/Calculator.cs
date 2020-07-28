@@ -1,5 +1,5 @@
 using System;
-using Laconic.CodeGen;
+using Laconic.CodeGeneration;
 using xf = Xamarin.Forms;
 
 // The UI code is ported from here:

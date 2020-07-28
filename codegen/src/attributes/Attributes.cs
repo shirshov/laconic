@@ -1,16 +1,16 @@
 ﻿using System;
 using CodeGeneration.Roslyn;
 
-namespace Laconic.CodeGen
+namespace Laconic.CodeGeneration
 {
     [AttributeUsage(AttributeTargets.Interface)]
-    [CodeGenerationAttribute("Laconic.CodeGen.UnionGenerator, Laconic.CodeGen.Generators")]
+    [CodeGenerationAttribute("Laconic.CodeGeneration.UnionGenerator, Laconic.CodeGen.Generators")]
     public class UnionAttribute : Attribute
     {
     }
     
     [AttributeUsage(AttributeTargets.Interface)]
-    [CodeGenerationAttribute("Laconic.CodeGen.RecordsGenerator, Laconic.CodeGen.Generators")]
+    [CodeGenerationAttribute("Laconic.CodeGeneration.RecordsGenerator, Laconic.CodeGen.Generators")]
     public class RecordsAttribute : Attribute
     {
     }

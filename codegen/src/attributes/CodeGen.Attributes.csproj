@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Laconic.CodeGen.Attributes</AssemblyName>
     <LangVersion>8.0</LangVersion>
+    <AssemblyName>Laconic.CodeGen.Attributes</AssemblyName>
+    <PackageName>Laconic.CodeGen.Attributes</PackageName>
   </PropertyGroup>
 
   <ItemGroup>
