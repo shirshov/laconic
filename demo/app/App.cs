@@ -24,10 +24,11 @@ namespace Laconic.Demo
             MainPage = shell;
 
             AddSample<CounterPage>("Counter");
-            AddSample<Calculator.Calculator>("Calculator (Grid)");
             AddSample<DynamicGrid>("Dynamic Grid");
+            AddSample<Calculator.Calculator>("Calculator (Grid)");
             AddSample<GroupedCollectionView>("Collection View");
-            AddSample<DancingBars>("Dancing Bars");
+            AddSample<DancingBars>("Dancing Bars (Performance)");
+            AddSample<EntryAndEditor>("Entry and Editor");
             AddSample<Shapes>("Shapes");
             AddSample<LoginShape>("Shapes - Login Page");
         }

@@ -51,9 +51,9 @@ namespace Laconic.CodeGen
                 NotUsed, //All.WithoutBaseDeclaration().ExceptWrittenManually(ContentView.ContentProperty),
             [typeof(DataTrigger)] = NotUsed,
             [typeof(DatePicker)] = All.ExceptManuallyWrittenEvents(nameof(DatePicker.DateSelected)),
-            [typeof(Editor)] = All,
+            [typeof(Editor)] = All.WithoutBaseDeclaration(),
             [typeof(Element)] = WrittenManually,
-            [typeof(Entry)] = All.ExceptNotUsed(
+            [typeof(Entry)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                 Entry.ReturnCommandProperty,
                 Entry.ReturnCommandParameterProperty),
             [typeof(EntryCell)] = NotUsed,
@@ -87,7 +87,10 @@ namespace Laconic.CodeGen
                 .ExceptNotUsed(
                     IndicatorView.IndicatorTemplateProperty,
                     IndicatorView.ItemsSourceProperty),
-            [typeof(InputView)] = NotUsed,
+            [typeof(InputView)] = All
+                .WithoutBaseDeclaration()
+                .TakeGenericParameter()
+                .ExceptManuallyWrittenEvents(nameof(InputView.TextChanged)),
             [typeof(ItemsLayout)] = NotUsed,
             [typeof(ItemsView)] = All
                 .WithoutBaseDeclaration()

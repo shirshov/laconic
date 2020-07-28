@@ -69,4 +69,23 @@ namespace Laconic
                     handler(s, new SelectedIndexChangedEventArgs( ((xf.Picker)s).SelectedIndex)));
         }
     }
+
+    public abstract partial class InputView<T> : VisualElement<T>, View where T : Xamarin.Forms.InputView, new()
+    {
+        public Func<xf.TextChangedEventArgs, Signal> TextChanged {
+            set => SetEvent(nameof(TextChanged), value,
+                (ctl, handler) => ctl.TextChanged += handler,
+                (ctl, handler) => ctl.TextChanged -= handler);
+        }
+    }
+
+    public partial class Entry : InputView<xf.Entry>
+    {
+        
+    }
+
+    public partial class Editor : InputView<xf.Editor>
+    {
+        
+    }
 }

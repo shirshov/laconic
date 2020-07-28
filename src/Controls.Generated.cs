@@ -194,7 +194,7 @@ namespace Laconic
         }
     }
 
-    public partial class Editor : View<xf.Editor>
+    public partial class Editor
     {
         public xf.EditorAutoSizeOption AutoSize
         {
@@ -252,7 +252,7 @@ namespace Laconic
         }
     }
 
-    public partial class Entry : View<xf.Entry>
+    public partial class Entry
     {
         public Double CharacterSpacing
         {
@@ -489,6 +489,55 @@ namespace Laconic
         {
             get => GetValue<xf.Color>(xf.IndicatorView.SelectedIndicatorColorProperty);
             set => SetValue(xf.IndicatorView.SelectedIndicatorColorProperty, value);
+        }
+    }
+
+    public partial class InputView<T>
+    {
+        public Double CharacterSpacing
+        {
+            get => GetValue<Double>(xf.InputView.CharacterSpacingProperty);
+            set => SetValue(xf.InputView.CharacterSpacingProperty, value);
+        }
+        public Boolean IsReadOnly
+        {
+            get => GetValue<Boolean>(xf.InputView.IsReadOnlyProperty);
+            set => SetValue(xf.InputView.IsReadOnlyProperty, value);
+        }
+        public Boolean IsSpellCheckEnabled
+        {
+            get => GetValue<Boolean>(xf.InputView.IsSpellCheckEnabledProperty);
+            set => SetValue(xf.InputView.IsSpellCheckEnabledProperty, value);
+        }
+        public xf.Keyboard Keyboard
+        {
+            get => GetValue<xf.Keyboard>(xf.InputView.KeyboardProperty);
+            set => SetValue(xf.InputView.KeyboardProperty, value);
+        }
+        public Int32 MaxLength
+        {
+            get => GetValue<Int32>(xf.InputView.MaxLengthProperty);
+            set => SetValue(xf.InputView.MaxLengthProperty, value);
+        }
+        public xf.Color PlaceholderColor
+        {
+            get => GetValue<xf.Color>(xf.InputView.PlaceholderColorProperty);
+            set => SetValue(xf.InputView.PlaceholderColorProperty, value);
+        }
+        public String Placeholder
+        {
+            get => GetValue<String>(xf.InputView.PlaceholderProperty);
+            set => SetValue(xf.InputView.PlaceholderProperty, value);
+        }
+        public xf.Color TextColor
+        {
+            get => GetValue<xf.Color>(xf.InputView.TextColorProperty);
+            set => SetValue(xf.InputView.TextColorProperty, value);
+        }
+        public String Text
+        {
+            get => GetValue<String>(xf.InputView.TextProperty);
+            set => SetValue(xf.InputView.TextProperty, value);
         }
     }
 
