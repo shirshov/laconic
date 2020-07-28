@@ -111,12 +111,14 @@ namespace Laconic
         void OnBindingContextChanged(object sender, EventArgs e)
         {
             var realView = (xf.VisualElement) sender;
+            
+            if (realView.BindingContext != null) {
+                var contextItem = (BindingContextItem) realView.BindingContext;
+                _renderedBlueprints.TryGetValue(realView, out var value);
 
-            var contextItem = (BindingContextItem) realView.BindingContext;
-            _renderedBlueprints.TryGetValue(realView, out var value);
-
-            Patch.Apply(realView, Diff.Calculate(value.Blueprint, contextItem.Blueprint), _dispatch);
-            _renderedBlueprints[realView] = (contextItem.Key, contextItem.Blueprint);
+                Patch.Apply(realView, Diff.Calculate(value.Blueprint, contextItem.Blueprint), _dispatch);
+                _renderedBlueprints[realView] = (contextItem.Key, contextItem.Blueprint);
+            }
         }
 
         public void UpdateRendered(Key key, View newBlueprint)

@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
+    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CodeGeneration.Roslyn.Tool" Version="0.7.63" PrivateAssets="all" />
     <ProjectReference Include="..\codegen\src\attributes\CodeGen.Attributes.csproj" />
-    <ProjectReference Include="..\codegen\src\generators\CodeGen.Generators.csproj" OutputItemType="CodeGenerationRoslynPlugin"/>
+    <ProjectReference Include="..\codegen\src\generators\CodeGen.Generators.csproj" OutputItemType="CodeGenerationRoslynPlugin" />
   </ItemGroup>
   
 </Project>
