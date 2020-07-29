@@ -53,7 +53,7 @@ and calculates the new state. In most cases the reducer is a big
 
 ### Binder
 
-Binder is what ties State and Reducer together, and provide methods for creating
+Binder is what ties State and Reducer together, and provides methods for creating
 actual Xamarin.Forms views using Blueprint maker functions supplied by you. 
 
 ### Example
