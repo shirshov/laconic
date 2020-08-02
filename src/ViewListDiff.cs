@@ -4,18 +4,9 @@ using Laconic.CodeGeneration;
 
 namespace Laconic
 {
-    [Union]
-    interface __ListOperation
-    {
-        record AddChild(Key key, string reuseKey, int index, View blueprint, DiffOperation[] operations);
-        record RemoveChild(int index);
-        record UpdateChild(Key key, int index, View blueprint, IEnumerable<DiffOperation> operations);
-        record ReplaceChild(int index, View newView, IEnumerable<DiffOperation> operations);
-    }
-
     static class ViewListDiff
     {
-        public static IReadOnlyList<ListOperation> Calculate(ViewList? existingItems, ViewList newItems)
+        public static ListOperation[] Calculate(ViewList? existingItems, ViewList newItems)
         {
             string GetReuseKey(Key key)
             {
@@ -77,16 +68,16 @@ namespace Laconic
                         }
                         else if (existingView.GetType() != newView.GetType())
                         {
-                            res.Add(new ReplaceChild(index, newView, Diff.Calculate(null, newView)
-                                .Concat(GridDiff.CalculateGridLayoutDiff(action.SourceItem, existingItems, newItems))));
-                        }
-                        else
-                        {
-                            var patch = Diff.Calculate(existingView, newView)
+                            res.Add(new ReplaceChild(index, newView, 
+                                Diff.Calculate(null, newView)
                                 .Concat(GridDiff.CalculateGridLayoutDiff(action.SourceItem, existingItems, newItems))
-                                .ToArray();
-                            if (patch.Length != 0)
-                                res.Add(new UpdateChild(action.DestinationItem, index, newView, patch));
+                                .ToArray()));
+                        }
+                        else {
+                            var patch = Diff.Calculate(existingView, newView)
+                                .Concat(GridDiff.CalculateGridLayoutDiff(action.SourceItem, existingItems, newItems));
+                            if (patch.Any())
+                                res.Add(new UpdateChild(action.DestinationItem, index, newView, patch.ToArray()));
                         }
 
                         index++;
@@ -94,7 +85,7 @@ namespace Laconic
                 }
             }
 
-            return res;
+            return res.ToArray();
         }
     }
 }

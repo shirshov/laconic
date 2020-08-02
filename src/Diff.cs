@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Laconic.CodeGeneration;
 using Laconic.Shapes;
 using xf = Xamarin.Forms;
 using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object>;
@@ -95,7 +93,7 @@ namespace Laconic
         {
             if (existingItems.Count == 0) {
                 foreach (var tb in newItems.Values) {
-                    yield return new AddToolbarItem(tb, Calculate(null, tb));
+                    yield return new AddToolbarItem(tb, Calculate(null, tb).ToArray());
                 }
             }
             else {
@@ -108,7 +106,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add) {
                         index++;
                         var newItem = newItems[action.DestinationItem];
-                        yield return new AddToolbarItem(newItem, Calculate(null, newItem));
+                        yield return new AddToolbarItem(newItem, Calculate(null, newItem).ToArray());
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
                         yield return new RemoveToolbarItem(index);
@@ -118,7 +116,7 @@ namespace Laconic
                         var newItem = newItems[action.DestinationItem];
                         var ops = Calculate(existingItem, newItem);
                         if (ops.Any())
-                            yield return new UpdateToolbarItem(index, ops);
+                            yield return new UpdateToolbarItem(index, ops.ToArray());
                         index++;
                     }
                 }
@@ -154,8 +152,8 @@ namespace Laconic
                         (null, null) => null,
                         (null, var n) => new SetContent(n, Calculate(null, n).ToArray()),
                         (_, null) => new RemoveContent(),
-                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, n)),
-                        var (o, n) => new UpdateContent(Calculate(o, n))
+                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, n).ToArray()),
+                        var (o, n) => new UpdateContent(Calculate(o, n).ToArray())
                     };
                     if (op != null)
                         operations.Add(op);
@@ -163,8 +161,8 @@ namespace Laconic
                 }
                 case ILayout l: {
                     var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children);
-                    if (diff.Count > 0)
-                        operations.Add(new UpdateChildren(diff));
+                    if (diff.Length > 0)
+                        operations.Add(new UpdateChildren(diff.ToArray()));
                     break;
                 }
                 case CollectionView c: {
@@ -187,29 +185,5 @@ namespace Laconic
 
             return operations;
         }
-    }
-
-    [Union]
-    interface __DiffOperation
-    {
-        record AddGestureRecognizer(IGestureRecognizer blueprint, params DiffOperation[] operations);
-        record RemoveGestureRecognizer(int index);
-        record UpdateGestureRecognizer(int index, params DiffOperation[] operations);
-        record AddToolbarItem(ToolbarItem blueprint, IEnumerable<DiffOperation> operations);
-        record RemoveToolbarItem(int index);
-        record UpdateToolbarItem(int index, IEnumerable<DiffOperation> operations);
-        record SetProperty(xf.BindableProperty property, object value);
-        record ResetProperty(xf.BindableProperty property);
-        record SetContent(View contentView, IEnumerable<DiffOperation> operations);
-        record UpdateContent(IEnumerable<DiffOperation> operations);
-        record RemoveContent();
-        record WireEvent(string eventName, Func<EventArgs, Signal> signalMaker, Action<xf.BindableObject, EventHandler> subscribe);
-        record UnwireEvent(string eventName, Action<xf.BindableObject, EventHandler> unsubscribe);
-        record SetClip(Geometry geometry);
-        record UpdateChildren(IReadOnlyList<ListOperation> operations);
-        record UpdateItems(IReadOnlyList<ListOperation> operations);
-        record GridPositionChange(GridPositionChangeType type, int value);
-        record RowDefinitionsChange(List<xf.RowDefinition> definitions);
-        record ColumnDefinitionsChange(List<xf.ColumnDefinition> definitions);
     }
 }

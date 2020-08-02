@@ -18,18 +18,18 @@ namespace Laconic
             Grid? existingGrid, Grid newGrid) => (existingGrid, newGrid) switch
         {
             (_, null) => null,
-            (null, _) => new RowDefinitionsChange(newGrid.RowDefinitions),
+            (null, _) => new RowDefinitionsChange(newGrid.RowDefinitions.ToArray()),
             var (e, n) when n.RowDefinitions.Equals(e.RowDefinitions) => null,
-            (_, _) => new RowDefinitionsChange(newGrid.RowDefinitions)
+            (_, _) => new RowDefinitionsChange(newGrid.RowDefinitions.ToArray())
         };
 
         public static DiffOperation? CalculateColumnDefinitionsDiff(
             Grid? existingGrid, Grid newGrid) => (existingGrid, newGrid) switch
         {
             (_, null) => null,
-            (null, _) => new ColumnDefinitionsChange(newGrid.ColumnDefinitions),
+            (null, _) => new ColumnDefinitionsChange(newGrid.ColumnDefinitions.ToArray()),
             var (e, n) when n.ColumnDefinitions.Equals(e.ColumnDefinitions) => null,
-            (_, _) => new ColumnDefinitionsChange(newGrid.ColumnDefinitions)
+            (_, _) => new ColumnDefinitionsChange(newGrid.ColumnDefinitions.ToArray())
         };
 
         public static IEnumerable<GridPositionChange> CalculateGridLayoutDiff(Key key, ViewList? existingList,

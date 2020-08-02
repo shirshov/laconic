@@ -67,9 +67,10 @@ namespace Laconic
                 var (realView, blueprint, blueprintFunc) = items[i];
                 var newBlueprint = blueprintFunc(State);
                 var diff = Diff.Calculate(blueprint, newBlueprint);
-                if (diff.Any())
-                Patch.Apply(realView, diff, Dispatch);
-                _trackedElements[i] = (realView, newBlueprint, blueprintFunc);
+                if (diff.Any()) {
+                    Patch.Apply(realView, diff, Dispatch);
+                    _trackedElements[i] = (realView, newBlueprint, blueprintFunc);
+                }
             }
         }
 
