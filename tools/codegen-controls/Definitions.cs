@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualBasic.FileIO;
 using Xamarin.Forms;
 
 namespace Laconic.CodeGen
@@ -51,11 +52,22 @@ namespace Laconic.CodeGen
                 NotUsed, //All.WithoutBaseDeclaration().ExceptWrittenManually(ContentView.ContentProperty),
             [typeof(DataTrigger)] = NotUsed,
             [typeof(DatePicker)] = All.ExceptManuallyWrittenEvents(nameof(DatePicker.DateSelected)),
-            [typeof(Editor)] = All.WithoutBaseDeclaration(),
+            [typeof(Editor)] = All.WithoutBaseDeclaration().ExceptNotUsed(
+                Editor.CharacterSpacingProperty,
+                Editor.PlaceholderColorProperty,
+                Editor.PlaceholderProperty,
+                Editor.TextColorProperty,
+                Editor.TextProperty),
             [typeof(Element)] = WrittenManually,
             [typeof(Entry)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                 Entry.ReturnCommandProperty,
-                Entry.ReturnCommandParameterProperty),
+                Entry.ReturnCommandParameterProperty,
+                // The ones below are inherited from InputView
+                Entry.CharacterSpacingProperty,
+                Entry.PlaceholderColorProperty,
+                Entry.PlaceholderProperty,
+                Entry.TextColorProperty,
+                Entry.TextProperty),
             [typeof(EntryCell)] = NotUsed,
             [typeof(EventTrigger)] = NotUsed,
             [typeof(FileImageSource)] = NotUsed,

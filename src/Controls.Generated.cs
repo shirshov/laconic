@@ -201,11 +201,6 @@ namespace Laconic
             get => GetValue<xf.EditorAutoSizeOption>(xf.Editor.AutoSizeProperty);
             set => SetValue(xf.Editor.AutoSizeProperty, value);
         }
-        public Double CharacterSpacing
-        {
-            get => GetValue<Double>(xf.Editor.CharacterSpacingProperty);
-            set => SetValue(xf.Editor.CharacterSpacingProperty, value);
-        }
         public xf.FontAttributes FontAttributes
         {
             get => GetValue<xf.FontAttributes>(xf.Editor.FontAttributesProperty);
@@ -226,26 +221,6 @@ namespace Laconic
             get => GetValue<Boolean>(xf.Editor.IsTextPredictionEnabledProperty);
             set => SetValue(xf.Editor.IsTextPredictionEnabledProperty, value);
         }
-        public xf.Color PlaceholderColor
-        {
-            get => GetValue<xf.Color>(xf.Editor.PlaceholderColorProperty);
-            set => SetValue(xf.Editor.PlaceholderColorProperty, value);
-        }
-        public String Placeholder
-        {
-            get => GetValue<String>(xf.Editor.PlaceholderProperty);
-            set => SetValue(xf.Editor.PlaceholderProperty, value);
-        }
-        public xf.Color TextColor
-        {
-            get => GetValue<xf.Color>(xf.Editor.TextColorProperty);
-            set => SetValue(xf.Editor.TextColorProperty, value);
-        }
-        public String Text
-        {
-            get => GetValue<String>(xf.Editor.TextProperty);
-            set => SetValue(xf.Editor.TextProperty, value);
-        }
         public Func<Signal> Completed
         {
             set => SetEvent(nameof(Completed), value, (ctl, handler) => ctl.Completed += handler, (ctl, handler) => ctl.Completed -= handler);
@@ -254,11 +229,6 @@ namespace Laconic
 
     public partial class Entry
     {
-        public Double CharacterSpacing
-        {
-            get => GetValue<Double>(xf.Entry.CharacterSpacingProperty);
-            set => SetValue(xf.Entry.CharacterSpacingProperty, value);
-        }
         public xf.ClearButtonVisibility ClearButtonVisibility
         {
             get => GetValue<xf.ClearButtonVisibility>(xf.Entry.ClearButtonVisibilityProperty);
@@ -299,16 +269,6 @@ namespace Laconic
             get => GetValue<Boolean>(xf.Entry.IsTextPredictionEnabledProperty);
             set => SetValue(xf.Entry.IsTextPredictionEnabledProperty, value);
         }
-        public xf.Color PlaceholderColor
-        {
-            get => GetValue<xf.Color>(xf.Entry.PlaceholderColorProperty);
-            set => SetValue(xf.Entry.PlaceholderColorProperty, value);
-        }
-        public String Placeholder
-        {
-            get => GetValue<String>(xf.Entry.PlaceholderProperty);
-            set => SetValue(xf.Entry.PlaceholderProperty, value);
-        }
         public xf.ReturnType ReturnType
         {
             get => GetValue<xf.ReturnType>(xf.Entry.ReturnTypeProperty);
@@ -318,16 +278,6 @@ namespace Laconic
         {
             get => GetValue<Int32>(xf.Entry.SelectionLengthProperty);
             set => SetValue(xf.Entry.SelectionLengthProperty, value);
-        }
-        public xf.Color TextColor
-        {
-            get => GetValue<xf.Color>(xf.Entry.TextColorProperty);
-            set => SetValue(xf.Entry.TextColorProperty, value);
-        }
-        public String Text
-        {
-            get => GetValue<String>(xf.Entry.TextProperty);
-            set => SetValue(xf.Entry.TextProperty, value);
         }
         public xf.TextAlignment VerticalTextAlignment
         {
