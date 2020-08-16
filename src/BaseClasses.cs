@@ -49,6 +49,9 @@ namespace Laconic
         }
 
         internal abstract xf.BindableObject CreateReal();
+        
+        public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)
+            where T : xf.VisualElement, new() => new ContextElement<T>(maker);
 
         public override bool Equals(object other) => other is Element el && Equals(el);
 

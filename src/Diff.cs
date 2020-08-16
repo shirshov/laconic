@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Laconic.Shapes;
@@ -7,6 +8,8 @@ using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInf
 
 namespace Laconic
 {
+    delegate (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, IContextElement newElement);
+    
     static class Diff
     {
         static IEnumerable<DiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues)
@@ -54,11 +57,12 @@ namespace Laconic
 
         static IEnumerable<DiffOperation> CalcGestureRecognizerDiff(
             Dictionary<Key, IGestureRecognizer> existingRecognizers,
-            Dictionary<Key, IGestureRecognizer> newRecognizers)
+            Dictionary<Key, IGestureRecognizer> newRecognizers,
+            ExpandWithContext expandWithContext)
         {
             if (existingRecognizers.Count == 0) {
                 foreach (var rec in newRecognizers.Values) {
-                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec).ToArray());
+                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec, expandWithContext).ToArray());
                 }
             }
             else {
@@ -71,7 +75,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add) {
                         index++;
                         var newRecog = newRecognizers[action.DestinationItem];
-                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog).ToArray());
+                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog, expandWithContext).ToArray());
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
                         yield return new RemoveGestureRecognizer(index);
@@ -79,7 +83,7 @@ namespace Laconic
                     else {
                         var existingRecog = existingRecognizers[action.DestinationItem];
                         var newRecog = newRecognizers[action.DestinationItem];
-                        var ops = Calculate((Element) existingRecog, (Element) newRecog);
+                        var ops = Calculate((Element) existingRecog, (Element) newRecog, expandWithContext);
                         if (ops.Any())
                             yield return new UpdateGestureRecognizer(index, ops.ToArray());
                         index++;
@@ -89,11 +93,12 @@ namespace Laconic
         }
 
         static IEnumerable<DiffOperation> CalcToolbarItemsDiff(IDictionary<Key, ToolbarItem> existingItems, 
-            IDictionary<Key, ToolbarItem> newItems)
+            IDictionary<Key, ToolbarItem> newItems,
+            ExpandWithContext expandWithContext)
         {
             if (existingItems.Count == 0) {
                 foreach (var tb in newItems.Values) {
-                    yield return new AddToolbarItem(tb, Calculate(null, tb).ToArray());
+                    yield return new AddToolbarItem(tb, Calculate(null, tb, expandWithContext).ToArray());
                 }
             }
             else {
@@ -106,7 +111,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add) {
                         index++;
                         var newItem = newItems[action.DestinationItem];
-                        yield return new AddToolbarItem(newItem, Calculate(null, newItem).ToArray());
+                        yield return new AddToolbarItem(newItem, Calculate(null, newItem, expandWithContext).ToArray());
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
                         yield return new RemoveToolbarItem(index);
@@ -114,7 +119,7 @@ namespace Laconic
                     else {
                         var existingItem = existingItems[action.DestinationItem];
                         var newItem = newItems[action.DestinationItem];
-                        var ops = Calculate(existingItem, newItem);
+                        var ops = Calculate(existingItem, newItem, expandWithContext);
                         if (ops.Any())
                             yield return new UpdateToolbarItem(index, ops.ToArray());
                         index++;
@@ -123,24 +128,32 @@ namespace Laconic
             }
         }
         
-        public static IEnumerable<DiffOperation> Calculate(IElement? existingElement, IElement newElement)
+        public static IEnumerable<DiffOperation> Calculate(IElement? existingElement, IElement newElement, 
+             ExpandWithContext expandWithContext)
         {
             var operations = new List<DiffOperation>();
             if (newElement == null)
                 return operations;
 
+            if (newElement is IContextElement contextElement) {
+                var (existingExpanded, newExpanded) = expandWithContext((IContextElement)existingElement, contextElement);
+                return Calculate((Element)existingExpanded, newExpanded, expandWithContext);
+            }
+            
             operations.AddRange(CalcPropertyDiff(existingElement?.ProvidedValues ?? new PropDict(),
                 newElement.ProvidedValues));
             operations.AddRange(CalcEventDiff(existingElement?.Events ?? new EventDict(), newElement.Events));
             if (newElement is View v)
                 operations.AddRange(CalcGestureRecognizerDiff(
                     (existingElement as View)?.GestureRecognizers ?? new Dictionary<Key, IGestureRecognizer>(),
-                    v.GestureRecognizers));
+                    v.GestureRecognizers,
+                    expandWithContext));
 
             if (newElement is ContentPage p) {
                 operations.AddRange(CalcToolbarItemsDiff(
                     (existingElement as ContentPage)?.ToolbarItems ?? new Dictionary<Key, ToolbarItem>(),
-                    p.ToolbarItems
+                    p.ToolbarItems,
+                    expandWithContext
                 ));
             }
 
@@ -150,23 +163,23 @@ namespace Laconic
                     var newContent = newViewAsContainer.Content;
                     DiffOperation? op = (oldContent, newContent) switch {
                         (null, null) => null,
-                        (null, var n) => new SetContent(n, Calculate(null, n).ToArray()),
+                        (null, var n) => new SetContent(n, Calculate(null, n, expandWithContext).ToArray()),
                         (_, null) => new RemoveContent(),
-                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, n).ToArray()),
-                        var (o, n) => new UpdateContent(Calculate(o, n).ToArray())
+                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, n, expandWithContext).ToArray()),
+                        var (o, n) => new UpdateContent(Calculate(o, n, expandWithContext).ToArray())
                     };
                     if (op != null)
                         operations.Add(op);
                     break;
                 }
                 case ILayout l: {
-                    var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children);
+                    var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children, expandWithContext);
                     if (diff.Length > 0)
                         operations.Add(new UpdateChildren(diff.ToArray()));
                     break;
                 }
                 case CollectionView c: {
-                    var diff = ViewListDiff.Calculate((existingElement as CollectionView)?.Items, c.Items);
+                    var diff = ViewListDiff.Calculate((existingElement as CollectionView)?.Items, c.Items, expandWithContext);
                     if (diff.Any())
                         operations.Add(new UpdateItems(diff));
                     break;

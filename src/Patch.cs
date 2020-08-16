@@ -29,7 +29,7 @@ namespace Laconic
     
     static class Patch
     {
-        internal static void Apply(xf.BindableObject element, IEnumerable<DiffOperation> operations,
+        internal static List<(Guid ContextId, xf.BindableObject Element)> Apply(xf.BindableObject element, IEnumerable<DiffOperation> operations,
             Action<Signal> dispatch)
         {
             xf.View GetRealViewContent() => element switch {
@@ -59,6 +59,8 @@ namespace Laconic
 
             IList<xf.View> GetChildren() => ((xf.Layout<xf.View>) element).Children;
 
+            var withContext = new List<(Guid, xf.BindableObject)>();
+            
             foreach (var op in operations) {
                 Action patchingAction = op switch {
                     SetProperty p => () => element.SetValue(p.Property, p.Value),
@@ -66,11 +68,11 @@ namespace Laconic
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
                         var childView = (xf.View?) CreateReal((Element) sc.ContentView);
-                        Apply(childView!, sc.Operations, dispatch);
+                        withContext.AddRange(Apply(childView!, sc.Operations, dispatch));
                         SetRealViewContent(childView);
                     },
-                    UpdateContent uc => () => Apply(GetRealViewContent(), uc.Operations, dispatch),
-                    UpdateChildren uc => () => ViewListPatch.Apply(GetChildren(), uc.Operations, dispatch),
+                    UpdateContent uc => () => withContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
+                    UpdateChildren uc => () => withContext.AddRange(ViewListPatch.Apply(GetChildren(), uc.Operations, dispatch)),
                     RowDefinitionsChange rdc => () => {
                         var grid = (xf.Grid) element;
                         grid.RowDefinitions.Clear();
@@ -112,7 +114,8 @@ namespace Laconic
                         var sub = subs[evt.EventName];
                         evt.Unsubscribe(element, sub.EventHandler);
                     },
-                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, dispatch),
+                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, dispatch, 
+                        (x, y) => ((IElement)x, (IElement)y)),
                     AddGestureRecognizer agr => () => {
                         var view = (xf.View) element;
                         var realRec = agr.Blueprint.CreateReal();
@@ -153,6 +156,8 @@ namespace Laconic
                 };
                 patchingAction();
             }
+
+            return withContext;
         }
 
         internal static xf.BindableObject CreateReal(Element definition) => definition.CreateReal();

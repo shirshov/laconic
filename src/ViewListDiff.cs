@@ -6,7 +6,7 @@ namespace Laconic
 {
     static class ViewListDiff
     {
-        public static ListOperation[] Calculate(ViewList? existingItems, ViewList newItems)
+        public static ListOperation[] Calculate(ViewList? existingItems, ViewList newItems, ExpandWithContext expandWithContext)
         {
             string GetReuseKey(Key key)
             {
@@ -17,13 +17,16 @@ namespace Laconic
             }
 
             var res = new List<ListOperation>();
-            if (existingItems == null || existingItems.Count == 0)
-            {
-                foreach (var item in newItems.Where(p => p.Value != null))
-                    res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, item.Value,
-                        Diff.Calculate(null, item.Value)
-                            .Concat(GridDiff.CalculateGridLayoutDiff(item.Key, existingItems, newItems)).ToArray()
-                        ));
+            if (existingItems == null || existingItems.Count == 0) {
+                foreach (var item in newItems.Where(p => p.Value != null)) {
+                    var childOps = Diff.Calculate(null, item.Value, expandWithContext)
+                        .Concat(GridDiff.CalculateGridLayoutDiff(item.Key, existingItems, newItems))
+                        .ToArray();
+                    if (item.Value is IContextElement withContext)
+                        res.Add(new AddChildWithContext(item.Key, GetReuseKey(item.Key), res.Count, item.Value, withContext.ContextId, childOps));
+                    else    
+                        res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, item.Value, childOps));
+                }
             }
             else
             {
@@ -37,7 +40,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add)
                     {
                         var newItem = newItems[action.DestinationItem];
-                        var childOps = Diff.Calculate(null, newItem)
+                        var childOps = Diff.Calculate(null, newItem, expandWithContext)
                             .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, existingItems, newItems));
                         res.Add(
                                 new AddChild(action.DestinationItem, 
@@ -57,7 +60,7 @@ namespace Laconic
                         var newView = newItems[action.SourceItem];
                         if (existingView == null) {
                             var items = Diff
-                                .Calculate(null, newView)
+                                .Calculate(null, newView, expandWithContext)
                                 .Concat(GridDiff.CalculateGridLayoutDiff(action.DestinationItem, 
                                     existingItems,
                                     newItems));
@@ -69,12 +72,12 @@ namespace Laconic
                         else if (existingView.GetType() != newView.GetType())
                         {
                             res.Add(new ReplaceChild(index, newView, 
-                                Diff.Calculate(null, newView)
+                                Diff.Calculate(null, newView, expandWithContext)
                                 .Concat(GridDiff.CalculateGridLayoutDiff(action.SourceItem, existingItems, newItems))
                                 .ToArray()));
                         }
                         else {
-                            var patch = Diff.Calculate(existingView, newView)
+                            var patch = Diff.Calculate(existingView, newView, expandWithContext)
                                 .Concat(GridDiff.CalculateGridLayoutDiff(action.SourceItem, existingItems, newItems));
                             if (patch.Any())
                                 res.Add(new UpdateChild(action.DestinationItem, index, newView, patch.ToArray()));

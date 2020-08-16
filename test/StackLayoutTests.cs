@@ -17,7 +17,7 @@ namespace Laconic.Tests
             sl.Children.Count.ShouldBe(2);
 
             var binder = Binder.Create("state", (state, signal) => state);
-            var real = binder.CreateView(state => new StackLayout {
+            var real = binder.CreateElement(state => new StackLayout {
                 ["1"] = new Label { Text = "lbl1"},
                 ["2"] = new Label { Text = "lbl2" }
             });
