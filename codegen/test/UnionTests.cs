@@ -1,6 +1,7 @@
-﻿using Xunit;
+﻿using System.Drawing;
+using Xunit;
 
-namespace Laconic.CodeGen.Tests
+namespace Laconic.CodeGeneration.Tests
 {
     // ReSharper disable UnusedType.Global
     // ReSharper disable UnusedMember.Global
