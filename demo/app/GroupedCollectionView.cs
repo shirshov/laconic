@@ -74,7 +74,7 @@ namespace Laconic.Demo
 
             _binder = Binder.Create(ImmutableList.CreateRange(list), Reducer);
 
-            Content = _binder.CreateView(state => new StackLayout
+            Content = _binder.CreateElement(state => new StackLayout
             {
                 ["list"] = new CollectionView
                 {

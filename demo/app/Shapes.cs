@@ -11,7 +11,7 @@ namespace Laconic.Demo
         {
             _binder = Binder.Create("", (s, g) => s);
 
-            Content = _binder.CreateView(s => new ScrollView {
+            Content = _binder.CreateElement(s => new ScrollView {
                 Content = new StackLayout {
                     ["lineLbl"] = new Label {Text = "Line"},
                     ["line"] = new Line {

@@ -14,7 +14,7 @@ namespace Laconic.Tests
         void page_can_be_created_from_binder()
         {
             var binder = Binder.Create(new State(), (state, signal) => state);
-            var real = binder.CreatePage(state => new ContentPage {Title = "Page"});
+            var real = binder.CreateElement(state => new ContentPage {Title = "Page"});
             real.ShouldBeOfType<xf.ContentPage>();
             real.Title.ShouldBe("Page");
         }
@@ -44,7 +44,7 @@ namespace Laconic.Tests
         public void view_changes_after_signal()
         {
             var binder = Binder.Create("state", (state, signal) => (string) signal.Payload);
-            var view = binder.CreateView(state => new Label {Text = state});
+            var view = binder.CreateElement(state => new Label {Text = state});
             view.Text.ShouldBe("state");
             binder.Dispatch(new TestSignal("new state"));
             view.Text.ShouldBe("new state");
@@ -54,7 +54,7 @@ namespace Laconic.Tests
         public void child_view_change_after_signal()
         {
             var binder = Binder.Create("state", (state, signal) => (string) signal.Payload);
-            var stackLayout = binder.CreateView(state => new StackLayout {[1] = new Label {Text = state}});
+            var stackLayout = binder.CreateElement(state => new StackLayout {[1] = new Label {Text = state}});
             var label = (xf.Label) stackLayout.Children[0];
             label.Text.ShouldBe("state");
             binder.Dispatch(new TestSignal("new state"));

@@ -49,7 +49,7 @@ namespace Laconic.Demo
         public DynamicGrid()
         {
             _binder = Binder.Create((2, 2), Reducer);
-            Content = _binder.CreateView(GridConstructionKit);
+            Content = _binder.CreateElement(GridConstructionKit);
 
             BackgroundColor = xf.Color.Bisque;
         }

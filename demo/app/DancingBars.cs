@@ -112,7 +112,7 @@ namespace Laconic.Demo
                     return newState;
                 });
 
-            Content = _binder.CreateView(state => new CollectionView {Items = CreateRows(state.Bars)});
+            Content = _binder.CreateElement(state => new CollectionView {Items = CreateRows(state.Bars)});
 
             xf.Device.StartTimer(TimeSpan.FromMilliseconds(30), () =>
             {

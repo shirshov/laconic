@@ -43,7 +43,7 @@ namespace Laconic.Demo
         public CounterPage()
         {
             _binder = Binder.Create(0, Reducer);
-            Content = _binder.CreateView(Counter);
+            Content = _binder.CreateElement(Counter);
 
             BackgroundColor = xf.Color.Bisque;
         }

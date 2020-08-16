@@ -11,7 +11,7 @@ namespace Laconic.Demo
 
             var binder = Binder.Create("", (s, g) => s);
 
-            Content = binder.CreateView(s => new Grid {
+            Content = binder.CreateElement(s => new Grid {
                 ColumnDefinitions = "*,279,*",
                 RowDefinitions = "*,350,*",
                 ["photo", column: 1] =

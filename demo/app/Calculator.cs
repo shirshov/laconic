@@ -96,7 +96,7 @@ namespace Laconic.Demo.Calculator
             State initialState = new Initial();
             var binder = Binder.Create(initialState, MainReducer);
 
-            Content = binder.CreateView(s => new Grid {
+            Content = binder.CreateElement(s => new Grid {
                 RowSpacing = 1,
                 ColumnSpacing = 1,
                 RowDefinitions = "150, *, *, *, *, *",

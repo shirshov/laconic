@@ -41,7 +41,7 @@ namespace Laconic.Demo
         public EntryAndEditor()
         {
             _binder = Binder.Create("", (s, g) => (string)g.Payload);
-            Content = _binder.CreateView(EntryWithTextChanged);
+            Content = _binder.CreateElement(EntryWithTextChanged);
         }
     }
 }
