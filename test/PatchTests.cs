@@ -221,7 +221,7 @@ namespace Laconic.Tests
         {
             var val = "initial";
 
-            var binder = Binder.Create("state", (s, g) => {
+            var binder = Binder.CreateForTest("state", (s, g) => {
                 val = "modified";
                 return s;
             });
@@ -237,7 +237,7 @@ namespace Laconic.Tests
         [Fact]
         public void unwire_event()
         {
-            var binder = Binder.Create(0, (s, g) => ++s);
+            var binder = Binder.CreateForTest(0, (s, g) => ++s);
             
             var real = binder.CreateElement(s => new RefreshView {
                 Refreshing = s == 0 ? () => new Signal("") : (Func<Signal>)null 

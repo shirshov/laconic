@@ -116,7 +116,7 @@ namespace Laconic.Demo
 
             xf.Device.StartTimer(TimeSpan.FromMilliseconds(30), () =>
             {
-                _binder.Dispatch(new Signal("rand"));
+                _binder.Send(new Signal("rand"));
                 return true;
             });
         }

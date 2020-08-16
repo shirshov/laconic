@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using xf = Xamarin.Forms;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 using ContextRequestList = System.Collections.Generic.List<(Laconic.IContextElement ContextElement, Laconic.LocalContext Context, Laconic.IElement Rendered)>; 
 using ContextDict = System.Collections.Generic.Dictionary<Laconic.IContextElement, Laconic.LocalContextInfo>;
                 
@@ -35,7 +38,12 @@ namespace Laconic
             View = view;
         }
     }
-        
+
+    class TestSynchronizationContext : SynchronizationContext
+    {
+        public override void Send(SendOrPostCallback d, object state) => d.Invoke(null);
+    }
+    
     public class Binder<TState>
     {
         readonly Func<TState, Signal, TState> _mainReducer;
@@ -46,12 +54,23 @@ namespace Laconic
             = new List<(xf.VisualElement realView, Element VirtualView, Func<TState, Element> viewDefinition)>();
 
         readonly ContextDict _elementContexts = new ContextDict();
-        
-        internal Binder(TState initialState, Func<TState, Signal, TState> mainReducer)
+        readonly Channel<Signal> _channel;
+        readonly SynchronizationContext _synchronizationContext;
+
+        internal Binder(TState initialState, Func<TState, Signal, TState> mainReducer, SynchronizationContext synchronizationContext)
         {
             State = initialState;
             _mainReducer = mainReducer;
             _middlewarePipeline = (c, n) => n(c);
+            _synchronizationContext = synchronizationContext;
+
+            _channel = Channel.CreateUnbounded<Signal>(new UnboundedChannelOptions {SingleReader = true});
+            Task.Run(async () => {
+                while (true) {
+                    var s = await _channel.Reader.ReadAsync();
+                    ProcessSignal(s);
+                }
+            });
         }
 
         public TState State { get; private set; }
@@ -95,7 +114,7 @@ namespace Laconic
             
             var diff = Diff.Calculate(null, blueprint, (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
 
-            var newElementsWithContext = Patch.Apply(realView, diff, Dispatch);
+            var newElementsWithContext = Patch.Apply(realView, diff, Send);
             
             if (blueprint is IContextElement withContext)
                 newElementsWithContext.Add((withContext.ContextId, realView));
@@ -106,7 +125,15 @@ namespace Laconic
             return realView;
         }
 
-        public void Dispatch(Signal signal)
+        public void Send(Signal signal)
+        {
+            if (_synchronizationContext is TestSynchronizationContext)
+                ProcessSignal(signal);
+            else
+                _channel.Writer.WriteAsync(signal);   
+        }
+
+        internal void ProcessSignal(Signal signal)
         {
             var contextRequests = new ContextRequestList();
             
@@ -119,11 +146,13 @@ namespace Laconic
                 var newBlueprint = info.Make(info.Context);
                 var diff = Diff.Calculate(info.Rendered, newBlueprint, 
                     (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
-                
-                var newElementsWithContext = Patch.Apply(info.View, diff, Dispatch);
-                
-                UpdateElementContexts(contextRequests, newElementsWithContext);
-                _elementContexts[contextElement] = new LocalContextInfo(newBlueprint, info.Context, info.Make, info.View);
+
+                _synchronizationContext.Send(_ => {
+                    var newElementsWithContext = Patch.Apply(info.View, diff, Send);
+                    
+                    UpdateElementContexts(contextRequests, newElementsWithContext);
+                    _elementContexts[contextElement] = new LocalContextInfo(newBlueprint, info.Context, info.Make, info.View);
+                }, null);
             } else {
                 var context = _middlewarePipeline(
                     new MiddlewareContext<TState>(State, signal), 
@@ -131,20 +160,22 @@ namespace Laconic
 
                 State = context.State;
 
-                var items = _trackedElements.ToArray();
-                for (var i = 0; i < items.Length; i++) {
-                    var (realView, blueprint, blueprintFunc) = items[i];
-                    
-                    var newBlueprint = blueprintFunc(State);
-                    
-                    var diff = Diff.Calculate(blueprint, newBlueprint, 
-                        (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
+                _synchronizationContext.Send(_ => {
+                    var items = _trackedElements.ToArray();
+                    for (var i = 0; i < items.Length; i++) {
+                        var (realView, blueprint, blueprintFunc) = items[i];
 
-                    var newElementsWithContext = Patch.Apply(realView, diff, Dispatch);
-                    
-                    UpdateElementContexts(contextRequests, newElementsWithContext);
-                    _trackedElements[i] = (realView, newBlueprint, blueprintFunc);
-                }
+                        var newBlueprint = blueprintFunc(State);
+
+                        var diff = Diff.Calculate(blueprint, newBlueprint,
+                            (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
+
+                        var newElementsWithContext = Patch.Apply(realView, diff, Send);
+
+                        UpdateElementContexts(contextRequests, newElementsWithContext);
+                        _trackedElements[i] = (realView, newBlueprint, blueprintFunc);
+                    }
+                }, null);
             }
         }
 
@@ -161,7 +192,13 @@ namespace Laconic
     {
         public static Binder<TState> Create<TState>(TState initialState, Func<TState, Signal, TState> mainReducer)
         {
-            var binder = new Binder<TState>(initialState, mainReducer);
+            var binder = new Binder<TState>(initialState, mainReducer, SynchronizationContext.Current);
+            return binder;
+        }
+
+        internal static Binder<TState> CreateForTest<TState>(TState initialState, Func<TState, Signal, TState> mainReducer)
+        {
+            var binder = new Binder<TState>(initialState, mainReducer, new TestSynchronizationContext());
             return binder;
         }
     }

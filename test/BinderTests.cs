@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Xunit;
 using Shouldly;
 using xf = Xamarin.Forms;
@@ -35,7 +36,7 @@ namespace Laconic.Tests
                 signalIntercepted = signal;
                 return (string) signal.Payload;
             });
-            binder.Dispatch(new TestSignal("new state"));
+            binder.ProcessSignal(new TestSignal("new state"));
             signalIntercepted.Payload.ShouldBe("new state");
             binder.State.ShouldBe("new state");
         }
@@ -46,7 +47,7 @@ namespace Laconic.Tests
             var binder = Binder.Create("state", (state, signal) => (string) signal.Payload);
             var view = binder.CreateElement(state => new Label {Text = state});
             view.Text.ShouldBe("state");
-            binder.Dispatch(new TestSignal("new state"));
+            binder.ProcessSignal(new TestSignal("new state"));
             view.Text.ShouldBe("new state");
         }
 
@@ -57,7 +58,7 @@ namespace Laconic.Tests
             var stackLayout = binder.CreateElement(state => new StackLayout {[1] = new Label {Text = state}});
             var label = (xf.Label) stackLayout.Children[0];
             label.Text.ShouldBe("state");
-            binder.Dispatch(new TestSignal("new state"));
+            binder.ProcessSignal(new TestSignal("new state"));
             label.Text.ShouldBe("new state");
         }
     }

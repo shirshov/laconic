@@ -10,7 +10,7 @@ namespace Laconic.Tests
         [Fact]
         public void LocalState_is_updated()
         {
-            var binder = Binder.Create(0, (s, g) => s);
+            var binder = Binder.CreateForTest(0, (s, g) => s);
             var button = binder.CreateElement(s => Element.WithContext(ctx => {
                 var (state, setState) = ctx.UseLocalState("initial");
                 return new Button {Text = state, Clicked = () => setState("changed")};
@@ -78,7 +78,7 @@ namespace Laconic.Tests
                 return new Button {Text = state, Clicked = () => setter("child2 updated")};
             });
             
-            var binder = Binder.Create(0, (s, g) => s);
+            var binder = Binder.CreateForTest(0, (s, g) => s);
             var sl = binder.CreateElement(s => new StackLayout {Children = {[1] = child1, [2] = child2}});
 
             var btn1 = (xf.Button) sl.Children[0];
@@ -101,7 +101,7 @@ namespace Laconic.Tests
         [Fact]
         public void local_context_is_preserved_on_global_signal()
         {
-            var binder = Binder.Create(0, (s, g) => s + 1);
+            var binder = Binder.CreateForTest(0, (s, g) => s + 1);
             var button = binder.CreateElement(globalState => Element.WithContext(ctx => {
                 var (localState, setter) = ctx.UseLocalState(0);
                 return new Button { Text = $"G{globalState}L{localState}", Clicked = () => setter(localState + 1)};
@@ -113,7 +113,7 @@ namespace Laconic.Tests
             
             button.Text.ShouldBe("G0L1");
             
-            binder.Dispatch(new Signal(""));
+            binder.Send(new Signal(""));
             
             button.Text.ShouldBe("G1L1");
         }
@@ -122,7 +122,7 @@ namespace Laconic.Tests
         public void event_subscription_is_transferred()
         {
             var counter = 0;
-            var binder = Binder.Create(0, (s, g) => s + 1);
+            var binder = Binder.CreateForTest(0, (s, g) => s + 1);
             var button = binder.CreateElement(s => Element.WithContext(ctx => {
                 var (state, setter) = ctx.UseLocalState(0);
                 counter++;
@@ -148,7 +148,7 @@ namespace Laconic.Tests
         public void event_subscription_for_child_is_transferred()
         {
             var counter = 0;
-            var binder = Binder.Create(0, (s, g) => s + 1);
+            var binder = Binder.CreateForTest(0, (s, g) => s + 1);
             var sl = binder.CreateElement(s => new StackLayout {
                 ["a"] = Element.WithContext(ctx => {
                     var (state, setter) = ctx.UseLocalState(0);
@@ -178,7 +178,7 @@ namespace Laconic.Tests
         public void children_are_added_from_local_state_update()
         {
             var counter = 0;
-            var binder = Binder.Create(0, (s, g) => s);
+            var binder = Binder.CreateForTest(0, (s, g) => s);
             var xfStackLayout = binder.CreateElement(s => Element.WithContext(ctx => {
                 var (state, setter) = ctx.UseLocalState(0);
                 counter = state;

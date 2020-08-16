@@ -426,7 +426,7 @@ namespace Laconic.Tests
         [Fact]
         public void transfer_GestureRecognizer_subscription()
         {
-            var binder = Binder.Create(new StateWrapper(1), (s, g) => 
+            var binder = Binder.CreateForTest(new StateWrapper(1), (s, g) => 
                 new StateWrapper(s.Value + (int)g.Payload)
             );
             

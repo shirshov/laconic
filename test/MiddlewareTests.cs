@@ -16,7 +16,7 @@ namespace Laconic.Tests
                 return next(context);
             });
             
-            binder.Dispatch(new Signal("_"));
+            binder.ProcessSignal(new Signal("_"));
 
             isCalled.ShouldBeTrue();
         }
@@ -31,7 +31,7 @@ namespace Laconic.Tests
                 return next(modified);
             });
             
-            binder.Dispatch(new Signal("_"));
+            binder.ProcessSignal(new Signal("_"));
 
             binder.State.ShouldBe("initial - modified - reducer");
         }
@@ -46,7 +46,7 @@ namespace Laconic.Tests
                 return ctx.WithState(ctx.State + " - modified");
             });
             
-            binder.Dispatch(new Signal("_"));
+            binder.ProcessSignal(new Signal("_"));
 
             binder.State.ShouldBe("reducer - modified");
         }
@@ -66,7 +66,7 @@ namespace Laconic.Tests
                 return ctx.WithState(ctx.State + " - inner");
             });
             
-            binder.Dispatch(new Signal("_"));
+            binder.ProcessSignal(new Signal("_"));
 
             binder.State.ShouldBe("reducer - inner - outer");
         }
