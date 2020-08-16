@@ -34,5 +34,9 @@ namespace Laconic
         public static bool operator ==(Key lhs, long rhs) => lhs._value.Equals(rhs);
         public static bool operator !=(Key lhs, long rhs) => !lhs._value.Equals(rhs);
         public static implicit operator Key(long value) => new Key(value);
+        
+        public static bool operator ==(Key lhs, Guid rhs) => lhs._value.Equals(rhs);
+        public static bool operator !=(Key lhs, Guid rhs) => !lhs._value.Equals(rhs);
+        public static implicit operator Key(Guid value) => new Key(value);
     }
 }
