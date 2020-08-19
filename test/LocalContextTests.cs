@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Net;
 using Xunit;
 using xf = Xamarin.Forms;
 using Shouldly;
@@ -207,11 +209,24 @@ namespace Laconic.Tests
             xfStackLayout.Children[0].ShouldBe(button);
             xfStackLayout.Children.Count.ShouldBe(3);           
         }
-        
+
         [Fact]
+        public void elements_with_local_context_created_from_middleware()
+        {
+            xf.StackLayout sl = null;
+            var binder = Binder.CreateForTest(0, (s, g) => s);
+            binder.UseMiddleware((ctx, next) => {
+                sl = binder.CreateElement(s => Element.WithContext(_ => new StackLayout {[0] = new Button()}));
+                return next(ctx);
+            });
+            
+            binder.Send(new Signal(""));
+            sl.Children.Count.ShouldBe(1);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
         public void nested_contexts()
         {
-            
         }
     }
 }

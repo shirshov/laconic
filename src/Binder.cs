@@ -6,8 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using ContextRequestList = System.Collections.Generic.List<(Laconic.IContextElement ContextElement, Laconic.LocalContext Context, Laconic.IElement Rendered)>; 
-using ContextDict = System.Collections.Generic.Dictionary<Laconic.IContextElement, Laconic.LocalContextInfo>;
+using ContextRequestList = System.Collections.Generic.List<(Laconic.IContextElement ContextElement, Laconic.LocalContext Context, Laconic.Element Rendered)>; 
                 
 [assembly: InternalsVisibleTo("LaconicTests")]
 
@@ -23,37 +22,52 @@ namespace Laconic
         public MiddlewareContext<TState> WithState(TState state) => new MiddlewareContext<TState>(state, Signal);
     }
 
-    class LocalContextInfo
-    {
-        public readonly IElement Rendered;
-        public readonly LocalContext Context;
-        public readonly Func<LocalContext, Element> Make;
-        public readonly xf.BindableObject View;
-        
-        public LocalContextInfo(IElement rendered, LocalContext context, Func<LocalContext, Element> make, xf.BindableObject view)
-        {
-            Rendered = rendered;
-            Context = context;
-            Make = make;
-            View = view;
-        }
-    }
-
-    class TestSynchronizationContext : SynchronizationContext
-    {
-        public override void Send(SendOrPostCallback d, object state) => d.Invoke(null);
-    }
-    
     public class Binder<TState>
     {
+        class TrackedElement
+        {
+            public readonly WeakReference<xf.VisualElement> View;
+            public readonly Element RenderedBlueprint;
+            public readonly Func<TState, Element> BlueprintMaker;
+
+            public TrackedElement(WeakReference<xf.VisualElement> view, Element renderedBlueprint, Func<TState, Element> blueprintMaker)
+            {
+                View = view;
+                RenderedBlueprint = renderedBlueprint;
+                BlueprintMaker = blueprintMaker;
+            }
+
+            public TrackedElement With(Element newBlueprint) => new TrackedElement(View, newBlueprint, BlueprintMaker);
+        }
+
+        class LocalContextInfo
+        {
+            public readonly WeakReference<xf.BindableObject> View;
+            public readonly Element RenderedBlueprint;
+            public readonly Func<LocalContext, Element> BlueprintMaker;
+            public readonly LocalContext Context;
+            
+            public LocalContextInfo(WeakReference<xf.BindableObject> view, Element renderedBlueprint, 
+                Func<LocalContext, Element> blueprintMaker, LocalContext context)
+            {
+                View = view;
+                RenderedBlueprint = renderedBlueprint;
+                BlueprintMaker = blueprintMaker;
+                Context = context;
+            }
+
+            public LocalContextInfo With(Element newBlueprint) 
+                => new LocalContextInfo(View, newBlueprint, BlueprintMaker, Context);
+        }
+    
         readonly Func<TState, Signal, TState> _mainReducer;
 
         Func<MiddlewareContext<TState>, Func<MiddlewareContext<TState>, MiddlewareContext<TState>>, MiddlewareContext<TState>> _middlewarePipeline;
 
-        readonly List<(xf.VisualElement realView, Element VirtualView, Func<TState, Element> viewDefinition)> _trackedElements 
-            = new List<(xf.VisualElement realView, Element VirtualView, Func<TState, Element> viewDefinition)>();
+        readonly List<TrackedElement> _trackedElements = new List<TrackedElement>();
 
-        readonly ContextDict _elementContexts = new ContextDict();
+        readonly  Dictionary<IContextElement, LocalContextInfo> _elementContexts 
+            = new Dictionary<IContextElement, LocalContextInfo>();
         readonly Channel<Signal> _channel;
         readonly SynchronizationContext _synchronizationContext;
 
@@ -75,11 +89,37 @@ namespace Laconic
 
         public TState State { get; private set; }
 
-        void AddToTrackedElements(Element virtualView, xf.VisualElement realElement, Func<TState, Element> viewDefinition) 
-            => _trackedElements.Add((realElement, virtualView, viewDefinition));
+        public T CreateElement<T>(Func<TState, VisualElement<T>> blueprintMaker) where T : xf.VisualElement, new()
+        {
+            var blueprint = (Element)blueprintMaker(State);
+            var view = new T();
 
-        static (IElement?, IElement) ExpandWithUncommittedContext(IContextElement? existingElement, IContextElement newElement,
-            ContextDict contexts,
+            var contextRequests = new ContextRequestList();
+            
+            var diff = Diff.Calculate(null, blueprint, (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
+
+            var newElementsWithContext = Patch.Apply(view, diff, Send);
+            
+            if (blueprint is IContextElement withContext)
+                newElementsWithContext.Add((withContext.ContextId, view));
+            
+            UpdateElementContexts(contextRequests, newElementsWithContext);
+            _trackedElements.Add(new TrackedElement(new WeakReference<xf.VisualElement>(view), blueprint, blueprintMaker));
+            
+            return view;
+        }
+
+        public void Send(Signal signal)
+        {
+            if (_synchronizationContext is TestSynchronizationContext)
+                ProcessSignal(signal);
+            else
+                _channel.Writer.WriteAsync(signal);   
+        }
+
+        static (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, 
+            IContextElement newElement,
+            Dictionary<IContextElement, LocalContextInfo> contexts,
             ContextRequestList contextRequests)
         {
             LocalContext context;
@@ -91,67 +131,52 @@ namespace Laconic
             newElement.ContextId = context.Id;
             var newBlueprint = newElement.Make(context);
             contextRequests.Add((newElement, context, newBlueprint));
-            return (null, newBlueprint);
+
+            IElement existingExpanded = null;
+            if (existingElement != null && contexts.ContainsKey(existingElement))
+                existingExpanded = contexts[existingElement].RenderedBlueprint;
+            
+            return (existingExpanded, newBlueprint);
         }
 
         void UpdateElementContexts(ContextRequestList contextRequests, List<(Guid ContextId, xf.BindableObject Element)> newElementsWithContext)
         {
             var infos = from req in contextRequests
                 join real in newElementsWithContext on req.Context.Id equals real.ContextId
-                select (req.ContextElement, new LocalContextInfo(req.Rendered, req.Context, req.ContextElement.Make, real.Element));
+                select new {
+                    req.ContextElement, 
+                    ContextInfo = new LocalContextInfo(
+                        new WeakReference<xf.BindableObject>(real.Element), 
+                        req.Rendered, 
+                        req.ContextElement.Make,
+                        req.Context)
+                };
             
-            foreach (var (key, value) in infos)
-                _elementContexts[key] = value;
+            foreach (var info in infos)
+                _elementContexts[info.ContextElement] = info.ContextInfo;
         }
         
-        public T CreateElement<T>(Func<TState, VisualElement<T>> blueprintMaker)
-            where T : xf.VisualElement, new()
-        {
-            var blueprint = (Element)blueprintMaker(State);
-            var realView = new T();
-
-            var contextRequests = new ContextRequestList();
-            
-            var diff = Diff.Calculate(null, blueprint, (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
-
-            var newElementsWithContext = Patch.Apply(realView, diff, Send);
-            
-            if (blueprint is IContextElement withContext)
-                newElementsWithContext.Add((withContext.ContextId, realView));
-            
-            UpdateElementContexts(contextRequests, newElementsWithContext);
-            AddToTrackedElements(blueprint, realView, blueprintMaker);
-            
-            return realView;
-        }
-
-        public void Send(Signal signal)
-        {
-            if (_synchronizationContext is TestSynchronizationContext)
-                ProcessSignal(signal);
-            else
-                _channel.Writer.WriteAsync(signal);   
-        }
-
         internal void ProcessSignal(Signal signal)
         {
             var contextRequests = new ContextRequestList();
             
             if (signal is ILocalContextSignal sig) {
+                
                 var kvp = _elementContexts.First(p => p.Value.Context.Id == sig.Id);
                 var (contextElement, info) = (kvp.Key, kvp.Value);
                 
                 info.Context.SetValue(LocalContext.LOCAL_STATE_KEY, sig.Payload);
 
-                var newBlueprint = info.Make(info.Context);
-                var diff = Diff.Calculate(info.Rendered, newBlueprint, 
-                    (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
+                var newBlueprint = info.BlueprintMaker(info.Context);
+                var diff = Diff.Calculate(info.RenderedBlueprint, newBlueprint, 
+                    (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
                 _synchronizationContext.Send(_ => {
-                    var newElementsWithContext = Patch.Apply(info.View, diff, Send);
+                    info.View.TryGetTarget(out var view);
+                    var newElementsWithContext = Patch.Apply(view, diff, Send);
                     
                     UpdateElementContexts(contextRequests, newElementsWithContext);
-                    _elementContexts[contextElement] = new LocalContextInfo(newBlueprint, info.Context, info.Make, info.View);
+                    _elementContexts[contextElement] = info.With(newBlueprint); 
                 }, null);
             } else {
                 var context = _middlewarePipeline(
@@ -160,20 +185,28 @@ namespace Laconic
 
                 State = context.State;
 
+                // This runs on the main thread. 
+                // TODO: do diffing on the background one
                 _synchronizationContext.Send(_ => {
-                    var items = _trackedElements.ToArray();
-                    for (var i = 0; i < items.Length; i++) {
-                        var (realView, blueprint, blueprintFunc) = items[i];
 
-                        var newBlueprint = blueprintFunc(State);
+                    var copy = _trackedElements.ToArray();
+                    _trackedElements.Clear();
+                    var aliveTrackedElements = new List<TrackedElement>();
+                    
+                    foreach (var el in copy) {
+                        if (el.View.TryGetTarget(out var aliveView)) {
+                            aliveTrackedElements.Add(el);
 
-                        var diff = Diff.Calculate(blueprint, newBlueprint,
-                            (e, n) => ExpandWithUncommittedContext(e, n, _elementContexts, contextRequests));
+                            Element newBlueprint = el.BlueprintMaker(State);
+                            
+                            var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
+                                (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
-                        var newElementsWithContext = Patch.Apply(realView, diff, Send);
+                            var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
 
-                        UpdateElementContexts(contextRequests, newElementsWithContext);
-                        _trackedElements[i] = (realView, newBlueprint, blueprintFunc);
+                            UpdateElementContexts(contextRequests, newElementsWithContext);
+                            _trackedElements.Add(el.With(newBlueprint));
+                        }
                     }
                 }, null);
             }
@@ -183,11 +216,16 @@ namespace Laconic
             Func<MiddlewareContext<TState>, MiddlewareContext<TState>>,
             MiddlewareContext<TState>> middleware)
         {
-            var oldPipeline = _middlewarePipeline;
-            _middlewarePipeline = (c, n) => oldPipeline(c, c1 => middleware(c1, n));
+            var currentPipeline = _middlewarePipeline;
+            _middlewarePipeline = (c, n) => currentPipeline(c, c1 => middleware(c1, n));
         }
     }
 
+    class TestSynchronizationContext : SynchronizationContext
+    {
+        public override void Send(SendOrPostCallback d, object state) => d.Invoke(null);
+    }
+    
     public static class Binder
     {
         public static Binder<TState> Create<TState>(TState initialState, Func<TState, Signal, TState> mainReducer)
