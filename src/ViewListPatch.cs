@@ -57,7 +57,7 @@ namespace Laconic
                 var source = (ObservableCollection<BindingContextItem>) itemsView.ItemsSource;
                 foreach (var op in update.Operations) {
                     Action patchAction = op switch {
-                        AddChild ac => () => source.Add(new BindingContextItem(ac.ReuseKey, ac.Key, ac.Blueprint)),
+                        AddChild ac => () => source.Insert(ac.Index, new BindingContextItem(ac.ReuseKey, ac.Key, ac.Blueprint)),
                         RemoveChild rc => () => source.RemoveAt(rc.Index),
                         UpdateChild uc => () => {
                             var selector = (ItemsViewTemplateSelector) itemsView.ItemTemplate;

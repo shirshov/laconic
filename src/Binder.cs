@@ -139,7 +139,8 @@ namespace Laconic
             return (existingExpanded, newBlueprint);
         }
 
-        void UpdateElementContexts(ContextRequestList contextRequests, List<(Guid ContextId, xf.BindableObject Element)> newElementsWithContext)
+        void UpdateElementContexts(ContextRequestList contextRequests, 
+            List<(Guid ContextId, xf.BindableObject Element)> newElementsWithContext)
         {
             var infos = from req in contextRequests
                 join real in newElementsWithContext on req.Context.Id equals real.ContextId
@@ -172,7 +173,9 @@ namespace Laconic
                     (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
                 _synchronizationContext.Send(_ => {
-                    info.View.TryGetTarget(out var view);
+                    var isViewAlive = info.View.TryGetTarget(out var view); 
+                    if (!isViewAlive)
+                        throw new InvalidOperationException("View with local context was disposed.");
                     var newElementsWithContext = Patch.Apply(view, diff, Send);
                     
                     UpdateElementContexts(contextRequests, newElementsWithContext);
@@ -183,8 +186,6 @@ namespace Laconic
                     new MiddlewareContext<TState>(State, signal), 
                     c => new MiddlewareContext<TState>(_mainReducer(c.State, signal), signal));
 
-                State = context.State;
-
                 // This runs on the main thread. 
                 // TODO: do diffing on the background one
                 _synchronizationContext.Send(_ => {
@@ -194,11 +195,13 @@ namespace Laconic
                     var aliveTrackedElements = new List<TrackedElement>();
                     
                     foreach (var el in copy) {
-                        if (el.View.TryGetTarget(out var aliveView)) {
+                        if (!el.View.TryGetTarget(out var aliveView)) continue;
+                        
                             aliveTrackedElements.Add(el);
 
-                            Element newBlueprint = el.BlueprintMaker(State);
+                        var newBlueprint = el.BlueprintMaker(context.State);
                             
+                        // TODO: Diffs should run on the background thread
                             var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
                                 (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
@@ -207,7 +210,7 @@ namespace Laconic
                             UpdateElementContexts(contextRequests, newElementsWithContext);
                             _trackedElements.Add(el.With(newBlueprint));
                         }
-                    }
+                    State = context.State;
                 }, null);
             }
         }
