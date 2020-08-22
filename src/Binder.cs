@@ -109,17 +109,20 @@ namespace Laconic
             return view;
         }
 
-        public void Send(Signal signal)
+        public void Send(Signal? signal)
         {
+            if (signal == null)
+                return;
+            
             if (_synchronizationContext is TestSynchronizationContext)
                 ProcessSignal(signal);
-            else
-                _channel.Writer.WriteAsync(signal);   
+            else 
+                _channel.Writer.WriteAsync(signal);
         }
 
         static (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, 
             IContextElement newElement,
-            Dictionary<IContextElement, LocalContextInfo> contexts,
+            IReadOnlyDictionary<IContextElement, LocalContextInfo> contexts,
             ContextRequestList contextRequests)
         {
             LocalContext context;
@@ -132,7 +135,7 @@ namespace Laconic
             var newBlueprint = newElement.Make(context);
             contextRequests.Add((newElement, context, newBlueprint));
 
-            IElement existingExpanded = null;
+            IElement? existingExpanded = null;
             if (existingElement != null && contexts.ContainsKey(existingElement))
                 existingExpanded = contexts[existingElement].RenderedBlueprint;
             
@@ -140,7 +143,7 @@ namespace Laconic
         }
 
         void UpdateElementContexts(ContextRequestList contextRequests, 
-            List<(Guid ContextId, xf.BindableObject Element)> newElementsWithContext)
+            IEnumerable<(Guid ContextId, xf.BindableObject Element)> newElementsWithContext)
         {
             var infos = from req in contextRequests
                 join real in newElementsWithContext on req.Context.Id equals real.ContextId
@@ -162,7 +165,6 @@ namespace Laconic
             var contextRequests = new ContextRequestList();
             
             if (signal is ILocalContextSignal sig) {
-                
                 var kvp = _elementContexts.First(p => p.Value.Context.Id == sig.Id);
                 var (contextElement, info) = (kvp.Key, kvp.Value);
                 
@@ -197,19 +199,19 @@ namespace Laconic
                     foreach (var el in copy) {
                         if (!el.View.TryGetTarget(out var aliveView)) continue;
                         
-                            aliveTrackedElements.Add(el);
+                        aliveTrackedElements.Add(el);
 
                         var newBlueprint = el.BlueprintMaker(context.State);
-                            
+                        
                         // TODO: Diffs should run on the background thread
-                            var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
-                                (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
+                        var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
+                            (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
-                            var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
+                        var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
 
-                            UpdateElementContexts(contextRequests, newElementsWithContext);
-                            _trackedElements.Add(el.With(newBlueprint));
-                        }
+                        UpdateElementContexts(contextRequests, newElementsWithContext);
+                        _trackedElements.Add(el.With(newBlueprint));
+                    }
                     State = context.State;
                 }, null);
             }

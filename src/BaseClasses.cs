@@ -76,6 +76,14 @@ namespace Laconic
             return true;
         }
         
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (ProvidedValues.GetHashCode() * 397) ^ Events.GetHashCode();
+            }
+        }
+        
         public static bool operator ==(Element lhs, Element rhs) => lhs.Equals(rhs);
         public static bool operator !=(Element lhs, Element rhs) => !lhs.Equals(rhs);
     }

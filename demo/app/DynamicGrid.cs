@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using static Laconic.Signal;
 using xf = Xamarin.Forms;
 
 namespace Laconic.Demo
@@ -20,11 +19,11 @@ namespace Laconic.Demo
             Padding = 50,
             ["rowsLabel"] = new Label {Text = "Rows:"},
             ["rowsSlider"] =
-                new Slider {Maximum = 10, Minimum = 2, Value = state.Rows, ValueChanged = e => Send("r", e.NewValue)},
+                new Slider {Maximum = 10, Minimum = 2, Value = state.Rows, ValueChanged = e => new Signal("r", e.NewValue)},
             ["colsLabel"] = new Label {Text = "Columns:"},
             ["colsSlider"] = new Slider
             {
-                Maximum = 6, Minimum = 2, Value = state.Columns, ValueChanged = e => Send("c", e.NewValue)
+                Maximum = 6, Minimum = 2, Value = state.Columns, ValueChanged = e => new Signal("c", e.NewValue)
             },
             ["grid"] = new Grid
             {

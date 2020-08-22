@@ -107,7 +107,8 @@ namespace Laconic.Demo
                 {
                     var newState = g.Payload switch
                     {
-                        "rand" => RandomizeState(s, randomIndex.Next, randomHue.NextDouble, randomHeight.NextDouble)
+                        "rand" => RandomizeState(s, randomIndex.Next, randomHue.NextDouble, randomHeight.NextDouble),
+                        _ => throw new NotImplementedException($"Support for signal not implemented: {g}")
                     };
                     return newState;
                 });

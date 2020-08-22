@@ -34,7 +34,8 @@ namespace Laconic.Demo.Calculator
             Operator.Add => operand1 + operand2,
             Operator.Subtract => operand1 - operand2,
             Operator.Multiply => operand1 * operand2,
-            Operator.Divide => operand1 / operand2
+            Operator.Divide => operand1 / operand2,
+            _ => throw new NotImplementedException($"Operator not implemented: {@operator}")
         };
 
         static State Calculate(State state, Signal signal) => state switch {
@@ -54,7 +55,8 @@ namespace Laconic.Demo.Calculator
                 var s when s is Initial || s is Error || s is Result => new Operand(digit),
                 Operand op => new Operand(op.Value * 10 + digit),
                 OperandOperator (var operand, var @operator) => new OperandOperatorOperand(operand, @operator, digit),
-                OperandOperatorOperand(var op1, var @operator, var op2) => new OperandOperatorOperand(op1, @operator, op2 * 10 + digit)
+                OperandOperatorOperand(var op1, var @operator, var op2) => new OperandOperatorOperand(op1, @operator, op2 * 10 + digit),
+                _ => state
             },
             OperatorSignal (Operator @operator, _) => state switch {
                 var s when s is Initial || s is Error => state,
@@ -62,8 +64,10 @@ namespace Laconic.Demo.Calculator
                 Operand operand => new OperandOperator(operand.Value, @operator),
                 OperandOperator(var operand, _) => new OperandOperator(operand, @operator),
                 OperandOperatorOperand _ => Calculate(state, signal),
+                _ => state
             },
-            EqualsSignal _ => Calculate(state, signal)
+            EqualsSignal _ => Calculate(state, signal),
+            _ => throw new NotImplementedException($"Signal support is not implemented: {signal}")
         };
 
         static string Display(State state) => state switch {
@@ -72,7 +76,8 @@ namespace Laconic.Demo.Calculator
             OperandOperator (var op, _) => op.ToString(),
             OperandOperatorOperand(_, _, var op) => op.ToString(),
             Result res => res.Value.ToString(),
-            Error _ => "Error"
+            Error _ => "Error",
+            _ => state.ToString()
         };
 
         public Calculator()

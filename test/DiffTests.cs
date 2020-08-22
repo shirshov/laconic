@@ -207,7 +207,7 @@ namespace Laconic.Tests
                 return new StateWrapper(s.Value + 1);
             });
             var real = binder.CreateElement(s =>
-                new RefreshView {Refreshing = () => new Signal(s)}
+                new RefreshView {Refreshing = e => new Signal(s)}
             );
             real.IsRefreshing = true;
             real.IsRefreshing = false;

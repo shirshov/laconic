@@ -725,10 +725,6 @@ namespace Laconic
             get => GetValue<xf.Color>(xf.RefreshView.RefreshColorProperty);
             set => SetValue(xf.RefreshView.RefreshColorProperty, value);
         }
-        public Func<Signal> Refreshing
-        {
-            set => SetEvent(nameof(Refreshing), value, (ctl, handler) => ctl.Refreshing += handler, (ctl, handler) => ctl.Refreshing -= handler);
-        }
     }
 
     public partial class ScrollView

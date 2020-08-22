@@ -136,8 +136,9 @@ namespace Laconic.CodeGen
             [typeof(PinchGestureRecognizer)] = NotUsed,
             [typeof(ProgressBar)] = All,
             [typeof(RefreshView)] = All.WithoutBaseDeclaration().ExceptNotUsed(
-                RefreshView.CommandProperty,
-                RefreshView.CommandParameterProperty),
+                    RefreshView.CommandProperty,
+                    RefreshView.CommandParameterProperty)
+                .ExceptManuallyWrittenEvents(nameof(RefreshView.Refreshing)),
             [typeof(RowDefinition)] = NotUsed,
             [typeof(ScrollView)] = All
                 .WithoutBaseDeclaration()
@@ -169,7 +170,7 @@ namespace Laconic.CodeGen
             [typeof(SwipeItems)] = NotUsed,
             [typeof(SwipeItemView)] = NotUsed,
             [typeof(SwipeView)] = NotUsed,
-            [typeof(Switch)] = All.ExceptNotUsedEvents(nameof(Switch.Toggled)),
+            [typeof(Switch)] = All.ExceptManuallyWrittenEvents(nameof(Switch.Toggled)),
             [typeof(SwitchCell)] = NotUsed,
             [typeof(Tab)] = NotUsed,
             [typeof(TabBar)] = NotUsed,

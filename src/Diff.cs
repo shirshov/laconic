@@ -136,13 +136,14 @@ namespace Laconic
                 return operations;
 
             if (newElement is IContextElement contextElement) {
-                var (existingExpanded, newExpanded) = expandWithContext((IContextElement)existingElement, contextElement);
-                return Calculate((Element)existingExpanded, newExpanded, expandWithContext);
+                var (existingExpanded, newExpanded) = expandWithContext((IContextElement)existingElement!, contextElement);
+                return Calculate((Element)existingExpanded!, newExpanded!, expandWithContext);
             }
             
             operations.AddRange(CalcPropertyDiff(existingElement?.ProvidedValues ?? new PropDict(),
                 newElement.ProvidedValues));
             operations.AddRange(CalcEventDiff(existingElement?.Events ?? new EventDict(), newElement.Events));
+            
             if (newElement is View v)
                 operations.AddRange(CalcGestureRecognizerDiff(
                     (existingElement as View)?.GestureRecognizers ?? new Dictionary<Key, IGestureRecognizer>(),

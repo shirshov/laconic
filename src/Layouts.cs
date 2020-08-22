@@ -99,6 +99,8 @@ namespace Laconic
 
             return true;
         }
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     public class ColumnDefinitionCollection : List<xf.ColumnDefinition>
@@ -144,6 +146,8 @@ namespace Laconic
 
             return true;
         }
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     public partial class Grid : Layout<xf.Grid>, ILayout
@@ -154,7 +158,7 @@ namespace Laconic
 
         public View this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
         {
-            // get => Children[key];
+            get => Children[key];
             set
             {
                 Children[key] = value;
@@ -165,9 +169,24 @@ namespace Laconic
         public RowDefinitionCollection RowDefinitions { get; set; } = new RowDefinitionCollection();
         public ColumnDefinitionCollection ColumnDefinitions { get; set; } = new ColumnDefinitionCollection();
     }
+
+    public class RefreshingEventArgs : EventArgs
+    {
+        public RefreshingEventArgs(bool isRefreshing) => IsRefreshing = isRefreshing;
+
+        public bool IsRefreshing { get; }
+    }
     
     public partial class RefreshView : Layout<xf.RefreshView>, IContentHost
     {
         public View? Content { get; set; }
+
+        public Func<RefreshingEventArgs, Signal> Refreshing {
+            set => SetEvent(nameof(Refreshing), value, 
+                (ctl, handler) => ctl.Refreshing += (s, e) => 
+                    handler(s, new RefreshingEventArgs( ((xf.RefreshView)s).IsRefreshing)),
+                (ctl, handler) => ctl.Refreshing -= (s, e) => 
+                    handler(s, new RefreshingEventArgs( ((xf.RefreshView)s).IsRefreshing)));
+        }
     } 
 }

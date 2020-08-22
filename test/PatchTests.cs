@@ -146,7 +146,7 @@ namespace Laconic.Tests
                 Diff.Calculate(null,
                     new StackLayout {
                         GestureRecognizers = { [0] = new TapGestureRecognizer {
-                            NumberOfTapsRequired = 2, Tapped = () => Signal.Send("foo")
+                            NumberOfTapsRequired = 2, Tapped = () => new Signal("foo")
                         }
                     }
                 }, NoopExpander), 
@@ -163,7 +163,7 @@ namespace Laconic.Tests
             var sl = new xf.StackLayout();
             var blueprint = new StackLayout {
                 GestureRecognizers = {
-                    [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => Signal.Send("foo")}
+                    [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")}
                 }
             };
             Patch.Apply(sl, Diff.Calculate(null, blueprint, NoopExpander), _ => { });
@@ -175,7 +175,7 @@ namespace Laconic.Tests
                     new StackLayout { 
                         GestureRecognizers = {
                             [0] = new TapGestureRecognizer {
-                                NumberOfTapsRequired = 1, Tapped = () => Signal.Send("foo")
+                                NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")
                             }
                         }
                     }, NoopExpander), 
@@ -226,7 +226,7 @@ namespace Laconic.Tests
                 return s;
             });
             var real = binder.CreateElement(s =>
-                new RefreshView {Refreshing = () => new Signal(s)}
+                new RefreshView {Refreshing = e => new Signal(s)}
             );
 
             real.IsRefreshing = true;
@@ -239,23 +239,22 @@ namespace Laconic.Tests
         {
             var binder = Binder.CreateForTest(0, (s, g) => ++s);
             
-            var real = binder.CreateElement(s => new RefreshView {
-                Refreshing = s == 0 ? () => new Signal("") : (Func<Signal>)null 
+            var view = binder.CreateElement(s => new RefreshView {
+                Refreshing = e => s == 0 ? new Signal("") : null
             });
             
-            real.IsRefreshing = true;
-             real.IsRefreshing = false;
+            view.IsRefreshing = true;
+            view.IsRefreshing = false;
             
             binder.State.ShouldBe(1);
             
-            real.IsRefreshing = true;
-            real.IsRefreshing = false;
-            real.IsRefreshing = true;
-            real.IsRefreshing = false;
+            view.IsRefreshing = true;
+            view.IsRefreshing = false;
+            view.IsRefreshing = true;
+            view.IsRefreshing = false;
             
             binder.State.ShouldBe(1);
         }
-        
 
         [Fact]
         public void captured_value_in_event()
@@ -265,7 +264,7 @@ namespace Laconic.Tests
                 return s + 1;
             });
             var real = binder.CreateElement(s =>
-                new RefreshView {Refreshing = () => new Signal(s)}
+                new RefreshView {Refreshing = e => new Signal(s)}
             );
             real.IsRefreshing = true;
             real.IsRefreshing = false;

@@ -7,17 +7,17 @@ namespace Laconic
     interface ILocalContextSignal
     {
         Guid Id { get; }
-        object Payload { get; }
+        object? Payload { get; }
     }
     class SetLocalStateSignal<T> : Signal<T>, ILocalContextSignal
     {
         readonly Guid _id;
 
-        public SetLocalStateSignal(Guid id, T payload) : base(payload) => _id = id;
+        internal SetLocalStateSignal(Guid id, T payload) : base(payload) => _id = id;
 
         Guid ILocalContextSignal.Id => _id;
 
-        object ILocalContextSignal.Payload => Payload;
+        object? ILocalContextSignal.Payload => Payload;
     }
     
     public class LocalContext
@@ -29,7 +29,7 @@ namespace Laconic
 
         internal LocalContext() => Id = Guid.NewGuid();
 
-        public (TState, Func<TState, Signal>) UseLocalState<TState>(TState initial)
+        public (TState, Func<TState, Signal>) UseLocalState<TState>(TState initial) where TState : notnull
         {
             if (_values.TryGetValue(LOCAL_STATE_KEY, out var existingState)) {
                 return ((TState)existingState, state => new SetLocalStateSignal<TState>(Id, state));
@@ -41,7 +41,7 @@ namespace Laconic
 
         internal T GetValue<T>(string key) => (T)_values[key];
 
-        internal void SetValue<T>(string key, T value) => _values[key] = value;
+        internal void SetValue<T>(string key, T value) => _values[key] = value!;
     }
 
     interface IContextElement
