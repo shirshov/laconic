@@ -141,8 +141,8 @@ namespace Laconic
 			if (destination == null) throw new ArgumentNullException (nameof (destination));
 			if (match == null) throw new ArgumentNullException (nameof (match));
 
-			IList<S> x = source as IList<S> ?? source.ToArray ();
-			IList<D> y = destination as IList<D> ?? destination.ToArray ();
+			var x = source as IList<S> ?? source.ToArray ();
+			var y = destination as IList<D> ?? destination.ToArray ();
 
 			Actions = new List<ListDiffAction<S, D>> ();
 

@@ -9,7 +9,7 @@ namespace Laconic.Shapes
 
     public class Geometry<T> : Element<T>, Geometry where T : xf.Shapes.Geometry, new()
     {
-        internal override xf.BindableObject CreateReal() => new T();
+        internal override xf.BindableObject CreateView() => new T();
     }
 
     public class EllipseGeometry : Geometry<xf.Shapes.EllipseGeometry>

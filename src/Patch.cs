@@ -29,7 +29,8 @@ namespace Laconic
     
     static class Patch
     {
-        internal static List<(Guid ContextId, xf.BindableObject Element)> Apply(xf.BindableObject element, IEnumerable<DiffOperation> operations,
+        internal static List<(Guid ContextId, xf.BindableObject Element)> Apply(xf.BindableObject element, 
+            IEnumerable<DiffOperation> operations,
             Action<Signal> dispatch)
         {
             xf.View GetRealViewContent() => element switch {
@@ -67,7 +68,7 @@ namespace Laconic
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
-                        var childView = (xf.View?) CreateReal((Element) sc.ContentView);
+                        var childView = (xf.View?) CreateView((Element) sc.ContentView);
                         withContext.AddRange(Apply(childView!, sc.Operations, dispatch));
                         SetRealViewContent(childView);
                     },
@@ -133,16 +134,16 @@ namespace Laconic
                     },
                     SetClip sc => () => {
                         var geomEl = (Element) sc.Geometry;
-                        var realGeom = geomEl.CreateReal();
+                        var realGeom = geomEl.CreateView();
                         foreach (var p in geomEl.ProvidedValues)
                             realGeom.SetValue(p.Key, p.Value);
                         element.SetValue(xf.VisualElement.ClipProperty, realGeom);
                     },
                     AddToolbarItem tb => () => {
-                         var real = (xf.ToolbarItem)tb.Blueprint.CreateReal();
-                         Apply(real, tb.Operations, dispatch);
+                         var view = (xf.ToolbarItem)tb.Blueprint.CreateView();
+                         Apply(view, tb.Operations, dispatch);
                          var page = (xf.ContentPage) element;
-                         page.ToolbarItems.Add(real);
+                         page.ToolbarItems.Add(view);
                     },
                     RemoveToolbarItem tb => () => {
                          var page = (xf.ContentPage) element;
@@ -160,6 +161,6 @@ namespace Laconic
             return withContext;
         }
 
-        internal static xf.BindableObject CreateReal(Element definition) => definition.CreateReal();
+        internal static xf.BindableObject CreateView(Element definition) => definition.CreateView();
     }
 }

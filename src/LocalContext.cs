@@ -29,6 +29,10 @@ namespace Laconic
 
         internal LocalContext() => Id = Guid.NewGuid();
 
+        internal T GetValue<T>(string key) => (T)_values[key];
+
+        internal void SetValue<T>(string key, T value) => _values[key] = value!;
+        
         public (TState, Func<TState, Signal>) UseLocalState<TState>(TState initial) where TState : notnull
         {
             if (_values.TryGetValue(LOCAL_STATE_KEY, out var existingState)) {
@@ -39,9 +43,10 @@ namespace Laconic
             return (initial, state => new SetLocalStateSignal<TState>(Id, state));
         }
 
-        internal T GetValue<T>(string key) => (T)_values[key];
-
-        internal void SetValue<T>(string key, T value) => _values[key] = value!;
+        public Action<xf.VisualElement> ViewCreated {
+            get;
+            set;
+        }
     }
 
     interface IContextElement

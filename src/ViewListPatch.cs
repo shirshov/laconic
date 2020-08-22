@@ -17,17 +17,17 @@ namespace Laconic
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
                     UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () => {
-                        var real = (xf.View) Patch.CreateReal((Element) rc.NewView);
+                        var real = (xf.View) Patch.CreateView((Element) rc.NewView);
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
-                        var real = Patch.CreateReal((Element) acv.Blueprint);
+                        var real = Patch.CreateView((Element) acv.Blueprint);
                         Patch.Apply(real, acv.Operations, dispatch);
                         list.Insert(acv.Index, (xf.View) real);
                     },
                     AddChildWithContext wc => () =>  {
-                        var real = Patch.CreateReal((Element) wc.Blueprint);
+                        var real = Patch.CreateView((Element) wc.Blueprint);
                         Patch.Apply(real, wc.Operations, dispatch);
                         list.Insert(wc.Index, (xf.View) real);
                         withContext.Add((wc.ContextId, real));
@@ -112,7 +112,7 @@ namespace Laconic
             var contextItem = (BindingContextItem) item;
             if (!_templates.ContainsKey(contextItem.ReuseKey)) {
                 var template = new xf.DataTemplate(() => {
-                    var newRealView = (xf.View) Patch.CreateReal((Element) contextItem.Blueprint);
+                    var newRealView = (xf.View) Patch.CreateView((Element) contextItem.Blueprint);
                     var diff = Diff.Calculate(null, contextItem.Blueprint, _expandWithContext);
                     Patch.Apply(newRealView, diff, _dispatch);
                     newRealView.BindingContextChanged += OnBindingContextChanged;

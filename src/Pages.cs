@@ -17,7 +17,7 @@ namespace Laconic
                 (ctl, handler) => ctl.Clicked -= handler);
         }
 
-        internal override xf.BindableObject CreateReal() => new xf.ToolbarItem();
+        internal override xf.BindableObject CreateView() => new xf.ToolbarItem();
     }
 
     public abstract partial class Page<T> : VisualElement<T> where T : Xamarin.Forms.Page, new()
