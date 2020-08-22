@@ -14,4 +14,10 @@ namespace Laconic.CodeGeneration
     public class RecordsAttribute : Attribute
     {
     }
+    
+    [AttributeUsage(AttributeTargets.Interface)]
+    [CodeGenerationAttribute("Laconic.CodeGeneration.SignalsGenerator, Laconic.CodeGen.Generators")]
+    public class SignalsAttribute : Attribute
+    {
+    }
 }

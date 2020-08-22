@@ -15,10 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Droid", "demo\droid\De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGen.Controls", "tools\codegen-controls\CodeGen.Controls.csproj", "{D48E805B-2031-4512-8661-597D61740846}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGen.Attributes", "codegen\src\attributes\CodeGen.Attributes.csproj", "{8EF0804A-78A1-4A57-8DC7-3DC247316D23}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGen.Generators", "codegen\src\generators\CodeGen.Generators.csproj", "{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,30 +124,6 @@ Global
 		{D48E805B-2031-4512-8661-597D61740846}.Release|x64.Build.0 = Release|Any CPU
 		{D48E805B-2031-4512-8661-597D61740846}.Release|x86.ActiveCfg = Release|Any CPU
 		{D48E805B-2031-4512-8661-597D61740846}.Release|x86.Build.0 = Release|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Debug|x64.Build.0 = Debug|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Debug|x86.Build.0 = Debug|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Release|x64.ActiveCfg = Release|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Release|x64.Build.0 = Release|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Release|x86.ActiveCfg = Release|Any CPU
-		{8EF0804A-78A1-4A57-8DC7-3DC247316D23}.Release|x86.Build.0 = Release|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Debug|x64.Build.0 = Debug|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Debug|x86.Build.0 = Debug|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x64.ActiveCfg = Release|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x64.Build.0 = Release|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x86.ActiveCfg = Release|Any CPU
-		{3E0EB76A-EA47-4327-B5AE-51F77CCC1942}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
