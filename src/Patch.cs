@@ -64,7 +64,11 @@ namespace Laconic
             
             foreach (var op in operations) {
                 Action patchingAction = op switch {
-                    SetProperty p => () => element.SetValue(p.Property, ConvertToNative(p.Value)),
+                    SetProperty p => () => {
+                        var native = ConvertToNative(p.Value);
+                        element.SetValue(p.Property, native);
+                        var updated = element.GetValue(p.Property);
+                    },
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
@@ -189,6 +193,7 @@ namespace Laconic
                 VisualMarker.MatchParent => xf.VisualMarker.MatchParent,
                 _ => throw new NotImplementedException($"Support for VisualMarker.{vm} is not implemented")
             },
+            // Keyboard is a class in Xamarin.Forms
             Keyboard k => k switch {
                 Keyboard.Plain => xf.Keyboard.Plain,
                 Keyboard.Chat => xf.Keyboard.Chat,

@@ -1,3 +1,4 @@
+using System.Linq;
 using Shouldly;
 using Xunit;
 using xf = Xamarin.Forms;
@@ -20,19 +21,20 @@ namespace Laconic.Tests
             var img = binder.CreateElement(s => s == 0 ? bp1 : bp2);
             
             var imgSource = img.Source.ShouldBeOfType<xf.FontImageSource>();
- 
-            // TODO: fails updating
-            // imgSource.FontFamily.ShouldBe("Arial");
-            // imgSource.Glyph.ShouldBe("a");
-            // imgSource.Size.ShouldBe(13);
-            // imgSource.Color.ShouldBe(xf.Color.Red);
-            //
-            // binder.Send(new Signal(null));
-            //
-            // imgSource.FontFamily.ShouldBe("Helvetica");
-            // imgSource.Glyph.ShouldBe("h");
-            // imgSource.Size.ShouldBe(15);
-            // imgSource.Color.ShouldBe(xf.Color.Green);
+
+            imgSource.FontFamily.ShouldBe("Arial");
+            imgSource.Glyph.ShouldBe("a");
+            imgSource.Size.ShouldBe(13);
+            imgSource.Color.ShouldBe(xf.Color.Red);
+            
+            binder.Send(new Signal(null));
+
+            imgSource = img.Source.ShouldBeOfType<xf.FontImageSource>();
+             
+            imgSource.FontFamily.ShouldBe("Helvetica");
+            imgSource.Glyph.ShouldBe("h");
+            imgSource.Size.ShouldBe(15);
+            imgSource.Color.ShouldBe(xf.Color.Green);
         }
     }
 }

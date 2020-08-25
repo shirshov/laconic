@@ -399,7 +399,10 @@ namespace Laconic.Tests
 
             var upd = diff.First().ShouldBeOfType<UpdateToolbarItem>();
             upd.Index.ShouldBe(1);
-            upd.Operations.First().ShouldBeOfType<SetProperty>().Value.ToString().ShouldBe("File: bar");
+            upd.Operations
+                .First().ShouldBeOfType<SetProperty>()
+                .Value.ShouldBeOfType<FileImageSource>()
+                .File.ShouldBe("bar");
         }
 
         [Fact]
