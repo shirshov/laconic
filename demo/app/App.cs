@@ -25,7 +25,7 @@ namespace Laconic.Demo
 
             AddSample<CounterPage>("Counter");
             AddSample<DynamicGrid>("Dynamic Grid");
-            AddSample<Calculator.Calculator>("Calculator (Grid)");
+            AddSample<CalculatorPage>("Calculator (Grid)");
             AddSample<GroupedCollectionView>("Collection View");
             AddSample<DancingBars>("Dancing Bars (Performance)");
             AddSample<EntryAndEditor>("Entry and Editor");

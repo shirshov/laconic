@@ -9,9 +9,9 @@ namespace Laconic
 {
     public partial class BoxView : View<xf.BoxView>
     {
-        public xf.Color Color
+        public Color Color
         {
-            get => GetValue<xf.Color>(xf.BoxView.ColorProperty);
+            get => GetValue<Color>(xf.BoxView.ColorProperty);
             set => SetValue(xf.BoxView.ColorProperty, value);
         }
         public xf.CornerRadius CornerRadius
@@ -23,9 +23,9 @@ namespace Laconic
 
     public partial class Button : View<xf.Button>
     {
-        public xf.Color BorderColor
+        public Color BorderColor
         {
-            get => GetValue<xf.Color>(xf.Button.BorderColorProperty);
+            get => GetValue<Color>(xf.Button.BorderColorProperty);
             set => SetValue(xf.Button.BorderColorProperty, value);
         }
         public Double BorderWidth
@@ -43,9 +43,9 @@ namespace Laconic
             get => GetValue<Int32>(xf.Button.CornerRadiusProperty);
             set => SetValue(xf.Button.CornerRadiusProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.Button.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.Button.FontAttributesProperty);
             set => SetValue(xf.Button.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -63,19 +63,19 @@ namespace Laconic
             get => GetValue<Double>(xf.Button.FontSizeProperty);
             set => SetValue(xf.Button.FontSizeProperty, value);
         }
-        public xf.ImageSource Image
+        public ImageSource Image
         {
-            get => GetValue<xf.ImageSource>(xf.Button.ImageSourceProperty);
+            get => GetValue<ImageSource>(xf.Button.ImageSourceProperty);
             set => SetValue(xf.Button.ImageSourceProperty, value);
         }
-        public xf.Thickness Padding
+        public Thickness Padding
         {
-            get => GetValue<xf.Thickness>(xf.Button.PaddingProperty);
+            get => GetValue<Thickness>(xf.Button.PaddingProperty);
             set => SetValue(xf.Button.PaddingProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.Button.TextColorProperty);
+            get => GetValue<Color>(xf.Button.TextColorProperty);
             set => SetValue(xf.Button.TextColorProperty, value);
         }
         public String Text
@@ -119,9 +119,9 @@ namespace Laconic
             get => GetValue<xf.LinearItemsLayout>(xf.CarouselView.ItemsLayoutProperty);
             set => SetValue(xf.CarouselView.ItemsLayoutProperty, value);
         }
-        public xf.Thickness PeekAreaInsets
+        public Thickness PeekAreaInsets
         {
-            get => GetValue<xf.Thickness>(xf.CarouselView.PeekAreaInsetsProperty);
+            get => GetValue<Thickness>(xf.CarouselView.PeekAreaInsetsProperty);
             set => SetValue(xf.CarouselView.PeekAreaInsetsProperty, value);
         }
         public Int32 Position
@@ -133,9 +133,9 @@ namespace Laconic
 
     public partial class CheckBox
     {
-        public xf.Color Color
+        public Color Color
         {
-            get => GetValue<xf.Color>(xf.CheckBox.ColorProperty);
+            get => GetValue<Color>(xf.CheckBox.ColorProperty);
             set => SetValue(xf.CheckBox.ColorProperty, value);
         }
         public Boolean IsChecked
@@ -157,9 +157,9 @@ namespace Laconic
             get => GetValue<DateTime>(xf.DatePicker.DateProperty);
             set => SetValue(xf.DatePicker.DateProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.DatePicker.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.DatePicker.FontAttributesProperty);
             set => SetValue(xf.DatePicker.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -187,23 +187,23 @@ namespace Laconic
             get => GetValue<DateTime>(xf.DatePicker.MinimumDateProperty);
             set => SetValue(xf.DatePicker.MinimumDateProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.DatePicker.TextColorProperty);
+            get => GetValue<Color>(xf.DatePicker.TextColorProperty);
             set => SetValue(xf.DatePicker.TextColorProperty, value);
         }
     }
 
     public partial class Editor
     {
-        public xf.EditorAutoSizeOption AutoSize
+        public EditorAutoSizeOption AutoSize
         {
-            get => GetValue<xf.EditorAutoSizeOption>(xf.Editor.AutoSizeProperty);
+            get => GetValue<EditorAutoSizeOption>(xf.Editor.AutoSizeProperty);
             set => SetValue(xf.Editor.AutoSizeProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.Editor.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.Editor.FontAttributesProperty);
             set => SetValue(xf.Editor.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -229,9 +229,9 @@ namespace Laconic
 
     public partial class Entry
     {
-        public xf.ClearButtonVisibility ClearButtonVisibility
+        public ClearButtonVisibility ClearButtonVisibility
         {
-            get => GetValue<xf.ClearButtonVisibility>(xf.Entry.ClearButtonVisibilityProperty);
+            get => GetValue<ClearButtonVisibility>(xf.Entry.ClearButtonVisibilityProperty);
             set => SetValue(xf.Entry.ClearButtonVisibilityProperty, value);
         }
         public Int32 CursorPosition
@@ -239,9 +239,9 @@ namespace Laconic
             get => GetValue<Int32>(xf.Entry.CursorPositionProperty);
             set => SetValue(xf.Entry.CursorPositionProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.Entry.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.Entry.FontAttributesProperty);
             set => SetValue(xf.Entry.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -254,9 +254,9 @@ namespace Laconic
             get => GetValue<Double>(xf.Entry.FontSizeProperty);
             set => SetValue(xf.Entry.FontSizeProperty, value);
         }
-        public xf.TextAlignment HorizontalTextAlignment
+        public TextAlignment HorizontalTextAlignment
         {
-            get => GetValue<xf.TextAlignment>(xf.Entry.HorizontalTextAlignmentProperty);
+            get => GetValue<TextAlignment>(xf.Entry.HorizontalTextAlignmentProperty);
             set => SetValue(xf.Entry.HorizontalTextAlignmentProperty, value);
         }
         public Boolean IsPassword
@@ -269,9 +269,9 @@ namespace Laconic
             get => GetValue<Boolean>(xf.Entry.IsTextPredictionEnabledProperty);
             set => SetValue(xf.Entry.IsTextPredictionEnabledProperty, value);
         }
-        public xf.ReturnType ReturnType
+        public ReturnType ReturnType
         {
-            get => GetValue<xf.ReturnType>(xf.Entry.ReturnTypeProperty);
+            get => GetValue<ReturnType>(xf.Entry.ReturnTypeProperty);
             set => SetValue(xf.Entry.ReturnTypeProperty, value);
         }
         public Int32 SelectionLength
@@ -279,9 +279,9 @@ namespace Laconic
             get => GetValue<Int32>(xf.Entry.SelectionLengthProperty);
             set => SetValue(xf.Entry.SelectionLengthProperty, value);
         }
-        public xf.TextAlignment VerticalTextAlignment
+        public TextAlignment VerticalTextAlignment
         {
-            get => GetValue<xf.TextAlignment>(xf.Entry.VerticalTextAlignmentProperty);
+            get => GetValue<TextAlignment>(xf.Entry.VerticalTextAlignmentProperty);
             set => SetValue(xf.Entry.VerticalTextAlignmentProperty, value);
         }
         public Func<Signal> Completed
@@ -290,11 +290,44 @@ namespace Laconic
         }
     }
 
+    public partial class FileImageSource
+    {
+        public String File
+        {
+            get => GetValue<String>(xf.FileImageSource.FileProperty);
+            set => SetValue(xf.FileImageSource.FileProperty, value);
+        }
+    }
+
+    public partial class FontImageSource
+    {
+        public Color Color
+        {
+            get => GetValue<Color>(xf.FontImageSource.ColorProperty);
+            set => SetValue(xf.FontImageSource.ColorProperty, value);
+        }
+        public String FontFamily
+        {
+            get => GetValue<String>(xf.FontImageSource.FontFamilyProperty);
+            set => SetValue(xf.FontImageSource.FontFamilyProperty, value);
+        }
+        public String Glyph
+        {
+            get => GetValue<String>(xf.FontImageSource.GlyphProperty);
+            set => SetValue(xf.FontImageSource.GlyphProperty, value);
+        }
+        public Double Size
+        {
+            get => GetValue<Double>(xf.FontImageSource.SizeProperty);
+            set => SetValue(xf.FontImageSource.SizeProperty, value);
+        }
+    }
+
     public partial class Frame
     {
-        public xf.Color BorderColor
+        public Color BorderColor
         {
-            get => GetValue<xf.Color>(xf.Frame.BorderColorProperty);
+            get => GetValue<Color>(xf.Frame.BorderColorProperty);
             set => SetValue(xf.Frame.BorderColorProperty, value);
         }
         public Single CornerRadius
@@ -325,9 +358,9 @@ namespace Laconic
 
     public partial class Image : View<xf.Image>
     {
-        public xf.Aspect Aspect
+        public Aspect Aspect
         {
-            get => GetValue<xf.Aspect>(xf.Image.AspectProperty);
+            get => GetValue<Aspect>(xf.Image.AspectProperty);
             set => SetValue(xf.Image.AspectProperty, value);
         }
         public Boolean IsAnimationPlaying
@@ -340,23 +373,23 @@ namespace Laconic
             get => GetValue<Boolean>(xf.Image.IsOpaqueProperty);
             set => SetValue(xf.Image.IsOpaqueProperty, value);
         }
-        public xf.ImageSource Source
+        public ImageSource Source
         {
-            get => GetValue<xf.ImageSource>(xf.Image.SourceProperty);
+            get => GetValue<ImageSource>(xf.Image.SourceProperty);
             set => SetValue(xf.Image.SourceProperty, value);
         }
     }
 
     public partial class ImageButton : View<xf.ImageButton>
     {
-        public xf.Aspect Aspect
+        public Aspect Aspect
         {
-            get => GetValue<xf.Aspect>(xf.ImageButton.AspectProperty);
+            get => GetValue<Aspect>(xf.ImageButton.AspectProperty);
             set => SetValue(xf.ImageButton.AspectProperty, value);
         }
-        public xf.Color BorderColor
+        public Color BorderColor
         {
-            get => GetValue<xf.Color>(xf.ImageButton.BorderColorProperty);
+            get => GetValue<Color>(xf.ImageButton.BorderColorProperty);
             set => SetValue(xf.ImageButton.BorderColorProperty, value);
         }
         public Double BorderWidth
@@ -374,14 +407,14 @@ namespace Laconic
             get => GetValue<Boolean>(xf.ImageButton.IsOpaqueProperty);
             set => SetValue(xf.ImageButton.IsOpaqueProperty, value);
         }
-        public xf.Thickness Padding
+        public Thickness Padding
         {
-            get => GetValue<xf.Thickness>(xf.ImageButton.PaddingProperty);
+            get => GetValue<Thickness>(xf.ImageButton.PaddingProperty);
             set => SetValue(xf.ImageButton.PaddingProperty, value);
         }
-        public xf.ImageSource Source
+        public ImageSource Source
         {
-            get => GetValue<xf.ImageSource>(xf.ImageButton.SourceProperty);
+            get => GetValue<ImageSource>(xf.ImageButton.SourceProperty);
             set => SetValue(xf.ImageButton.SourceProperty, value);
         }
         public Func<Signal> Clicked
@@ -410,9 +443,9 @@ namespace Laconic
             get => GetValue<Boolean>(xf.IndicatorView.HideSingleProperty);
             set => SetValue(xf.IndicatorView.HideSingleProperty, value);
         }
-        public xf.Color IndicatorColor
+        public Color IndicatorColor
         {
-            get => GetValue<xf.Color>(xf.IndicatorView.IndicatorColorProperty);
+            get => GetValue<Color>(xf.IndicatorView.IndicatorColorProperty);
             set => SetValue(xf.IndicatorView.IndicatorColorProperty, value);
         }
         public Double IndicatorSize
@@ -420,9 +453,9 @@ namespace Laconic
             get => GetValue<Double>(xf.IndicatorView.IndicatorSizeProperty);
             set => SetValue(xf.IndicatorView.IndicatorSizeProperty, value);
         }
-        public xf.IndicatorShape IndicatorsShape
+        public IndicatorShape IndicatorsShape
         {
-            get => GetValue<xf.IndicatorShape>(xf.IndicatorView.IndicatorsShapeProperty);
+            get => GetValue<IndicatorShape>(xf.IndicatorView.IndicatorsShapeProperty);
             set => SetValue(xf.IndicatorView.IndicatorsShapeProperty, value);
         }
         public Int32 MaximumVisible
@@ -435,9 +468,9 @@ namespace Laconic
             get => GetValue<Int32>(xf.IndicatorView.PositionProperty);
             set => SetValue(xf.IndicatorView.PositionProperty, value);
         }
-        public xf.Color SelectedIndicatorColor
+        public Color SelectedIndicatorColor
         {
-            get => GetValue<xf.Color>(xf.IndicatorView.SelectedIndicatorColorProperty);
+            get => GetValue<Color>(xf.IndicatorView.SelectedIndicatorColorProperty);
             set => SetValue(xf.IndicatorView.SelectedIndicatorColorProperty, value);
         }
     }
@@ -459,9 +492,9 @@ namespace Laconic
             get => GetValue<Boolean>(xf.InputView.IsSpellCheckEnabledProperty);
             set => SetValue(xf.InputView.IsSpellCheckEnabledProperty, value);
         }
-        public xf.Keyboard Keyboard
+        public Keyboard Keyboard
         {
-            get => GetValue<xf.Keyboard>(xf.InputView.KeyboardProperty);
+            get => GetValue<Keyboard>(xf.InputView.KeyboardProperty);
             set => SetValue(xf.InputView.KeyboardProperty, value);
         }
         public Int32 MaxLength
@@ -469,9 +502,9 @@ namespace Laconic
             get => GetValue<Int32>(xf.InputView.MaxLengthProperty);
             set => SetValue(xf.InputView.MaxLengthProperty, value);
         }
-        public xf.Color PlaceholderColor
+        public Color PlaceholderColor
         {
-            get => GetValue<xf.Color>(xf.InputView.PlaceholderColorProperty);
+            get => GetValue<Color>(xf.InputView.PlaceholderColorProperty);
             set => SetValue(xf.InputView.PlaceholderColorProperty, value);
         }
         public String Placeholder
@@ -479,9 +512,9 @@ namespace Laconic
             get => GetValue<String>(xf.InputView.PlaceholderProperty);
             set => SetValue(xf.InputView.PlaceholderProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.InputView.TextColorProperty);
+            get => GetValue<Color>(xf.InputView.TextColorProperty);
             set => SetValue(xf.InputView.TextColorProperty, value);
         }
         public String Text
@@ -503,14 +536,14 @@ namespace Laconic
             get => GetValue<xf.DataTemplate>(xf.ItemsView.EmptyViewTemplateProperty);
             set => SetValue(xf.ItemsView.EmptyViewTemplateProperty, value);
         }
-        public xf.ScrollBarVisibility HorizontalScrollBarVisibility
+        public ScrollBarVisibility HorizontalScrollBarVisibility
         {
-            get => GetValue<xf.ScrollBarVisibility>(xf.ItemsView.HorizontalScrollBarVisibilityProperty);
+            get => GetValue<ScrollBarVisibility>(xf.ItemsView.HorizontalScrollBarVisibilityProperty);
             set => SetValue(xf.ItemsView.HorizontalScrollBarVisibilityProperty, value);
         }
-        public xf.ItemsUpdatingScrollMode ItemsUpdatingScrollMode
+        public ItemsUpdatingScrollMode ItemsUpdatingScrollMode
         {
-            get => GetValue<xf.ItemsUpdatingScrollMode>(xf.ItemsView.ItemsUpdatingScrollModeProperty);
+            get => GetValue<ItemsUpdatingScrollMode>(xf.ItemsView.ItemsUpdatingScrollModeProperty);
             set => SetValue(xf.ItemsView.ItemsUpdatingScrollModeProperty, value);
         }
         public Int32 RemainingItemsThreshold
@@ -518,9 +551,9 @@ namespace Laconic
             get => GetValue<Int32>(xf.ItemsView.RemainingItemsThresholdProperty);
             set => SetValue(xf.ItemsView.RemainingItemsThresholdProperty, value);
         }
-        public xf.ScrollBarVisibility VerticalScrollBarVisibility
+        public ScrollBarVisibility VerticalScrollBarVisibility
         {
-            get => GetValue<xf.ScrollBarVisibility>(xf.ItemsView.VerticalScrollBarVisibilityProperty);
+            get => GetValue<ScrollBarVisibility>(xf.ItemsView.VerticalScrollBarVisibilityProperty);
             set => SetValue(xf.ItemsView.VerticalScrollBarVisibilityProperty, value);
         }
     }
@@ -532,9 +565,9 @@ namespace Laconic
             get => GetValue<Double>(xf.Label.CharacterSpacingProperty);
             set => SetValue(xf.Label.CharacterSpacingProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.Label.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.Label.FontAttributesProperty);
             set => SetValue(xf.Label.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -557,14 +590,14 @@ namespace Laconic
             get => GetValue<xf.FormattedString>(xf.Label.FormattedTextProperty);
             set => SetValue(xf.Label.FormattedTextProperty, value);
         }
-        public xf.TextAlignment HorizontalTextAlignment
+        public TextAlignment HorizontalTextAlignment
         {
-            get => GetValue<xf.TextAlignment>(xf.Label.HorizontalTextAlignmentProperty);
+            get => GetValue<TextAlignment>(xf.Label.HorizontalTextAlignmentProperty);
             set => SetValue(xf.Label.HorizontalTextAlignmentProperty, value);
         }
-        public xf.LineBreakMode LineBreakMode
+        public LineBreakMode LineBreakMode
         {
-            get => GetValue<xf.LineBreakMode>(xf.Label.LineBreakModeProperty);
+            get => GetValue<LineBreakMode>(xf.Label.LineBreakModeProperty);
             set => SetValue(xf.Label.LineBreakModeProperty, value);
         }
         public Double LineHeight
@@ -577,19 +610,19 @@ namespace Laconic
             get => GetValue<Int32>(xf.Label.MaxLinesProperty);
             set => SetValue(xf.Label.MaxLinesProperty, value);
         }
-        public xf.Thickness Padding
+        public Thickness Padding
         {
-            get => GetValue<xf.Thickness>(xf.Label.PaddingProperty);
+            get => GetValue<Thickness>(xf.Label.PaddingProperty);
             set => SetValue(xf.Label.PaddingProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.Label.TextColorProperty);
+            get => GetValue<Color>(xf.Label.TextColorProperty);
             set => SetValue(xf.Label.TextColorProperty, value);
         }
-        public xf.TextDecorations TextDecorations
+        public TextDecorations TextDecorations
         {
-            get => GetValue<xf.TextDecorations>(xf.Label.TextDecorationsProperty);
+            get => GetValue<TextDecorations>(xf.Label.TextDecorationsProperty);
             set => SetValue(xf.Label.TextDecorationsProperty, value);
         }
         public String Text
@@ -597,28 +630,28 @@ namespace Laconic
             get => GetValue<String>(xf.Label.TextProperty);
             set => SetValue(xf.Label.TextProperty, value);
         }
-        public xf.TextType TextType
+        public TextType TextType
         {
-            get => GetValue<xf.TextType>(xf.Label.TextTypeProperty);
+            get => GetValue<TextType>(xf.Label.TextTypeProperty);
             set => SetValue(xf.Label.TextTypeProperty, value);
         }
-        public xf.TextAlignment VerticalTextAlignment
+        public TextAlignment VerticalTextAlignment
         {
-            get => GetValue<xf.TextAlignment>(xf.Label.VerticalTextAlignmentProperty);
+            get => GetValue<TextAlignment>(xf.Label.VerticalTextAlignmentProperty);
             set => SetValue(xf.Label.VerticalTextAlignmentProperty, value);
         }
     }
 
     public partial class Page<T>
     {
-        public xf.ImageSource BackgroundImageSource
+        public ImageSource BackgroundImageSource
         {
-            get => GetValue<xf.ImageSource>(xf.Page.BackgroundImageSourceProperty);
+            get => GetValue<ImageSource>(xf.Page.BackgroundImageSourceProperty);
             set => SetValue(xf.Page.BackgroundImageSourceProperty, value);
         }
-        public xf.ImageSource IconImageSource
+        public ImageSource IconImageSource
         {
-            get => GetValue<xf.ImageSource>(xf.Page.IconImageSourceProperty);
+            get => GetValue<ImageSource>(xf.Page.IconImageSourceProperty);
             set => SetValue(xf.Page.IconImageSourceProperty, value);
         }
         public Boolean IsBusy
@@ -626,9 +659,9 @@ namespace Laconic
             get => GetValue<Boolean>(xf.Page.IsBusyProperty);
             set => SetValue(xf.Page.IsBusyProperty, value);
         }
-        public xf.Thickness Padding
+        public Thickness Padding
         {
-            get => GetValue<xf.Thickness>(xf.Page.PaddingProperty);
+            get => GetValue<Thickness>(xf.Page.PaddingProperty);
             set => SetValue(xf.Page.PaddingProperty, value);
         }
         public String Title
@@ -657,9 +690,9 @@ namespace Laconic
             get => GetValue<Double>(xf.Picker.CharacterSpacingProperty);
             set => SetValue(xf.Picker.CharacterSpacingProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.Picker.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.Picker.FontAttributesProperty);
             set => SetValue(xf.Picker.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -682,14 +715,14 @@ namespace Laconic
             get => GetValue<Object>(xf.Picker.SelectedItemProperty);
             set => SetValue(xf.Picker.SelectedItemProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.Picker.TextColorProperty);
+            get => GetValue<Color>(xf.Picker.TextColorProperty);
             set => SetValue(xf.Picker.TextColorProperty, value);
         }
-        public xf.Color TitleColor
+        public Color TitleColor
         {
-            get => GetValue<xf.Color>(xf.Picker.TitleColorProperty);
+            get => GetValue<Color>(xf.Picker.TitleColorProperty);
             set => SetValue(xf.Picker.TitleColorProperty, value);
         }
         public String Title
@@ -701,9 +734,9 @@ namespace Laconic
 
     public partial class ProgressBar : View<xf.ProgressBar>
     {
-        public xf.Color ProgressColor
+        public Color ProgressColor
         {
-            get => GetValue<xf.Color>(xf.ProgressBar.ProgressColorProperty);
+            get => GetValue<Color>(xf.ProgressBar.ProgressColorProperty);
             set => SetValue(xf.ProgressBar.ProgressColorProperty, value);
         }
         public Double Progress
@@ -720,37 +753,37 @@ namespace Laconic
             get => GetValue<Boolean>(xf.RefreshView.IsRefreshingProperty);
             set => SetValue(xf.RefreshView.IsRefreshingProperty, value);
         }
-        public xf.Color RefreshColor
+        public Color RefreshColor
         {
-            get => GetValue<xf.Color>(xf.RefreshView.RefreshColorProperty);
+            get => GetValue<Color>(xf.RefreshView.RefreshColorProperty);
             set => SetValue(xf.RefreshView.RefreshColorProperty, value);
         }
     }
 
     public partial class ScrollView
     {
-        public xf.ScrollBarVisibility HorizontalScrollBarVisibility
+        public ScrollBarVisibility HorizontalScrollBarVisibility
         {
-            get => GetValue<xf.ScrollBarVisibility>(xf.ScrollView.HorizontalScrollBarVisibilityProperty);
+            get => GetValue<ScrollBarVisibility>(xf.ScrollView.HorizontalScrollBarVisibilityProperty);
             set => SetValue(xf.ScrollView.HorizontalScrollBarVisibilityProperty, value);
         }
-        public xf.ScrollOrientation Orientation
+        public ScrollOrientation Orientation
         {
-            get => GetValue<xf.ScrollOrientation>(xf.ScrollView.OrientationProperty);
+            get => GetValue<ScrollOrientation>(xf.ScrollView.OrientationProperty);
             set => SetValue(xf.ScrollView.OrientationProperty, value);
         }
-        public xf.ScrollBarVisibility VerticalScrollBarVisibility
+        public ScrollBarVisibility VerticalScrollBarVisibility
         {
-            get => GetValue<xf.ScrollBarVisibility>(xf.ScrollView.VerticalScrollBarVisibilityProperty);
+            get => GetValue<ScrollBarVisibility>(xf.ScrollView.VerticalScrollBarVisibilityProperty);
             set => SetValue(xf.ScrollView.VerticalScrollBarVisibilityProperty, value);
         }
     }
 
     public partial class SearchBar : View<xf.SearchBar>
     {
-        public xf.Color CancelButtonColor
+        public Color CancelButtonColor
         {
-            get => GetValue<xf.Color>(xf.SearchBar.CancelButtonColorProperty);
+            get => GetValue<Color>(xf.SearchBar.CancelButtonColorProperty);
             set => SetValue(xf.SearchBar.CancelButtonColorProperty, value);
         }
         public Double CharacterSpacing
@@ -758,9 +791,9 @@ namespace Laconic
             get => GetValue<Double>(xf.SearchBar.CharacterSpacingProperty);
             set => SetValue(xf.SearchBar.CharacterSpacingProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.SearchBar.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.SearchBar.FontAttributesProperty);
             set => SetValue(xf.SearchBar.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -773,14 +806,14 @@ namespace Laconic
             get => GetValue<Double>(xf.SearchBar.FontSizeProperty);
             set => SetValue(xf.SearchBar.FontSizeProperty, value);
         }
-        public xf.TextAlignment HorizontalTextAlignment
+        public TextAlignment HorizontalTextAlignment
         {
-            get => GetValue<xf.TextAlignment>(xf.SearchBar.HorizontalTextAlignmentProperty);
+            get => GetValue<TextAlignment>(xf.SearchBar.HorizontalTextAlignmentProperty);
             set => SetValue(xf.SearchBar.HorizontalTextAlignmentProperty, value);
         }
-        public xf.Color PlaceholderColor
+        public Color PlaceholderColor
         {
-            get => GetValue<xf.Color>(xf.SearchBar.PlaceholderColorProperty);
+            get => GetValue<Color>(xf.SearchBar.PlaceholderColorProperty);
             set => SetValue(xf.SearchBar.PlaceholderColorProperty, value);
         }
         public String Placeholder
@@ -793,9 +826,9 @@ namespace Laconic
             get => GetValue<Object>(xf.SearchBar.SearchCommandParameterProperty);
             set => SetValue(xf.SearchBar.SearchCommandParameterProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.SearchBar.TextColorProperty);
+            get => GetValue<Color>(xf.SearchBar.TextColorProperty);
             set => SetValue(xf.SearchBar.TextColorProperty, value);
         }
         public String Text
@@ -803,9 +836,9 @@ namespace Laconic
             get => GetValue<String>(xf.SearchBar.TextProperty);
             set => SetValue(xf.SearchBar.TextProperty, value);
         }
-        public xf.TextAlignment VerticalTextAlignment
+        public TextAlignment VerticalTextAlignment
         {
-            get => GetValue<xf.TextAlignment>(xf.SearchBar.VerticalTextAlignmentProperty);
+            get => GetValue<TextAlignment>(xf.SearchBar.VerticalTextAlignmentProperty);
             set => SetValue(xf.SearchBar.VerticalTextAlignmentProperty, value);
         }
         public Func<Signal> SearchButtonPressed
@@ -821,9 +854,9 @@ namespace Laconic
             get => GetValue<Object>(xf.SelectableItemsView.SelectedItemProperty);
             set => SetValue(xf.SelectableItemsView.SelectedItemProperty, value);
         }
-        public xf.SelectionMode SelectionMode
+        public SelectionMode SelectionMode
         {
-            get => GetValue<xf.SelectionMode>(xf.SelectableItemsView.SelectionModeProperty);
+            get => GetValue<SelectionMode>(xf.SelectableItemsView.SelectionModeProperty);
             set => SetValue(xf.SelectableItemsView.SelectionModeProperty, value);
         }
     }
@@ -835,9 +868,9 @@ namespace Laconic
             get => GetValue<Double>(xf.Slider.MaximumProperty);
             set => SetValue(xf.Slider.MaximumProperty, value);
         }
-        public xf.Color MaximumTrackColor
+        public Color MaximumTrackColor
         {
-            get => GetValue<xf.Color>(xf.Slider.MaximumTrackColorProperty);
+            get => GetValue<Color>(xf.Slider.MaximumTrackColorProperty);
             set => SetValue(xf.Slider.MaximumTrackColorProperty, value);
         }
         public Double Minimum
@@ -845,19 +878,19 @@ namespace Laconic
             get => GetValue<Double>(xf.Slider.MinimumProperty);
             set => SetValue(xf.Slider.MinimumProperty, value);
         }
-        public xf.Color MinimumTrackColor
+        public Color MinimumTrackColor
         {
-            get => GetValue<xf.Color>(xf.Slider.MinimumTrackColorProperty);
+            get => GetValue<Color>(xf.Slider.MinimumTrackColorProperty);
             set => SetValue(xf.Slider.MinimumTrackColorProperty, value);
         }
-        public xf.Color ThumbColor
+        public Color ThumbColor
         {
-            get => GetValue<xf.Color>(xf.Slider.ThumbColorProperty);
+            get => GetValue<Color>(xf.Slider.ThumbColorProperty);
             set => SetValue(xf.Slider.ThumbColorProperty, value);
         }
-        public xf.ImageSource ThumbImageSource
+        public ImageSource ThumbImageSource
         {
-            get => GetValue<xf.ImageSource>(xf.Slider.ThumbImageSourceProperty);
+            get => GetValue<ImageSource>(xf.Slider.ThumbImageSourceProperty);
             set => SetValue(xf.Slider.ThumbImageSourceProperty, value);
         }
         public Double Value
@@ -877,9 +910,9 @@ namespace Laconic
 
     public partial class StackLayout
     {
-        public xf.StackOrientation Orientation
+        public StackOrientation Orientation
         {
-            get => GetValue<xf.StackOrientation>(xf.StackLayout.OrientationProperty);
+            get => GetValue<StackOrientation>(xf.StackLayout.OrientationProperty);
             set => SetValue(xf.StackLayout.OrientationProperty, value);
         }
         public Double Spacing
@@ -896,24 +929,14 @@ namespace Laconic
             get => GetValue<Object>(xf.StructuredItemsView.FooterProperty);
             set => SetValue(xf.StructuredItemsView.FooterProperty, value);
         }
-        public xf.DataTemplate FooterTemplate
-        {
-            get => GetValue<xf.DataTemplate>(xf.StructuredItemsView.FooterTemplateProperty);
-            set => SetValue(xf.StructuredItemsView.FooterTemplateProperty, value);
-        }
         public Object Header
         {
             get => GetValue<Object>(xf.StructuredItemsView.HeaderProperty);
             set => SetValue(xf.StructuredItemsView.HeaderProperty, value);
         }
-        public xf.DataTemplate HeaderTemplate
+        public ItemSizingStrategy ItemSizingStrategy
         {
-            get => GetValue<xf.DataTemplate>(xf.StructuredItemsView.HeaderTemplateProperty);
-            set => SetValue(xf.StructuredItemsView.HeaderTemplateProperty, value);
-        }
-        public xf.ItemSizingStrategy ItemSizingStrategy
-        {
-            get => GetValue<xf.ItemSizingStrategy>(xf.StructuredItemsView.ItemSizingStrategyProperty);
+            get => GetValue<ItemSizingStrategy>(xf.StructuredItemsView.ItemSizingStrategyProperty);
             set => SetValue(xf.StructuredItemsView.ItemSizingStrategyProperty, value);
         }
         public xf.IItemsLayout ItemsLayout
@@ -930,14 +953,14 @@ namespace Laconic
             get => GetValue<Boolean>(xf.Switch.IsToggledProperty);
             set => SetValue(xf.Switch.IsToggledProperty, value);
         }
-        public xf.Color OnColor
+        public Color OnColor
         {
-            get => GetValue<xf.Color>(xf.Switch.OnColorProperty);
+            get => GetValue<Color>(xf.Switch.OnColorProperty);
             set => SetValue(xf.Switch.OnColorProperty, value);
         }
-        public xf.Color ThumbColor
+        public Color ThumbColor
         {
-            get => GetValue<xf.Color>(xf.Switch.ThumbColorProperty);
+            get => GetValue<Color>(xf.Switch.ThumbColorProperty);
             set => SetValue(xf.Switch.ThumbColorProperty, value);
         }
     }
@@ -949,9 +972,9 @@ namespace Laconic
             get => GetValue<Double>(xf.TimePicker.CharacterSpacingProperty);
             set => SetValue(xf.TimePicker.CharacterSpacingProperty, value);
         }
-        public xf.FontAttributes FontAttributes
+        public FontAttributes FontAttributes
         {
-            get => GetValue<xf.FontAttributes>(xf.TimePicker.FontAttributesProperty);
+            get => GetValue<FontAttributes>(xf.TimePicker.FontAttributesProperty);
             set => SetValue(xf.TimePicker.FontAttributesProperty, value);
         }
         public String FontFamily
@@ -969,9 +992,9 @@ namespace Laconic
             get => GetValue<String>(xf.TimePicker.FormatProperty);
             set => SetValue(xf.TimePicker.FormatProperty, value);
         }
-        public xf.Color TextColor
+        public Color TextColor
         {
-            get => GetValue<xf.Color>(xf.TimePicker.TextColorProperty);
+            get => GetValue<Color>(xf.TimePicker.TextColorProperty);
             set => SetValue(xf.TimePicker.TextColorProperty, value);
         }
         public TimeSpan Time
@@ -993,9 +1016,9 @@ namespace Laconic
             get => GetValue<Double>(xf.VisualElement.AnchorYProperty);
             set => SetValue(xf.VisualElement.AnchorYProperty, value);
         }
-        public xf.Color BackgroundColor
+        public Color BackgroundColor
         {
-            get => GetValue<xf.Color>(xf.VisualElement.BackgroundColorProperty);
+            get => GetValue<Color>(xf.VisualElement.BackgroundColorProperty);
             set => SetValue(xf.VisualElement.BackgroundColorProperty, value);
         }
         public Geometry Clip
@@ -1003,9 +1026,9 @@ namespace Laconic
             get => GetValue<Geometry>(xf.VisualElement.ClipProperty);
             set => SetValue(xf.VisualElement.ClipProperty, value);
         }
-        public xf.FlowDirection FlowDirection
+        public FlowDirection FlowDirection
         {
-            get => GetValue<xf.FlowDirection>(xf.VisualElement.FlowDirectionProperty);
+            get => GetValue<FlowDirection>(xf.VisualElement.FlowDirectionProperty);
             set => SetValue(xf.VisualElement.FlowDirectionProperty, value);
         }
         public Double HeightRequest
@@ -1097,11 +1120,6 @@ namespace Laconic
         {
             get => GetValue<Double>(xf.VisualElement.TranslationYProperty);
             set => SetValue(xf.VisualElement.TranslationYProperty, value);
-        }
-        public xf.IVisual Visual
-        {
-            get => GetValue<xf.IVisual>(xf.VisualElement.VisualProperty);
-            set => SetValue(xf.VisualElement.VisualProperty, value);
         }
         public Double WidthRequest
         {

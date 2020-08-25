@@ -64,7 +64,7 @@ namespace Laconic
             
             foreach (var op in operations) {
                 Action patchingAction = op switch {
-                    SetProperty p => () => element.SetValue(p.Property, p.Value),
+                    SetProperty p => () => element.SetValue(p.Property, ConvertToNative(p.Value)),
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
@@ -162,5 +162,63 @@ namespace Laconic
         }
 
         internal static xf.BindableObject CreateView(Element definition) => definition.CreateView();
+
+        static object ConvertToNative(object value) => value switch {
+            FontAttributes _ => (xf.FontAttributes) value,
+            ReturnType _ => (xf.ReturnType) value,
+            IndicatorShape _ => (xf.IndicatorShape) value,
+            ScrollBarVisibility _ => (xf.ScrollBarVisibility) value,
+            ItemsUpdatingScrollMode _ => (xf.ItemsUpdatingScrollMode) value,
+            LineBreakMode _ => (xf.LineBreakMode) value,
+            TextDecorations _ => (xf.TextDecorations) value,
+            TextType _ => (xf.TextType) value,
+            ScrollOrientation _ => (xf.ScrollOrientation) value,
+            SelectionMode _ => (xf.SelectionMode) value,
+            StackOrientation _ => (xf.StackOrientation) value,
+            ItemSizingStrategy _ => (xf.ItemSizingStrategy) value,
+            FlowDirection _ => (xf.FlowDirection) value,
+            TextAlignment _ => (xf.TextAlignment) value,
+            Aspect _ => (xf.Aspect) value,
+            ClearButtonVisibility _ => (xf.ClearButtonVisibility) value,
+            EditorAutoSizeOption _ => (xf.EditorAutoSizeOption) value,
+            LayoutAlignment _ => (xf.LayoutAlignment) value,
+            Stretch _ => (xf.Stretch)value,
+            VisualMarker vm => vm switch {
+                VisualMarker.Default => xf.VisualMarker.Default,
+                VisualMarker.Material => xf.VisualMarker.Material,
+                VisualMarker.MatchParent => xf.VisualMarker.MatchParent,
+                _ => throw new NotImplementedException($"Support for VisualMarker.{vm} is not implemented")
+            },
+            Keyboard k => k switch {
+                Keyboard.Plain => xf.Keyboard.Plain,
+                Keyboard.Chat => xf.Keyboard.Chat,
+                Keyboard.Default => xf.Keyboard.Default,
+                Keyboard.Email => xf.Keyboard.Email,
+                Keyboard.Numeric => xf.Keyboard.Numeric,
+                Keyboard.Telephone => xf.Keyboard.Telephone,
+                Keyboard.Text => xf.Keyboard.Text,
+                Keyboard.Url => xf.Keyboard.Url,
+                _ => throw new NotImplementedException($"Support for Keyboard.{k} is not implemented")
+            },
+            // Shapes enums
+            Shapes.FillRule _ => (xf.Shapes.FillRule)value,
+            Shapes.PenLineCap _ => (xf.Shapes.PenLineCap)value,
+            Shapes.PenLineJoin _ => (xf.Shapes.PenLineJoin)value,
+            // LayoutOptions is a struct in Xamarin.Forms
+            LayoutOptions l when l == LayoutOptions.Start => xf.LayoutOptions.Start,
+            LayoutOptions l when l == LayoutOptions.Center => xf.LayoutOptions.Center,
+            LayoutOptions l when l == LayoutOptions.End => xf.LayoutOptions.End,
+            LayoutOptions l when l == LayoutOptions.Fill => xf.LayoutOptions.Fill,
+            LayoutOptions l when l == LayoutOptions.StartAndExpand => xf.LayoutOptions.StartAndExpand,
+            LayoutOptions l when l == LayoutOptions.CenterAndExpand => xf.LayoutOptions.CenterAndExpand,     
+            LayoutOptions l when l == LayoutOptions.EndAndExpand => xf.LayoutOptions.EndAndExpand,
+            LayoutOptions l when l == LayoutOptions.FillAndExpand => xf.LayoutOptions.FillAndExpand,
+            // custom types 
+            Thickness t => new xf.Thickness(t.Left, t.Top, t.Right, t.Bottom),
+            Color c => c.ToXamarinFormsColor(),
+            CornerRadius r => r.ToXamarinFormsCornerRadius(),
+            ImageSource s => s.ToXamarinFormsImageSource(),
+            _ => value
+        };
     }
 }

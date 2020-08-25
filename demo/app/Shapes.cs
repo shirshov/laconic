@@ -1,9 +1,8 @@
 using Laconic.Shapes;
-using xf = Xamarin.Forms;
 
 namespace Laconic.Demo
 {
-    public class Shapes : xf.ContentPage
+    public class Shapes : Xamarin.Forms.ContentPage
     {
         Binder<string> _binder;
 
@@ -19,20 +18,22 @@ namespace Laconic.Demo
                         Y1 = 0,
                         X2 = 0,
                         Y2 = 120,
-                        Stroke = xf.Color.Red
+                        Stroke = Color.Red
                     },
                     ["rect"] = new Rectangle {
-                        Fill = xf.Color.Blue,
-                        Stroke = xf.Color.Black,
+                        Fill = Color.Blue,
+                        Stroke = Color.Black,
                         StrokeThickness = 3,
                         RadiusX = 50,
                         RadiusY = 10,
                         WidthRequest = 200,
                         HeightRequest = 100,
-                        HorizontalOptions = xf.LayoutOptions.Start
+                        HorizontalOptions = LayoutOptions.Start
                     },
                     ["path"] = new Path {
-                        Data = "M 10,100 C 100,0 200,200 300,100", Stroke = xf.Color.Black, Aspect = xf.Stretch.Uniform
+                        Data = "M 10,100 C 100,0 200,200 300,100", 
+                        Stroke = Color.Black, 
+                        Aspect = Stretch.Uniform
                     }
                 }
             });

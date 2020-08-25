@@ -7,9 +7,9 @@ namespace Laconic
 {
     public abstract class Layout<T> : View<T> where T : xf.Layout, new()
     {
-        public xf.Thickness Padding
+        public Thickness Padding
         {
-            get => GetValue<xf.Thickness>(xf.Layout.PaddingProperty);
+            get => GetValue<Thickness>(xf.Layout.PaddingProperty);
             set => SetValue(xf.Layout.PaddingProperty, value);
         }
 

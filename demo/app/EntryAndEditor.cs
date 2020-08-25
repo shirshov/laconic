@@ -1,11 +1,9 @@
-using xf = Xamarin.Forms;
-
 namespace Laconic.Demo
 {
-    public class EntryAndEditor : xf.ContentPage
+    public class EntryAndEditor : Xamarin.Forms.ContentPage
     {
         static StackLayout EntryWithTextChanged(string state) => new StackLayout {
-            BackgroundColor = xf.Color.Bisque,
+            BackgroundColor = Color.Bisque,
             Padding = 20,
             Spacing = 20,
             ["entry label"] = new Label {
@@ -30,7 +28,7 @@ namespace Laconic.Demo
             },
             ["numbers entry"] = new Entry {
                 Placeholder = "Type something",
-                Keyboard = xf.Keyboard.Numeric,
+                Keyboard = Keyboard.Numeric,
                 Text = state,
                 TextChanged = e => new Signal(e.NewTextValue)
             }

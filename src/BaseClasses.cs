@@ -131,26 +131,33 @@ namespace Laconic
         internal override xf.BindableObject CreateView() => new T();
         
         public Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; } = new Dictionary<Key, IGestureRecognizer>();
+        
+        public VisualMarker Visual
+        {
+            get => GetValue<VisualMarker>(xf.VisualElement.VisualProperty);
+            set => SetValue(xf.VisualElement.VisualProperty, value);
+        }
     }
 
     public abstract class View<T> : VisualElement<T>, View where T : xf.View, new()
     {
-        public xf.LayoutOptions HorizontalOptions {
-            get => GetValue<xf.LayoutOptions>(xf.View.HorizontalOptionsProperty);
+        public LayoutOptions HorizontalOptions {
+            get => GetValue<LayoutOptions>(xf.View.HorizontalOptionsProperty);
             set => SetValue(xf.View.HorizontalOptionsProperty, value);
         }
 
-        public xf.LayoutOptions VerticalOptions {
-            get => GetValue<xf.LayoutOptions>(xf.View.VerticalOptionsProperty);
+        public LayoutOptions VerticalOptions {
+            get => GetValue<LayoutOptions>(xf.View.VerticalOptionsProperty);
             set => SetValue(xf.View.VerticalOptionsProperty, value);
         }
 
-        public xf.Thickness Margin {
-            get => GetValue<xf.Thickness>(xf.View.MarginProperty);
+        public Thickness Margin {
+            get => GetValue<Thickness>(xf.View.MarginProperty);
             set => SetValue(xf.View.MarginProperty, value);
         }
+        
     }
-
+    
     public interface View : IElement
     {
         Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; }

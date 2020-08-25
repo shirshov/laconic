@@ -219,7 +219,7 @@ namespace Laconic
 
                         foreach (var (contextId, view) in newElementsWithContext) {
                             var info = _elementContexts.First(x => x.Value.Context.Id == contextId).Value;
-                            info.Context.ViewCreated((xf.VisualElement) view);
+                            info.Context.ViewCreated?.Invoke((xf.VisualElement) view);
                         }
 
                         _trackedElements.Add(el.With(newBlueprint));

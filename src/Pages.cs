@@ -6,7 +6,7 @@ namespace Laconic
 	// TODO: MenuItem etc.
     public class ToolbarItem : Element<xf.ToolbarItem>
     {
-        public xf.ImageSource IconImageSource {
+        public ImageSource IconImageSource {
 			set => SetValue(xf.MenuItem.IconImageSourceProperty, value);
 		}
 

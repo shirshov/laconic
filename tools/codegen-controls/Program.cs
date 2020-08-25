@@ -49,8 +49,15 @@ namespace Laconic.CodeGen
 
             static IEnumerable<string> GenerateAll(IEnumerable<(Type Type, Type Base)> all)
             {
-                static string WithXfPrefix(Type type) =>
-                    type.Namespace == "Xamarin.Forms" ? "xf." + type.Name : type.Name;
+                static string WithXfPrefix(Type type)
+                {
+                    var providedByLaconic = new[] {"Color", "Thickness", "ImageSource", "Keyboard"};
+
+                    return type.Namespace == "Xamarin.Forms" &&
+                           !(providedByLaconic.Contains(type.Name) || type.IsEnum)
+                        ? "xf." + type.Name
+                        : type.Name;
+                }
 
                 foreach (var c in all.Select(x => x.Type))
                 {

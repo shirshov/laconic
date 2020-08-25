@@ -45,9 +45,9 @@ namespace Laconic
             set => SetValue(xf.StructuredItemsView.FooterProperty, value);
         }
 
-        public xf.ItemSizingStrategy ItemSizingStrategy
+        public ItemSizingStrategy ItemSizingStrategy
         {
-            get => GetValue<xf.ItemSizingStrategy>(xf.StructuredItemsView.ItemSizingStrategyProperty);
+            get => GetValue<ItemSizingStrategy>(xf.StructuredItemsView.ItemSizingStrategyProperty);
             set => SetValue(xf.StructuredItemsView.ItemSizingStrategyProperty, value);
         }
     }

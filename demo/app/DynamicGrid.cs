@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-using xf = Xamarin.Forms;
 
 namespace Laconic.Demo
 {
-    public class DynamicGrid : xf.ContentPage
+    public class DynamicGrid : Xamarin.Forms.ContentPage
     {
         static (int Rows, int Columns) Reducer((int Rows, int Columns) state, Signal signal) => signal switch
         {
@@ -15,7 +14,7 @@ namespace Laconic.Demo
 
         static StackLayout GridConstructionKit((int Rows, int Columns) state) => new StackLayout
         {
-            BackgroundColor = xf.Color.Bisque,
+            BackgroundColor = Color.Bisque,
             Padding = 50,
             ["rowsLabel"] = new Label {Text = "Rows:"},
             ["rowsSlider"] =
@@ -34,11 +33,11 @@ namespace Laconic.Demo
                         x => new Label
                         {
                             Text = $"R{x.Row}C{x.Column}",
-                            VerticalTextAlignment = xf.TextAlignment.Center,
-                            HorizontalTextAlignment = xf.TextAlignment.Center,
+                            VerticalTextAlignment = TextAlignment.Center,
+                            HorizontalTextAlignment = TextAlignment.Center,
                             HeightRequest = 70,
-                            BackgroundColor = xf.Color.Chocolate,
-                            TextColor = xf.Color.White
+                            BackgroundColor = Color.Chocolate,
+                            TextColor = Color.White
                         })
             },
         };
@@ -50,7 +49,7 @@ namespace Laconic.Demo
             _binder = Binder.Create((2, 2), Reducer);
             Content = _binder.CreateElement(GridConstructionKit);
 
-            BackgroundColor = xf.Color.Bisque;
+            BackgroundColor = Xamarin.Forms.Color.Bisque;
         }
     }
 }

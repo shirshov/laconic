@@ -3,6 +3,25 @@ using xf = Xamarin.Forms;
 
 namespace Laconic.Shapes
 {
+    public enum FillRule
+    {
+        EvenOdd,
+        Nonzero
+    }
+    public enum PenLineCap
+    {
+        Flat,
+        Square,
+        Round
+    }
+    
+    public enum PenLineJoin
+    {
+        Miter,
+        Bevel,
+        Round
+    }
+
     public interface Geometry
     {
     }
@@ -39,7 +58,7 @@ namespace Laconic.Shapes
             Figures = figures;
         }
 
-        public xf.Shapes.FillRule FillRule {
+        public FillRule FillRule {
             set => SetValue(xf.Shapes.PathGeometry.FillRuleProperty, value);
         }
 
@@ -66,13 +85,13 @@ namespace Laconic.Shapes
 
     public abstract class Shape<T> : View<T> where T : xf.View, new()
     {
-        public xf.Stretch Aspect {
-            get => GetValue<xf.Stretch>(xf.Shapes.Shape.AspectProperty);
+        public Stretch Aspect {
+            get => GetValue<Stretch>(xf.Shapes.Shape.AspectProperty);
             set => SetValue(xf.Shapes.Shape.AspectProperty, value);
         }
 
-        public xf.Color Fill {
-            get => GetValue<xf.Color>(xf.Shapes.Shape.FillProperty);
+        public Color Fill {
+            get => GetValue<Color>(xf.Shapes.Shape.FillProperty);
             set => SetValue(xf.Shapes.Shape.FillProperty, value);
         }
 
@@ -86,18 +105,18 @@ namespace Laconic.Shapes
             set => SetValue(xf.Shapes.Shape.StrokeDashOffsetProperty, value);
         }
 
-        public xf.Shapes.PenLineCap StrokeLineCap {
-            get => GetValue<xf.Shapes.PenLineCap>(xf.Shapes.Shape.StrokeLineCapProperty);
+        public PenLineCap StrokeLineCap {
+            get => GetValue<PenLineCap>(xf.Shapes.Shape.StrokeLineCapProperty);
             set => SetValue(xf.Shapes.Shape.StrokeLineCapProperty, value);
         }
 
-        public xf.Shapes.PenLineJoin StrokeLineJoin {
-            get => GetValue<xf.Shapes.PenLineJoin>(xf.Shapes.Shape.StrokeLineJoinProperty);
+        public PenLineJoin StrokeLineJoin {
+            get => GetValue<PenLineJoin>(xf.Shapes.Shape.StrokeLineJoinProperty);
             set => SetValue(xf.Shapes.Shape.StrokeLineJoinProperty, value);
         }
 
-        public xf.Color Stroke {
-            get => GetValue<xf.Color>(xf.Shapes.Shape.StrokeProperty);
+        public Color Stroke {
+            get => GetValue<Color>(xf.Shapes.Shape.StrokeProperty);
             set => SetValue(xf.Shapes.Shape.StrokeProperty, value);
         }
 
@@ -158,7 +177,7 @@ namespace Laconic.Shapes
             set => SetValue(xf.Shapes.Polygon.PointsProperty, value);
         }
 
-        public xf.Shapes.FillRule FillRule {
+        public FillRule FillRule {
             set => SetValue(xf.Shapes.Polygon.FillRuleProperty, value);
         }
     }
@@ -169,7 +188,7 @@ namespace Laconic.Shapes
             set => SetValue(xf.Shapes.Polyline.PointsProperty, value);
         }
 
-        public xf.Shapes.FillRule FillRule {
+        public FillRule FillRule {
             set => SetValue(xf.Shapes.Polyline.FillRuleProperty, value);
         }
     }

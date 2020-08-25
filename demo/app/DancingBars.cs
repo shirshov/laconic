@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using xf = Xamarin.Forms;
 
 namespace Laconic.Demo
 {
     // TODO:implement sliders for changing number of rows and columns
-    class DancingBars : xf.ContentPage
+    class DancingBars : Xamarin.Forms.ContentPage
     {
         class BarInfo
         {
@@ -70,9 +69,9 @@ namespace Laconic.Demo
                     x => (x.Column, 0, x.Column),
                     x => new BoxView
                     {
-                        BackgroundColor = xf.Color.FromHsla(x.Bar.Hue, 1, 0.5),
+                        BackgroundColor = Color.FromHsla(x.Bar.Hue, 1, 0.5),
                         HeightRequest = 10 + 100 * x.Bar.Height,
-                        VerticalOptions = xf.LayoutOptions.End
+                        VerticalOptions = LayoutOptions.End
                     })
         };
 
@@ -115,7 +114,7 @@ namespace Laconic.Demo
 
             Content = _binder.CreateElement(state => new CollectionView {Items = CreateRows(state.Bars)});
 
-            xf.Device.StartTimer(TimeSpan.FromMilliseconds(30), () =>
+            Xamarin.Forms.Device.StartTimer(TimeSpan.FromMilliseconds(30), () =>
             {
                 _binder.Send(new Signal("rand"));
                 return true;

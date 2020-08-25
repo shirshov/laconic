@@ -1,9 +1,8 @@
 using System;
-using xf = Xamarin.Forms;
 
 namespace Laconic.Demo
 {
-    public class CounterPage : xf.ContentPage
+    public class CounterPage : Xamarin.Forms.ContentPage
     {
         static StackLayout Counter(int state) => new StackLayout
         {
@@ -12,29 +11,29 @@ namespace Laconic.Demo
             {
                 Text = $"You clicked {state} times",
                 FontSize = 30,
-                FontAttributes = xf.FontAttributes.Bold,
-                VerticalOptions = xf.LayoutOptions.CenterAndExpand,
-                HorizontalOptions = xf.LayoutOptions.Center
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center
             },
             ["btn"] = new Button
             {
                 Text = "Click Me",
                 Clicked = () => new Signal("inc"),
-                TextColor = xf.Color.White,
+                TextColor = Color.White,
                 FontSize = 20,
-                BackgroundColor = xf.Color.Coral,
-                BorderColor = xf.Color.Chocolate,
+                BackgroundColor = Color.Coral,
+                BorderColor = Color.Chocolate,
                 BorderWidth = 3,
                 CornerRadius = 10,
-                HorizontalOptions = xf.LayoutOptions.Center,
-                Padding = new xf.Thickness(30, 0)
+                HorizontalOptions = LayoutOptions.Center,
+                Padding = (30, 0)
             }
         };
 
         static int Reducer(int state, Signal signal) => signal.Payload switch
         {
             "inc" => state + 1,
-            "dec" => throw new NotImplementedException(), // Left as an exercise for for reader
+            "dec" => throw new NotImplementedException(), // Left as an exercise for the reader
             _ => state
         };
 
@@ -45,7 +44,7 @@ namespace Laconic.Demo
             _binder = Binder.Create(0, Reducer);
             Content = _binder.CreateElement(Counter);
 
-            BackgroundColor = xf.Color.Bisque;
+            BackgroundColor = Xamarin.Forms.Color.Bisque;
         }
     }
 }

@@ -69,9 +69,9 @@ namespace Laconic.CodeGen
                 Entry.TextProperty),
             [typeof(EntryCell)] = NotUsed,
             [typeof(EventTrigger)] = NotUsed,
-            [typeof(FileImageSource)] = NotUsed,
+            [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FlyoutItem)] = NotUsed,
-            [typeof(FontImageSource)] = NotUsed,
+            [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FormattedString)] = NotUsed,
             [typeof(Frame)] = All.WithoutBaseDeclaration(),
             [typeof(GestureElement)] = NotUsed,
@@ -164,7 +164,10 @@ namespace Laconic.CodeGen
             [typeof(StackLayout)] = All.WithoutBaseDeclaration(),
             [typeof(Stepper)] = NotUsed,
             [typeof(StreamImageSource)] = NotUsed,
-            [typeof(StructuredItemsView)] = All,
+            [typeof(StructuredItemsView)] = All
+                .ExceptNotUsed(
+                    StructuredItemsView.FooterTemplateProperty,
+                    StructuredItemsView.HeaderTemplateProperty),
             [typeof(SwipeGestureRecognizer)] = NotUsed,
             [typeof(SwipeItem)] = NotUsed,
             [typeof(SwipeItems)] = NotUsed,
@@ -186,12 +189,13 @@ namespace Laconic.CodeGen
             [typeof(ToolbarItem)] = NotUsed,
             [typeof(Trigger)] = NotUsed,
             [typeof(TriggerBase)] = NotUsed,
-            [typeof(UriImageSource)] = NotUsed,
-            [typeof(UrlWebViewSource)] = NotUsed,
+            [typeof(UriImageSource)] = WrittenManually, // Requires calling Xamarin.Forms.Init()
+            [typeof(UrlWebViewSource)] = NotUsed, 
             [typeof(View)] = WrittenManually,
             [typeof(ViewCell)] = NotUsed,
             [typeof(VisualElement)] = All.WithoutBaseDeclaration().TakeGenericParameter()
                 .ExceptNotUsed(VisualElement.BehaviorsProperty, VisualElement.TriggersProperty)
+                .ExceptWrittenManually(VisualElement.VisualProperty)
                 .ExceptNotUsedEvents(
                     nameof(VisualElement.BatchCommitted),
                     nameof(VisualElement.ChildrenReordered),

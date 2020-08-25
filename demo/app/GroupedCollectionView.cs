@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ChanceNET;
-using xf = Xamarin.Forms;
 
 namespace Laconic.Demo
 {
-    public class GroupedCollectionView : xf.ContentPage
+    public class GroupedCollectionView : Xamarin.Forms.ContentPage
     {
         Binder<ImmutableList<Person>> _binder;
 
@@ -19,35 +18,35 @@ namespace Laconic.Demo
 
         static View SectionHeaderRow(string text) => new Grid
         {
-            Padding = new xf.Thickness(15, 0),
+            Padding = (15, 0),
             HeightRequest = 40,
             ["letter"] = new Label
             {
                 Text = text,
                 FontSize = 18,
-                FontAttributes = xf.FontAttributes.Bold,
-                BackgroundColor = xf.Color.Chocolate,
-                TextColor = xf.Color.White,
+                FontAttributes = FontAttributes.Bold,
+                BackgroundColor = Color.Chocolate,
+                TextColor = Color.White,
                 WidthRequest = 40,
-                HorizontalOptions = xf.LayoutOptions.Start,
-                VerticalTextAlignment = xf.TextAlignment.Center,
-                HorizontalTextAlignment = xf.TextAlignment.Center,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalTextAlignment = TextAlignment.Center,
+                HorizontalTextAlignment = TextAlignment.Center,
             },
             ["underline"] = new BoxView
             {
-                BackgroundColor = xf.Color.Chocolate, HeightRequest = 2, VerticalOptions = xf.LayoutOptions.End
+                BackgroundColor = Color.Chocolate, HeightRequest = 2, VerticalOptions = LayoutOptions.End
             }
         };
 
         static View ItemRow(string name, string phone) => new StackLayout
         {
-            Orientation = xf.StackOrientation.Horizontal,
-            Padding = new xf.Thickness(30, 0),
+            Orientation = StackOrientation.Horizontal,
+            Padding = (30, 0),
             HeightRequest = 30,
             ["name"] = new Label {Text = name},
             ["phone"] = new Label
             {
-                Text = phone, TextColor = xf.Color.Gray, HorizontalOptions = xf.LayoutOptions.EndAndExpand
+                Text = phone, TextColor = Color.Gray, HorizontalOptions = LayoutOptions.EndAndExpand
             }
         };
 
