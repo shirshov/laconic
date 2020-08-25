@@ -137,6 +137,18 @@ new StackLayout  {
 
 Sample code in the Demo app uses the former notation to reduce nesting.
 
+### Grid
+
+Dictionary initializer for `Grid.Children` has optional parameters for specifying a child's position:
+```csharp
+new Grid {
+    ...
+    ["footer", row: 3, column: 0, rowSpan: 2] = new Label {...}
+}
+```
+
+Helper methods `ToViewList` and `ToGridViewList` can be used for creating `Chidren` dictionary from an `IEnumerable<T>` source.
+
 ## Reuse keys
 
 When adding views to a `CollectionView` in addition to providing the key you must provide a *reuse key*. The reuse key
@@ -152,12 +164,39 @@ For controlling scope Laconic has a concept of *local context*:
 Element.WithContext(ctx => {
     var (state, setter) = ctx.UseLocalState(initial);
     return new ContentPage {
-        ["button"] = new Button { Text = $"You clicked {state} times", Clicked = () => setter(state + 1)},
+        ["button"] = new Button { Text = $"You clicked {state} times", Clicked = () => setter(state + 1) },
     ]};
 });
 ```
 More details on `LocalContext` can be found [here](https://omnitalented.com/converting-my-contacts-step-3/).
 For an example of more or less real world usage check out a port of [My Contacts](https://github.com/shirshov/app-contacts) app.
+
+## Niceties
+
+Laconic comes with built in implicit conversions where it makes sense. 
+
+For example, grid's row/column definitions can be created from strings:
+```csharp
+var g = new Grid { 
+    RowDefinition = "Auto, 2*, *, 50",
+    ColumnDefinition = "*, 2*, Auto, 30"
+};
+```
+
+`Thickness` and `CornerRadius` structs can be created from a single `double`, two element tuple or four element tuple:
+
+```csharp
+var l1 = new Label { Margin = 15 }; // Thickness: uniform margin
+var l2 = new Label { Margin = (10, 20) }; // Thickness: 10 for left and right, 20 for top and bottom
+var l3 = new BoxView { CornerRadius = (10, 20, 30, 40) }; // CornerRadius: top left, top right, bottom left, bottom right
+```
+
+`Color` can be created from a tuple with three or four (with alpha) `byte` elements, or from a hex string:
+
+```csharp
+var l1 = new Label { TextColor = (255, 123, 123) };
+var l2 = new Label { TextColor = "#222222" };
+```
 
 ## Code Generation
 
