@@ -157,7 +157,7 @@ Element.WithContext(ctx => {
 });
 ```
 More details on `LocalContext` can be found [here](https://omnitalented.com/converting-my-contacts-step-3/).
-For an example of more or less real world usage check out a port of [My Contacts]() app.
+For an example of more or less real world usage check out a port of [My Contacts](https://github.com/shirshov/app-contacts) app.
 
 ## Code Generation
 
