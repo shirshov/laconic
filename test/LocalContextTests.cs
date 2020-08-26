@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net;
 using Xunit;
 using xf = Xamarin.Forms;
 using Shouldly;
@@ -224,6 +223,28 @@ namespace Laconic.Tests
             sl.Children.Count.ShouldBe(1);
         }
 
+        [Fact]
+        public void ToolBarItems_on_page()
+        {
+            static VisualElement<Xamarin.Forms.ContentPage> TestPage(int state) => Element.WithContext(ctx => {
+                return new ContentPage {
+                    ToolbarItems = {["save"] = new ToolbarItem {Text = "Save", Clicked = () => new Signal(null)}},
+                };
+            });
+                
+            var binder = Binder.CreateForTest(0, (s, g) => s);
+
+            var page = binder.CreateElement(TestPage);
+            
+            page.ToolbarItems.Count.ShouldBe(1);
+            
+            binder.Send(new Signal(null));
+            page.ToolbarItems.Count.ShouldBe(1);
+            
+            binder.Send(new Signal(null));
+            page.ToolbarItems.Count.ShouldBe(1);
+        }
+        
         [Fact(Skip = "Not implemented yet")]
         public void nested_contexts()
         {

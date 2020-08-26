@@ -10,6 +10,10 @@ namespace Laconic
 			set => SetValue(xf.MenuItem.IconImageSourceProperty, value);
 		}
 
+        public string Text {
+            set => SetValue(xf.MenuItem.TextProperty, value);
+        }
+        
         public System.Func<Signal> Clicked
         {
             set => SetEvent(nameof(Clicked), value,

@@ -66,8 +66,7 @@ namespace Laconic
 
         readonly List<TrackedElement> _trackedElements = new List<TrackedElement>();
 
-        readonly  Dictionary<IContextElement, LocalContextInfo> _elementContexts 
-            = new Dictionary<IContextElement, LocalContextInfo>();
+        readonly  Dictionary<Guid, LocalContextInfo> _elementContexts = new Dictionary<Guid, LocalContextInfo>();
         readonly Channel<Signal> _channel;
         readonly SynchronizationContext _synchronizationContext;
 
@@ -128,12 +127,12 @@ namespace Laconic
 
         static (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, 
             IContextElement newElement,
-            IReadOnlyDictionary<IContextElement, LocalContextInfo> contexts,
+            IReadOnlyDictionary<Guid, LocalContextInfo> contexts,
             ContextRequestList contextRequests)
         {
             LocalContext context;
-            if (existingElement != null && contexts.ContainsKey(existingElement))
-                context = contexts[existingElement].Context;
+            if (existingElement != null && contexts.ContainsKey(existingElement.ContextId))
+                context = contexts[existingElement.ContextId].Context;
             else 
                 context = new LocalContext();
             
@@ -142,8 +141,8 @@ namespace Laconic
             contextRequests.Add((newElement, context, newBlueprint));
 
             IElement? existingExpanded = null;
-            if (existingElement != null && contexts.ContainsKey(existingElement))
-                existingExpanded = contexts[existingElement].RenderedBlueprint;
+            if (existingElement != null && contexts.ContainsKey(existingElement.ContextId))
+                existingExpanded = contexts[existingElement.ContextId].RenderedBlueprint;
             
             return (existingExpanded, newBlueprint);
         }
@@ -163,7 +162,7 @@ namespace Laconic
                 };
             
             foreach (var info in infos)
-                _elementContexts[info.ContextElement] = info.ContextInfo;
+                _elementContexts[info.ContextElement.ContextId] = info.ContextInfo;
         }
         
         internal void ProcessSignal(Signal signal)
