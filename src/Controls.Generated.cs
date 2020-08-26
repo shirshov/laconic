@@ -585,9 +585,9 @@ namespace Laconic
             get => GetValue<Double>(xf.Label.FontSizeProperty);
             set => SetValue(xf.Label.FontSizeProperty, value);
         }
-        public xf.FormattedString FormattedText
+        public FormattedString FormattedText
         {
-            get => GetValue<xf.FormattedString>(xf.Label.FormattedTextProperty);
+            get => GetValue<FormattedString>(xf.Label.FormattedTextProperty);
             set => SetValue(xf.Label.FormattedTextProperty, value);
         }
         public TextAlignment HorizontalTextAlignment
@@ -905,6 +905,55 @@ namespace Laconic
         public Func<Signal> DragStarted
         {
             set => SetEvent(nameof(DragStarted), value, (ctl, handler) => ctl.DragStarted += handler, (ctl, handler) => ctl.DragStarted -= handler);
+        }
+    }
+
+    public partial class Span
+    {
+        public Color BackgroundColor
+        {
+            get => GetValue<Color>(xf.Span.BackgroundColorProperty);
+            set => SetValue(xf.Span.BackgroundColorProperty, value);
+        }
+        public Double CharacterSpacing
+        {
+            get => GetValue<Double>(xf.Span.CharacterSpacingProperty);
+            set => SetValue(xf.Span.CharacterSpacingProperty, value);
+        }
+        public FontAttributes FontAttributes
+        {
+            get => GetValue<FontAttributes>(xf.Span.FontAttributesProperty);
+            set => SetValue(xf.Span.FontAttributesProperty, value);
+        }
+        public String FontFamily
+        {
+            get => GetValue<String>(xf.Span.FontFamilyProperty);
+            set => SetValue(xf.Span.FontFamilyProperty, value);
+        }
+        public Double FontSize
+        {
+            get => GetValue<Double>(xf.Span.FontSizeProperty);
+            set => SetValue(xf.Span.FontSizeProperty, value);
+        }
+        public Double LineHeight
+        {
+            get => GetValue<Double>(xf.Span.LineHeightProperty);
+            set => SetValue(xf.Span.LineHeightProperty, value);
+        }
+        public Color TextColor
+        {
+            get => GetValue<Color>(xf.Span.TextColorProperty);
+            set => SetValue(xf.Span.TextColorProperty, value);
+        }
+        public TextDecorations TextDecorations
+        {
+            get => GetValue<TextDecorations>(xf.Span.TextDecorationsProperty);
+            set => SetValue(xf.Span.TextDecorationsProperty, value);
+        }
+        public String Text
+        {
+            get => GetValue<String>(xf.Span.TextProperty);
+            set => SetValue(xf.Span.TextProperty, value);
         }
     }
 

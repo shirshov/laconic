@@ -1,6 +1,6 @@
 namespace Laconic
 {
-    public readonly struct CornerRadius
+    public readonly struct CornerRadius : IConvert
     {
         readonly bool _isParameterized;
 
@@ -69,7 +69,7 @@ namespace Laconic
             bottomRight = BottomRight;
         }
 
-        internal Xamarin.Forms.CornerRadius ToXamarinFormsCornerRadius() =>
+        object IConvert.ToNative() =>
             _isParameterized
                 ? new Xamarin.Forms.CornerRadius(TopLeft, TopRight, BottomLeft, BottomRight)
                 : new Xamarin.Forms.CornerRadius(TopLeft);

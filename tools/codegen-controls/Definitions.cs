@@ -72,7 +72,7 @@ namespace Laconic.CodeGen
             [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FlyoutItem)] = NotUsed,
             [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),
-            [typeof(FormattedString)] = NotUsed,
+            [typeof(FormattedString)] = WrittenManually,
             [typeof(Frame)] = All.WithoutBaseDeclaration(),
             [typeof(GestureElement)] = NotUsed,
             [typeof(GestureRecognizer)] = NotUsed,
@@ -160,7 +160,10 @@ namespace Laconic.CodeGen
             [typeof(Slider)] = All
                 .ExceptNotUsed(Slider.DragCompletedCommandProperty, Slider.DragStartedCommandProperty)
                 .ExceptNotUsedEvents(nameof(Slider.ValueChanged)),
-            [typeof(Span)] = NotUsed,
+            [typeof(Span)] = All
+                .WithoutBaseDeclaration()
+                .ExceptNotUsed(Span.FontProperty, Span.StyleProperty),
+            
             [typeof(StackLayout)] = All.WithoutBaseDeclaration(),
             [typeof(Stepper)] = NotUsed,
             [typeof(StreamImageSource)] = NotUsed,

@@ -167,7 +167,7 @@ namespace Laconic
 
         internal static xf.BindableObject CreateView(Element definition) => definition.CreateView();
 
-        static object ConvertToNative(object value) => value switch {
+        internal static object ConvertToNative(object value) => value switch {
             FontAttributes _ => (xf.FontAttributes) value,
             ReturnType _ => (xf.ReturnType) value,
             IndicatorShape _ => (xf.IndicatorShape) value,
@@ -220,9 +220,7 @@ namespace Laconic
             LayoutOptions l when l == LayoutOptions.FillAndExpand => xf.LayoutOptions.FillAndExpand,
             // custom types 
             Thickness t => new xf.Thickness(t.Left, t.Top, t.Right, t.Bottom),
-            Color c => c.ToXamarinFormsColor(),
-            CornerRadius r => r.ToXamarinFormsCornerRadius(),
-            ImageSource s => s.ToXamarinFormsImageSource(),
+            IConvert c => c.ToNative(),
             _ => value
         };
     }

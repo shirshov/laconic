@@ -51,7 +51,9 @@ namespace Laconic.CodeGen
             {
                 static string WithXfPrefix(Type type)
                 {
-                    var providedByLaconic = new[] {"Color", "Thickness", "ImageSource", "Keyboard"};
+                    var providedByLaconic = new[] {
+                        "Color", "Thickness", "ImageSource", "Keyboard", "FormattedString"
+                    };
 
                     return type.Namespace == "Xamarin.Forms" &&
                            !(providedByLaconic.Contains(type.Name) || type.IsEnum)

@@ -29,6 +29,7 @@ namespace Laconic.Demo
             AddSample<GroupedCollectionView>("Collection View");
             AddSample<DancingBars>("Dancing Bars (Performance)");
             AddSample<EntryAndEditor>("Entry and Editor");
+            AddSample<FormattedStringPage>("FormattedString");
             AddSample<Shapes>("Shapes");
             AddSample<LoginShape>("Shapes - Login Page");
         }

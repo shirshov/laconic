@@ -13,7 +13,7 @@ namespace Laconic
         record Rgba(byte r, byte g, byte b, byte a = 255);
     }
 
-    public readonly struct Color
+    public readonly struct Color : IConvert
     {
         public static readonly Color AliceBlue = (240, 248, 255);
         public static readonly Color AntiqueWhite = (250, 235, 215);
@@ -175,7 +175,7 @@ namespace Laconic
         public static Color FromHsla(double h, double s, double l, double a = 1.0)
             => new Color(new Hsla(h, s, l, a));
 
-        public Xamarin.Forms.Color ToXamarinFormsColor() => _value switch {
+        object IConvert.ToNative() => _value switch {
             Default _ => Xamarin.Forms.Color.Default,
             Accent _ => Xamarin.Forms.Color.Accent,
             Hex h => Xamarin.Forms.Color.FromHex(h.Value),

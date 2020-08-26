@@ -162,4 +162,9 @@ namespace Laconic
     {
         Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; }
     }
+
+    interface IConvert
+    {
+        object ToNative();
+    }
 }		

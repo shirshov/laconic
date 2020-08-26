@@ -6,7 +6,7 @@ using xf = Xamarin.Forms;
 
 namespace Laconic
 {
-    public abstract class ImageSource : IElement
+    public abstract class ImageSource : IElement, IConvert
     {
         readonly Dictionary<xf.BindableProperty, object>
             _providedValues = new Dictionary<xf.BindableProperty, object>();
@@ -41,7 +41,8 @@ namespace Laconic
                 : FromFile(source);
         }
 
-        internal xf.ImageSource ToXamarinFormsImageSource()
+        
+        object IConvert.ToNative()
         {
             switch (this) {
                 case FontImageSource s:
@@ -53,7 +54,7 @@ namespace Laconic
                     if (_providedValues.ContainsKey(xf.FontImageSource.SizeProperty))
                         native.Size = s.Size;
                     if (_providedValues.ContainsKey(xf.FontImageSource.ColorProperty))
-                        native.Color = s.Color.ToXamarinFormsColor();
+                        native.Color = (xf.Color)(s.Color as IConvert).ToNative();
                     return native;
                 case FileImageSource s:
                     return xf.ImageSource.FromFile(s.File);
