@@ -26,6 +26,7 @@ namespace Laconic
         record GridPositionChange(GridPositionChangeType type, int value);
         record RowDefinitionsChange(params Xamarin.Forms.RowDefinition[] definitions);
         record ColumnDefinitionsChange(params Xamarin.Forms.ColumnDefinition[] definitions);
+        record SetAbsoluteLayoutPositioning(Bounds bounds, AbsoluteLayoutFlags flags);
     }
     
     [Union]

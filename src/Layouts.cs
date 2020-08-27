@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Laconic.CodeGeneration;
 using xf = Xamarin.Forms;
 using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
@@ -188,5 +189,38 @@ namespace Laconic
                 (ctl, handler) => ctl.Refreshing -= (s, e) => 
                     handler(s, new RefreshingEventArgs( ((xf.RefreshView)s).IsRefreshing)));
         }
-    } 
+    }
+
+    public class AbsoluteLayout : Layout<xf.AbsoluteLayout>, ILayout
+    {
+        public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();
+        
+        ViewList ILayout.Children => Children;
+
+        public View this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
+            get => Children[key];
+            set {
+                Children[key] = value;
+                Children.SetPositioning(key, new Bounds(bounds.x, bounds.y, bounds.width, bounds.height), flags);
+            }
+        }
+    }
+    
+    [Records]
+    interface AbsoluteLayoutTypes
+    {
+        // TODO: should this be a Rectangle?
+        record Bounds(double x, double y, double width, double height);
+        record AbsLayoutInfo(Bounds bounds, AbsoluteLayoutFlags flags);
+    }
+    
+    public class AbsoluteLayoutViewList : ViewList
+    {
+        internal AbsLayoutInfo GetPositioning(Key key) => _positioning[key];
+
+        internal void SetPositioning(Key key, Bounds bounds,
+            AbsoluteLayoutFlags flags) => _positioning[key] = new AbsLayoutInfo(bounds, flags);
+
+        readonly Dictionary<Key, AbsLayoutInfo> _positioning = new Dictionary<Key, AbsLayoutInfo>();
+    }
 }

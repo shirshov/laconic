@@ -100,6 +100,10 @@ namespace Laconic
                         };
                         change(element, gpc.Value);
                     },
+                    SetAbsoluteLayoutPositioning (var bounds, var flags) => () => {
+                        xf.AbsoluteLayout.SetLayoutBounds(element, new xf.Rectangle(bounds.X, bounds.Y, bounds.Width, bounds.Height));
+                        xf.AbsoluteLayout.SetLayoutFlags(element, (xf.AbsoluteLayoutFlags)ConvertToNative(flags));
+                    },
                     WireEvent evt => () => {
                         var subs = (Dictionary<string, EventSubscription>)element.GetValue(EventSubscription.EventSubscriptionsProperty);
                         if (subs == null) {
@@ -168,6 +172,7 @@ namespace Laconic
         internal static xf.BindableObject CreateView(Element definition) => definition.CreateView();
 
         internal static object ConvertToNative(object value) => value switch {
+            AbsoluteLayoutFlags _ => (xf.AbsoluteLayoutFlags)value,
             FontAttributes _ => (xf.FontAttributes) value,
             ReturnType _ => (xf.ReturnType) value,
             IndicatorShape _ => (xf.IndicatorShape) value,

@@ -23,6 +23,7 @@ namespace Laconic.Demo
 
             MainPage = shell;
 
+            AddSample<AbsoluteLayoutPage>("AbsoluteLayout");
             AddSample<CounterPage>("Counter");
             AddSample<DynamicGrid>("Dynamic Grid");
             AddSample<CalculatorPage>("Calculator (Grid)");
