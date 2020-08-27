@@ -7,6 +7,20 @@ using Laconic.Shapes;
 
 namespace Laconic
 {
+    public partial class ActivityIndicator : View<xf.ActivityIndicator>
+    {
+        public Color Color
+        {
+            get => GetValue<Color>(xf.ActivityIndicator.ColorProperty);
+            set => SetValue(xf.ActivityIndicator.ColorProperty, value);
+        }
+        public Boolean IsRunning
+        {
+            get => GetValue<Boolean>(xf.ActivityIndicator.IsRunningProperty);
+            set => SetValue(xf.ActivityIndicator.IsRunningProperty, value);
+        }
+    }
+
     public partial class BoxView : View<xf.BoxView>
     {
         public Color Color
@@ -14,9 +28,9 @@ namespace Laconic
             get => GetValue<Color>(xf.BoxView.ColorProperty);
             set => SetValue(xf.BoxView.ColorProperty, value);
         }
-        public xf.CornerRadius CornerRadius
+        public CornerRadius CornerRadius
         {
-            get => GetValue<xf.CornerRadius>(xf.BoxView.CornerRadiusProperty);
+            get => GetValue<CornerRadius>(xf.BoxView.CornerRadiusProperty);
             set => SetValue(xf.BoxView.CornerRadiusProperty, value);
         }
     }

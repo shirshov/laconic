@@ -14,7 +14,7 @@ namespace Laconic.CodeGen
 
         public static readonly Dictionary<Type, Definitions> Defs = new Dictionary<Type, Definitions>
         {
-            [typeof(ActivityIndicator)] = NotUsed,
+            [typeof(ActivityIndicator)] = All,
             [typeof(Application)] = NotUsed,
             [typeof(AppLinkEntry)] = NotUsed,
             [typeof(BackButtonBehavior)] = NotUsed,
