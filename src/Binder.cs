@@ -125,7 +125,7 @@ namespace Laconic
                 _channel.Writer.WriteAsync(signal);
         }
 
-        static (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, 
+        (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, 
             IContextElement newElement,
             IReadOnlyDictionary<Guid, LocalContextInfo> contexts,
             ContextRequestList contextRequests)
@@ -134,7 +134,7 @@ namespace Laconic
             if (existingElement != null && contexts.ContainsKey(existingElement.ContextId))
                 context = contexts[existingElement.ContextId].Context;
             else 
-                context = new LocalContext();
+                context = new LocalContext(Send);
             
             newElement.ContextId = context.Id;
             var newBlueprint = newElement.Make(context);

@@ -176,7 +176,13 @@ namespace Laconic
                 case ILayout l: {
                     var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children, expandWithContext);
                     if (diff.Length > 0)
-                        operations.Add(new UpdateChildren(diff.ToArray()));
+                        operations.Add(new UpdateChildViews(diff.ToArray()));
+                    break;
+                }
+                case ICustomElementCollection col: {
+                    var diff = ViewListDiff.Calculate((existingElement as ICustomElementCollection)?.Children, col.Children, expandWithContext);
+                    if (diff.Length > 0)
+                        operations.Add(new UpdateChildElements(col, diff.ToArray()));
                     break;
                 }
                 case CollectionView c: {

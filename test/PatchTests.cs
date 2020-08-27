@@ -53,7 +53,7 @@ namespace Laconic.Tests
         {
             var sl = new xf.StackLayout();
             var diff = new[] {new AddChild("a", "reuseKey", 0, new Label(), new DiffOperation[0])};
-            Patch.Apply(sl, new[] {new UpdateChildren(diff)}, _ => { });
+            Patch.Apply(sl, new[] {new UpdateChildViews(diff)}, _ => { });
 
             sl.Children.Count.ShouldBe(1);
             sl.Children[0].ShouldBeOfType<xf.Label>();
@@ -108,7 +108,7 @@ namespace Laconic.Tests
             Patch.Apply(real,
                 new[]
                 {
-                    new UpdateChildren(new[]
+                    new UpdateChildViews(new[]
                     {
                         new AddChild("a", "reuseKey", 0, new Label(), new DiffOperation[0]),
                         new AddChild("b", "reuseKey", 1, new BoxView(),

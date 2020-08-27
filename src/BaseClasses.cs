@@ -48,7 +48,7 @@ namespace Laconic
             set => SetValue(xf.Element.ClassIdProperty, value);
         }
 
-        internal abstract xf.BindableObject CreateView();
+        protected internal abstract xf.BindableObject CreateView();
         
         public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)
             where T : xf.VisualElement, new() => new ContextElement<T>(maker);
@@ -128,7 +128,7 @@ namespace Laconic
     public abstract partial class VisualElement<T> : Element<T> where T : xf.VisualElement, new()
     {
         // TODO: why is it here, and not on Element<T>?
-        internal override xf.BindableObject CreateView() => new T();
+        protected internal override xf.BindableObject CreateView() => new T();
         
         public Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; } = new Dictionary<Key, IGestureRecognizer>();
         

@@ -23,13 +23,13 @@ namespace Laconic.Demo
 
             MainPage = shell;
 
-            AddSample<AbsoluteLayoutPage>("AbsoluteLayout");
             AddSample<CounterPage>("Counter");
             AddSample<DynamicGrid>("Dynamic Grid");
             AddSample<CalculatorPage>("Calculator (Grid)");
             AddSample<GroupedCollectionView>("Collection View");
             AddSample<DancingBars>("Dancing Bars (Performance)");
             AddSample<EntryAndEditor>("Entry and Editor");
+            AddSample<AbsoluteLayoutPage>("AbsoluteLayout");
             AddSample<FormattedStringPage>("FormattedString");
             AddSample<Shapes>("Shapes");
             AddSample<LoginShape>("Shapes - Login Page");

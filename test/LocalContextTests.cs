@@ -32,7 +32,7 @@ namespace Laconic.Tests
                 return new Label {Text = state};
             });
 
-            var context = new LocalContext();
+            var context = new LocalContext(null);
             IElement existingExpanded = null;
 
             (IElement, IElement) ExpandWithContext(IContextElement existing, IContextElement newOne)
@@ -59,10 +59,10 @@ namespace Laconic.Tests
         public void Diff_handles_AddChildWithRequest()
         {
             var sl = new StackLayout {Children = {[1] = Element.WithContext(ctx => new Label())}};
-            var context = new LocalContext();
+            var context = new LocalContext(null);
             var diff = Diff.Calculate(null, sl, (x, y) => (null, y.Make(context)));
             
-            diff.First().ShouldBeOfType<UpdateChildren>()
+            diff.First().ShouldBeOfType<UpdateChildViews>()
                 .Operations.First().ShouldBeOfType<AddChildWithContext>();
         }
 

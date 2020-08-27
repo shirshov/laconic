@@ -39,6 +39,29 @@ namespace Laconic
             return withContext;
         }
 
+        // TODO: this method should be somewhere else
+        internal static void ApplyToChildElements (xf.Element element, ICustomElementCollection list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
+        {
+            foreach (var op in operations) {
+                Action patchAction = op switch {
+                    RemoveChild rc => () => list.RemoveAt(element, rc.Index),
+                    UpdateChild uc => () => Patch.Apply(list.Get(element, uc.Index), uc.Operations, dispatch),
+                    ReplaceChild rc => () => {
+                        var real = (xf.View) Patch.CreateView((Element) rc.NewView);
+                        Patch.Apply(real, rc.Operations, dispatch);
+                        list.Set(element, rc.Index, real);
+                    },
+                    AddChild acv => () => {
+                        var real = Patch.CreateView((Element) acv.Blueprint);
+                        Patch.Apply(real, acv.Operations, dispatch);
+                        list.Insert(element, acv.Index, (xf.Element) real);
+                    },
+                    _ => () => throw new InvalidOperationException($"Unknown Diff operation: {op.GetType()}")
+                };
+                patchAction();
+            }
+        }
+        
         internal static void PatchItemsSource(xf.ItemsView itemsView, 
             UpdateItems update, 
             Action<Signal> dispatch, 
@@ -48,7 +71,7 @@ namespace Laconic
                 var source = new ObservableCollection<BindingContextItem>();
 
                 foreach (var op in update.Operations.OfType<AddChild>())
-                    source.Add(new BindingContextItem(op.ReuseKey, op.Key, op.Blueprint));
+                    source.Add(new BindingContextItem(op.ReuseKey, op.Key, (View)op.Blueprint));
 
                 itemsView.ItemTemplate = new ItemsViewTemplateSelector(dispatch, expandWithContext);
                 itemsView.ItemsSource = source;
@@ -57,7 +80,7 @@ namespace Laconic
                 var source = (ObservableCollection<BindingContextItem>) itemsView.ItemsSource;
                 foreach (var op in update.Operations) {
                     Action patchAction = op switch {
-                        AddChild ac => () => source.Insert(ac.Index, new BindingContextItem(ac.ReuseKey, ac.Key, ac.Blueprint)),
+                        AddChild ac => () => source.Insert(ac.Index, new BindingContextItem(ac.ReuseKey, ac.Key, (View)ac.Blueprint)),
                         RemoveChild rc => () => source.RemoveAt(rc.Index),
                         UpdateChild uc => () => {
                             var selector = (ItemsViewTemplateSelector) itemsView.ItemTemplate;

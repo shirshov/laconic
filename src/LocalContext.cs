@@ -22,12 +22,17 @@ namespace Laconic
     
     public class LocalContext
     {
+        readonly Action<Signal> _dispatch;
         internal const string LOCAL_STATE_KEY = "laconic.localstate";
         
         internal readonly Guid Id;
         readonly Dictionary<string, object> _values = new Dictionary<string, object>();
 
-        internal LocalContext() => Id = Guid.NewGuid();
+        internal LocalContext(Action<Signal> dispatch)
+        {
+            _dispatch = dispatch;
+            Id = Guid.NewGuid();
+        }
 
         public Action<xf.VisualElement>? ViewCreated { get; set; }
         
@@ -45,6 +50,7 @@ namespace Laconic
             return (initial, state => new SetLocalStateSignal<TState>(Id, state));
         }
 
+        public void Send(Signal signal) => _dispatch(signal);
     }
 
     interface IContextElement

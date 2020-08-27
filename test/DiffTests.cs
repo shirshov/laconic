@@ -95,6 +95,13 @@ namespace Laconic.Tests
         }
 
         [Fact]
+        public void ignore_null_for_child_views()
+        {
+            var diff = Diff.Calculate(null, new StackLayout {["ignored"] = null}, NoopExpander);
+            diff.Count().ShouldBe(0);
+        }
+        
+        [Fact]
         public void calc_diff_for_first_view()
         {
             var diff = Diff.Calculate(
@@ -120,7 +127,7 @@ namespace Laconic.Tests
         }
 
         [Fact]
-        public void ignore_child_set_to_null()
+        public void ignore_child_initially_set_to_null()
         {
             var diff = Diff.Calculate(null, new StackLayout {["null"] = null}, NoopExpander);
             diff.Count().ShouldBe(0);
@@ -132,7 +139,7 @@ namespace Laconic.Tests
             var diff = Diff.Calculate(new StackLayout {["1"] = new Label()}, new StackLayout {["1"] = null}, NoopExpander);
 
             diff.Count().ShouldBe(1);
-            diff.First().ShouldBeOfType<UpdateChildren>()
+            diff.First().ShouldBeOfType<UpdateChildViews>()
                 .Operations.First().ShouldBeOfType<RemoveChild>()
                 .Index.ShouldBe(0);
         }
@@ -144,6 +151,14 @@ namespace Laconic.Tests
         }
 
         [Fact]
+        public void noop_if_null_child_replaces_null_child()
+        {
+            var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = null}, NoopExpander);
+
+            diff.Count().ShouldBe(0);
+        }
+        
+        [Fact]
         public void add_children_to_new_view()
         {
             var diff = Diff.Calculate(
@@ -152,7 +167,7 @@ namespace Laconic.Tests
                 NoopExpander
             ).ToArray();
 
-            var updateChildren = diff[0].ShouldBeOfType<UpdateChildren>();
+            var updateChildren = diff[0].ShouldBeOfType<UpdateChildViews>();
 
             var addOne = updateChildren.Operations[0].ShouldBeOfType<AddChild>();
             addOne.Index.ShouldBe(0);
@@ -172,7 +187,7 @@ namespace Laconic.Tests
                 NoopExpander
             ).ToArray();
 
-            diff[0].ShouldBeOfType<UpdateChildren>()
+            diff[0].ShouldBeOfType<UpdateChildViews>()
                 .Operations[0].ShouldBeOfType<AddChild>()
                 .Index.ShouldBe(1);
         }
@@ -253,7 +268,7 @@ namespace Laconic.Tests
                     ["button", row: 1, columnSpan: 2] = new Button()
                 }, NoopExpander).ToArray();
 
-            var ops = diff[0].ShouldBeOfType<UpdateChildren>().Operations;
+            var ops = diff[0].ShouldBeOfType<UpdateChildViews>().Operations;
 
             ops[0].ShouldBeOfType<AddChild>().Blueprint.ShouldBeOfType<Label>();
             var labelPos = ops[0].ShouldBeOfType<AddChild>().Operations[0].ShouldBeOfType<GridPositionChange>();
@@ -270,7 +285,7 @@ namespace Laconic.Tests
                 NoopExpander
             ).ToArray();
 
-            var ops = diff[0].ShouldBeOfType<UpdateChildren>().Operations;
+            var ops = diff[0].ShouldBeOfType<UpdateChildViews>().Operations;
             ops[0].ShouldBeOfType<AddChild>().Blueprint.ShouldBeOfType<Label>();
         }
 
@@ -286,7 +301,7 @@ namespace Laconic.Tests
                     ["button", row: 1, columnSpan: 2] = new Button()
                 }, NoopExpander).ToArray();
 
-            var updateGrid = diff[0].ShouldBeOfType<UpdateChildren>().Operations;
+            var updateGrid = diff[0].ShouldBeOfType<UpdateChildViews>().Operations;
 
             var labelPosChanges = updateGrid[0].ShouldBeOfType<UpdateChild>().Operations.Cast<GridPositionChange>()
                 .ToArray();

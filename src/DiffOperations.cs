@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Laconic.CodeGeneration;
 using Laconic.Shapes;
 
@@ -21,7 +22,8 @@ namespace Laconic
         record WireEvent(string eventName, Func<EventArgs, Signal> signalMaker, Action<Xamarin.Forms.BindableObject, EventHandler> subscribe);
         record UnwireEvent(string eventName, Action<Xamarin.Forms.BindableObject, EventHandler> unsubscribe);
         record SetClip(Geometry geometry);
-        record UpdateChildren(params ListOperation[] operations);
+        record UpdateChildViews(params ListOperation[] operations);
+        record UpdateChildElements(ICustomElementCollection collection, params ListOperation[] operations);
         record UpdateItems(ListOperation[] operations);
         record GridPositionChange(GridPositionChangeType type, int value);
         record RowDefinitionsChange(params Xamarin.Forms.RowDefinition[] definitions);
@@ -32,7 +34,7 @@ namespace Laconic
     [Union]
     interface __ListOperation
     {
-        record AddChild(Key key, string reuseKey, int index, View blueprint, DiffOperation[] operations);
+        record AddChild(Key key, string reuseKey, int index, IElement blueprint, DiffOperation[] operations);
         record AddChildWithContext(Key key, string reuseKey, int index, View blueprint, Guid contextId, DiffOperation[] operations);
         record RemoveChild(int index);
         record UpdateChild(Key key, int index, View blueprint,DiffOperation[] operations);

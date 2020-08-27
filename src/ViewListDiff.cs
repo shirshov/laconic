@@ -5,7 +5,7 @@ namespace Laconic
 {
     static class ViewListDiff
     {
-        public static ListOperation[] Calculate(ViewList? existingItems, ViewList newItems, ExpandWithContext expandWithContext)
+        public static ListOperation[] Calculate(IDictionary<Key, IElement>? existingItems, IDictionary<Key, IElement> newItems, ExpandWithContext expandWithContext)
         {
             string GetReuseKey(Key key)
             {
@@ -22,15 +22,15 @@ namespace Laconic
                         .Concat(CalculatePositioningInParentDiff(item.Key, existingItems, newItems))
                         .ToArray();
                     if (item.Value is IContextElement withContext)
-                        res.Add(new AddChildWithContext(item.Key, GetReuseKey(item.Key), res.Count, item.Value, withContext.ContextId, childOps));
+                        res.Add(new AddChildWithContext(item.Key, GetReuseKey(item.Key), res.Count, (View)item.Value, withContext.ContextId, childOps));
                     else    
-                        res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, item.Value, childOps));
+                        res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, (View)item.Value, childOps));
                 }
             }
             else
             {
                 var listDiff = new ListDiff<Key, Key>(
-                    existingItems.Keys,
+                    existingItems.Where(x => x.Value != null).Select(x => x.Key),
                     newItems.Where(p => p.Value != null).Select(p => p.Key).ToArray());
 
                 var index = 0;
@@ -45,7 +45,7 @@ namespace Laconic
                                 new AddChild(action.DestinationItem, 
                                     GetReuseKey(action.DestinationItem), 
                                     index, 
-                                    newItem, childOps.ToArray())
+                                    newItem!, childOps.ToArray())
                         ); 
                         index++;
                     }
@@ -65,12 +65,12 @@ namespace Laconic
                                     newItems));
                                 res.Add(new AddChild(action.SourceItem, 
                                     GetReuseKey(action.DestinationItem), 
-                                    index, newView, items.ToArray())
+                                    index, (View)newView, items.ToArray())
                                 );
                         }
                         else if (existingView.GetType() != newView.GetType())
                         {
-                            res.Add(new ReplaceChild(index, newView, 
+                            res.Add(new ReplaceChild(index, (View)newView, 
                                 Diff.Calculate(null, newView, expandWithContext)
                                 .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems))
                                 .ToArray()));
@@ -79,7 +79,7 @@ namespace Laconic
                             var patch = Diff.Calculate(existingView, newView, expandWithContext)
                                 .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems));
                             if (patch.Any())
-                                res.Add(new UpdateChild(action.DestinationItem, index, newView, patch.ToArray()));
+                                res.Add(new UpdateChild(action.DestinationItem, index, (View)newView, patch.ToArray()));
                         }
 
                         index++;
@@ -92,8 +92,8 @@ namespace Laconic
         
         static IEnumerable<DiffOperation> CalculatePositioningInParentDiff(
             Key key, 
-            ViewList? existingList,
-            ViewList newList) => newList switch {
+            IDictionary<Key, IElement>? existingList,
+            IDictionary<Key, IElement> newList) => newList switch {
                 GridViewList gvl => GridDiff.CalculatePositioningInGrid(key, (GridViewList?) existingList, gvl),
                 AbsoluteLayoutViewList avl => AbsoluteLayoutDiff.Calculate(key, (AbsoluteLayoutViewList?)existingList, avl),
                 _ => new DiffOperation[0]

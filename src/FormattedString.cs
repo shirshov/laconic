@@ -6,7 +6,7 @@ namespace Laconic
 {
     public partial class Span : Element<xf.Span>
     {
-        internal override xf.BindableObject CreateView() => throw new System.NotImplementedException();
+        protected internal override xf.BindableObject CreateView() => throw new System.NotImplementedException();
     }
     
     public class FormattedString : Element<xf.FormattedString>, IEnumerable<Span>, IConvert
@@ -20,8 +20,8 @@ namespace Laconic
         public IEnumerator<Span> GetEnumerator() => throw new System.NotImplementedException();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        
-        internal override xf.BindableObject CreateView() => throw new System.NotImplementedException();
+
+        protected internal override xf.BindableObject CreateView() => throw new System.NotImplementedException();
 
         object IConvert.ToNative()
         {

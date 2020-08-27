@@ -41,15 +41,24 @@ namespace Laconic
 
     interface ILayout
     {
-        ViewList Children { get; }
+        IDictionary<Key, IElement> Children { get; }
+    }
+
+    // TODO: bad name
+    public interface ICustomElementCollection
+    {
+        IDictionary<Key, IElement> Children { get; }
+        void RemoveAt(xf.Element parent, int index);
+        void Insert(xf.Element parent, int index, xf.BindableObject child);
+        void Set(xf.Element parent, int index, xf.Element child);
+        xf.Element Get(xf.Element parent, int index);
     }
 
     public partial class StackLayout : Layout<xf.StackLayout>, ILayout
     {
         public ViewList Children { get; } = new ViewList();
 
-        ViewList ILayout.Children => Children;
-
+        IDictionary<Key, IElement> ILayout.Children => (IDictionary<Key, IElement>)Children;
 
         public View this[Key key]
         {
@@ -154,12 +163,12 @@ namespace Laconic
     public partial class Grid : Layout<xf.Grid>, ILayout
     {
         public GridViewList Children { get; set; } = new GridViewList();
-
-        ViewList ILayout.Children => Children;
+        
+        IDictionary<Key, IElement> ILayout.Children => (IDictionary<Key, IElement>)Children;
 
         public View this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
         {
-            get => Children[key];
+            get => (View)Children[key];
             set
             {
                 Children[key] = value;
@@ -195,10 +204,10 @@ namespace Laconic
     {
         public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();
         
-        ViewList ILayout.Children => Children;
+        IDictionary<Key, IElement> ILayout.Children => (IDictionary<Key, IElement>)Children;
 
         public View this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
-            get => Children[key];
+            get => (View)Children[key];
             set {
                 Children[key] = value;
                 Children.SetPositioning(key, new Bounds(bounds.x, bounds.y, bounds.width, bounds.height), flags);

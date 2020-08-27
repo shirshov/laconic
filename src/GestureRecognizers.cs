@@ -23,7 +23,7 @@ namespace Laconic
                 (ctl, handler) => ctl.Tapped -= handler);
         }
 
-        internal override xf.BindableObject CreateView() => new xf.TapGestureRecognizer();
+        protected internal override xf.BindableObject CreateView() => new xf.TapGestureRecognizer();
 
         xf.BindableObject IGestureRecognizer.CreateReal() => CreateView();
     }

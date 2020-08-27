@@ -58,17 +58,11 @@ namespace Laconic
                 }
             }
 
-            IList<xf.View> GetChildren() => ((xf.Layout<xf.View>) element).Children;
-
             var withContext = new List<(Guid, xf.BindableObject)>();
             
             foreach (var op in operations) {
                 Action patchingAction = op switch {
-                    SetProperty p => () => {
-                        var native = ConvertToNative(p.Value);
-                        element.SetValue(p.Property, native);
-                        var updated = element.GetValue(p.Property);
-                    },
+                    SetProperty p => () => element.SetValue(p.Property, ConvertToNative(p.Value)),
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
@@ -77,7 +71,10 @@ namespace Laconic
                         SetRealViewContent(childView);
                     },
                     UpdateContent uc => () => withContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
-                    UpdateChildren uc => () => withContext.AddRange(ViewListPatch.Apply(GetChildren(), uc.Operations, dispatch)),
+                    UpdateChildViews uc => () => withContext.AddRange(ViewListPatch.Apply(
+                        ((xf.Layout<xf.View>) element).Children, uc.Operations, dispatch)),
+                    UpdateChildElements uc => () => ViewListPatch
+                        .ApplyToChildElements((xf.Element)element, uc.Collection, uc.Operations, dispatch),
                     RowDefinitionsChange rdc => () => {
                         var grid = (xf.Grid) element;
                         grid.RowDefinitions.Clear();
