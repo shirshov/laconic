@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{72DDC363-9562-4D49-9B87-077C287AB212}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TemplateGuid>{c9e5eea5-ca05-42a1-839b-61506e0a37df}</TemplateGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Laconic.Maps.Demo</RootNamespace>
+    <AssemblyName>Laconic.Maps.Demo.Droid</AssemblyName>
+    <Deterministic>True</Deterministic>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Java.Interop" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Tabbar.xml">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Toolbar.xml">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\icon_round.xml">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-hdpi\icon.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-hdpi\launcher_foreground.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-mdpi\icon.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-mdpi\launcher_foreground.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-xhdpi\icon.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-xhdpi\launcher_foreground.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-xxhdpi\icon.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-xxhdpi\launcher_foreground.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\values\colors.xml">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\values\styles.xml">
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\app\Demo.csproj">
+      <Project>{fa3d35c6-c4ca-475e-b4fc-38b4c4784cbd}</Project>
+      <Name>Demo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="Xamarin.Android.Arch.Core.Common" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Arch.Core.Runtime" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.Common" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.LiveData" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.LiveData.Core" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.Runtime" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.ViewModel" Version="1.1.1.3" />
+    <PackageReference Include="Xamarin.Android.Support.Animated.Vector.Drawable" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Annotations" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.AsyncLayoutInflater" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Collections" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Compat" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.CoordinaterLayout" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Core.UI" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.CursorAdapter" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.CustomView" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.DocumentFile" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.DrawerLayout" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Fragment" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Interpolator" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Loader" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.LocalBroadcastManager" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Media.Compat" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Print" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.SlidingPaneLayout" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.SwipeRefreshLayout" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Transition" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.v7.RecyclerView" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Vector.Drawable" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.VersionedParcelable" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.ViewPager" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+</Project>

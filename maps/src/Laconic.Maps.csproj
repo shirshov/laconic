@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Laconic.CodeGeneration" Version="0.9.3-beta" />
-    <PackageReference Include="System.Threading.Channels" Version="4.7.1" />
-    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />
+    <ProjectReference Include="..\..\src\Laconic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms.Maps" Version="4.8.0.1269" />
   </ItemGroup>
 
 </Project>

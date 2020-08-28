@@ -28,11 +28,13 @@ namespace Laconic
 
     public abstract class Element : IEquatable<Element>, IElement
     {
-        public Dictionary<xf.BindableProperty, object> ProvidedValues { get; } =
+        public Dictionary<xf.BindableProperty, object?> ProvidedValues { get; } =
             new Dictionary<xf.BindableProperty, object>();
 
+        // TODO: this should be hidden from the app developer
         public Dictionary<string, EventInfo> Events { get; } = new Dictionary<string, EventInfo>();
 
+        // TODO: this should be hidden from the app developer
         protected T GetValue<T>(xf.BindableProperty property) => (T) ProvidedValues[property];
 
         protected void SetValue(xf.BindableProperty property, object? value) =>
