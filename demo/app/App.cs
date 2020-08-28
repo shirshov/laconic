@@ -8,7 +8,7 @@ namespace Laconic.Demo
     {
         public App()
         {
-            xf.Device.SetFlags(new[] { "Shapes_Experimental", "AppTheme_Experimental" });
+            xf.Device.SetFlags(new[] { "Shapes_Experimental", "AppTheme_Experimental", "Expander_Experimental" });
             
             var shell = new xf.Shell();
             xf.Shell.SetForegroundColor(shell, xf.Color.Chocolate);
@@ -31,6 +31,7 @@ namespace Laconic.Demo
             AddSample<EntryAndEditor>("Entry and Editor");
             AddSample<AbsoluteLayoutPage>("AbsoluteLayout");
             AddSample<FormattedStringPage>("FormattedString");
+            AddSample<ExpanderPage>("Expander");
             AddSample<Shapes>("Shapes");
             AddSample<LoginShape>("Shapes - Login Page");
         }

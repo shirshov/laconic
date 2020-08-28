@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Xunit;
 using Shouldly;
 using xf = Xamarin.Forms;

@@ -48,13 +48,10 @@ namespace Laconic.Shapes
 
     public class PathGeometry : Geometry<xf.Shapes.PathGeometry>
     {
-        readonly string _data;
-
         public PathGeometry(string data)
         {
-            _data = data;
             var figures = new PathFigureCollection();
-            xf.Shapes.PathFigureCollectionConverter.ParseStringToPathFigureCollection(figures, data);
+            PathFigureCollectionConverter.ParseStringToPathFigureCollection(figures, data);
             Figures = figures;
         }
 
@@ -86,43 +83,43 @@ namespace Laconic.Shapes
     public abstract class Shape<T> : View<T> where T : xf.View, new()
     {
         public Stretch Aspect {
-            get => GetValue<Stretch>(xf.Shapes.Shape.AspectProperty);
-            set => SetValue(xf.Shapes.Shape.AspectProperty, value);
+            get => GetValue<Stretch>(Shape.AspectProperty);
+            set => SetValue(Shape.AspectProperty, value);
         }
 
         public Color Fill {
-            get => GetValue<Color>(xf.Shapes.Shape.FillProperty);
-            set => SetValue(xf.Shapes.Shape.FillProperty, value);
+            get => GetValue<Color>(Shape.FillProperty);
+            set => SetValue(Shape.FillProperty, value);
         }
 
         public xf.DoubleCollection StrokeDashArray {
-            get => GetValue<xf.DoubleCollection>(xf.Shapes.Shape.StrokeDashArrayProperty);
-            set => SetValue(xf.Shapes.Shape.StrokeDashArrayProperty, value);
+            get => GetValue<xf.DoubleCollection>(Shape.StrokeDashArrayProperty);
+            set => SetValue(Shape.StrokeDashArrayProperty, value);
         }
 
         public double StrokeDashOffset {
-            get => GetValue<double>(xf.Shapes.Shape.StrokeDashOffsetProperty);
-            set => SetValue(xf.Shapes.Shape.StrokeDashOffsetProperty, value);
+            get => GetValue<double>(Shape.StrokeDashOffsetProperty);
+            set => SetValue(Shape.StrokeDashOffsetProperty, value);
         }
 
         public PenLineCap StrokeLineCap {
-            get => GetValue<PenLineCap>(xf.Shapes.Shape.StrokeLineCapProperty);
-            set => SetValue(xf.Shapes.Shape.StrokeLineCapProperty, value);
+            get => GetValue<PenLineCap>(Shape.StrokeLineCapProperty);
+            set => SetValue(Shape.StrokeLineCapProperty, value);
         }
 
         public PenLineJoin StrokeLineJoin {
-            get => GetValue<PenLineJoin>(xf.Shapes.Shape.StrokeLineJoinProperty);
-            set => SetValue(xf.Shapes.Shape.StrokeLineJoinProperty, value);
+            get => GetValue<PenLineJoin>(Shape.StrokeLineJoinProperty);
+            set => SetValue(Shape.StrokeLineJoinProperty, value);
         }
 
         public Color Stroke {
-            get => GetValue<Color>(xf.Shapes.Shape.StrokeProperty);
-            set => SetValue(xf.Shapes.Shape.StrokeProperty, value);
+            get => GetValue<Color>(Shape.StrokeProperty);
+            set => SetValue(Shape.StrokeProperty, value);
         }
 
         public double StrokeThickness {
-            get => GetValue<double>(xf.Shapes.Shape.StrokeThicknessProperty);
-            set => SetValue(xf.Shapes.Shape.StrokeThicknessProperty, value);
+            get => GetValue<double>(Shape.StrokeThicknessProperty);
+            set => SetValue(Shape.StrokeThicknessProperty, value);
         }
     }
 
@@ -135,7 +132,7 @@ namespace Laconic.Shapes
         public string Data {
             set {
                 var geom = new xf.Shapes.PathGeometry();
-                xf.Shapes.PathFigureCollectionConverter.ParseStringToPathFigureCollection(geom.Figures, value);
+                PathFigureCollectionConverter.ParseStringToPathFigureCollection(geom.Figures, value);
                 SetValue(xf.Shapes.Path.DataProperty, geom);
             }
         }

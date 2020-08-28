@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Laconic.Shapes;
 using xf = Xamarin.Forms;
 using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object>;
 using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInfo>;
@@ -12,26 +10,40 @@ namespace Laconic
     
     static class Diff
     {
-        static IEnumerable<DiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues)
+        static IEnumerable<DiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues, 
+            ExpandWithContext expandWithContext)
         {
-            foreach (var p in newValues) {
-                if (existingValues.TryGetValue(p.Key, out var val)) {
+            foreach (var newProp in newValues) {
+                if (existingValues.TryGetValue(newProp.Key, out var existingPropValue)) {
                     // Picker doesn't like items being changed while SelectedIndexChanged is being fired
-                    if (p.Key == xf.Picker.ItemsSourceProperty) {
-                        var oldItems = (IList<string>) val;
-                        var newItems = (IList<string>) p.Value;
+                    if (newProp.Key == xf.Picker.ItemsSourceProperty) {
+                        var oldItems = (IList<string>) existingPropValue;
+                        var newItems = (IList<string>) newProp.Value!;
                         if (!newItems.SequenceEqual(oldItems))
-                            yield return new SetProperty(p.Key, p.Value);
+                            yield return new SetProperty(newProp.Key, newProp.Value!);
                     }
-                    else if (p.Key == xf.VisualElement.ClipProperty && !val.Equals(p.Value))
-                        yield return new SetClip((Geometry) p.Value);
-                    else if (!val.Equals(p.Value))
-                        yield return new SetProperty(p.Key, p.Value);
+                    else if (newProp.Value is Element child) {
+                        var childDiff = Calculate((IElement)existingPropValue, child, expandWithContext).ToArray();
+                        if (childDiff.Length > 0)
+                            yield return new UpdateChildElement(newProp.Key, childDiff);
+                    }
+                    else if (!existingPropValue.Equals(newProp.Value))
+                        yield return new SetProperty(newProp.Key, newProp.Value!);
                 }
                 else {
-                    if (p.Key == xf.VisualElement.ClipProperty)
-                        yield return new SetClip((Geometry) p.Value);
-                    yield return (new SetProperty(p.Key, p.Value));
+                    switch (newProp.Value)
+                    {
+                        case Element _ when newProp.Value == null:
+                            yield return new SetChildElementToNull(newProp.Key);
+                            break;
+                        case Element child:
+                            var ops = Calculate(null, child, expandWithContext).ToArray();
+                            yield return new SetChildElement(newProp.Key, child.CreateView, ops);
+                            break;
+                        default: 
+                            yield return (new SetProperty(newProp.Key, newProp.Value!));
+                            break;
+                    }
                 }
             }
 
@@ -141,7 +153,7 @@ namespace Laconic
             }
             
             operations.AddRange(CalcPropertyDiff(existingElement?.ProvidedValues ?? new PropDict(),
-                newElement.ProvidedValues));
+                newElement.ProvidedValues, expandWithContext));
             operations.AddRange(CalcEventDiff(existingElement?.Events ?? new EventDict(), newElement.Events));
             
             if (newElement is View v)

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Laconic.CodeGeneration;
-using Laconic.Shapes;
 
 namespace Laconic
 {
@@ -21,8 +19,11 @@ namespace Laconic
         record RemoveContent();
         record WireEvent(string eventName, Func<EventArgs, Signal> signalMaker, Action<Xamarin.Forms.BindableObject, EventHandler> subscribe);
         record UnwireEvent(string eventName, Action<Xamarin.Forms.BindableObject, EventHandler> unsubscribe);
-        record SetClip(Geometry geometry);
         record UpdateChildViews(params ListOperation[] operations);
+        record SetChildElement(Xamarin.Forms.BindableProperty childElementProperty, 
+            Func<Xamarin.Forms.BindableObject> createElement, params DiffOperation[] operations);
+        record SetChildElementToNull(Xamarin.Forms.BindableProperty childElementProperty);
+        record UpdateChildElement(Xamarin.Forms.BindableProperty childElementProperty, DiffOperation[] operations);
         record UpdateChildElements(ICustomElementCollection collection, params ListOperation[] operations);
         record UpdateItems(ListOperation[] operations);
         record GridPositionChange(GridPositionChangeType type, int value);

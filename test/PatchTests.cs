@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Xunit;
 using Shouldly;
@@ -272,6 +271,18 @@ namespace Laconic.Tests
             real.IsRefreshing = false;
             real.IsRefreshing = true;
             real.IsRefreshing = false;
+        }
+
+        [Fact]
+        public void set_Expander_Header_and_Content()
+        {
+            var expander = new xf.Expander();
+            var diff = Diff.Calculate(null,
+                new Expander {Header = new Label {Text = "h"}, Content = new Label {Text = "d"}}, NoopExpander);
+            Patch.Apply(expander, diff, s => { });
+            
+            expander.Header.ShouldBeOfType<xf.Label>().Text.ShouldBe("h");
+            expander.Content.ShouldBeOfType<xf.Label>().Text.ShouldBe("d");
         }
     }
 }

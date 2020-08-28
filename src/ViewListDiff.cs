@@ -24,7 +24,7 @@ namespace Laconic
                     if (item.Value is IContextElement withContext)
                         res.Add(new AddChildWithContext(item.Key, GetReuseKey(item.Key), res.Count, (View)item.Value, withContext.ContextId, childOps));
                     else    
-                        res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, (View)item.Value, childOps));
+                        res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, item.Value, childOps));
                 }
             }
             else
@@ -77,7 +77,8 @@ namespace Laconic
                         }
                         else {
                             var patch = Diff.Calculate(existingView, newView, expandWithContext)
-                                .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems));
+                                .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems))
+                                .ToArray();
                             if (patch.Any())
                                 res.Add(new UpdateChild(action.DestinationItem, index, (View)newView, patch.ToArray()));
                         }

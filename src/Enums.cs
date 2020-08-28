@@ -15,6 +15,29 @@ namespace Laconic
         SizeProportional = 1 << 2 | 1 << 3,
         All = ~0
     }
+
+    public enum Easing
+    {
+        Linear,
+        SinOut,
+        SinIn,
+        SinInOut,
+        CubicIn,
+        CubicOut,
+        CubicInOut,
+        BounceOut,
+        BounceIn,
+        SpringIn,
+        SpringOut
+    }
+    
+    public enum ExpanderState
+    {
+        Expanding,
+        Expanded,
+        Collapsing,
+        Collapsed
+    }
     
     [Flags]
     public enum FontAttributes

@@ -304,6 +304,49 @@ namespace Laconic
         }
     }
 
+    public partial class Expander
+    {
+        public Easing CollapseAnimationEasing
+        {
+            get => GetValue<Easing>(xf.Expander.CollapseAnimationEasingProperty);
+            set => SetValue(xf.Expander.CollapseAnimationEasingProperty, value);
+        }
+        public UInt32 CollapseAnimationLength
+        {
+            get => GetValue<UInt32>(xf.Expander.CollapseAnimationLengthProperty);
+            set => SetValue(xf.Expander.CollapseAnimationLengthProperty, value);
+        }
+        public Easing ExpandAnimationEasing
+        {
+            get => GetValue<Easing>(xf.Expander.ExpandAnimationEasingProperty);
+            set => SetValue(xf.Expander.ExpandAnimationEasingProperty, value);
+        }
+        public UInt32 ExpandAnimationLength
+        {
+            get => GetValue<UInt32>(xf.Expander.ExpandAnimationLengthProperty);
+            set => SetValue(xf.Expander.ExpandAnimationLengthProperty, value);
+        }
+        public View Header
+        {
+            get => GetValue<View>(xf.Expander.HeaderProperty);
+            set => SetValue(xf.Expander.HeaderProperty, value);
+        }
+        public Boolean IsExpanded
+        {
+            get => GetValue<Boolean>(xf.Expander.IsExpandedProperty);
+            set => SetValue(xf.Expander.IsExpandedProperty, value);
+        }
+        public ExpanderState State
+        {
+            get => GetValue<ExpanderState>(xf.Expander.StateProperty);
+            set => SetValue(xf.Expander.StateProperty, value);
+        }
+        public Func<Signal> Tapped
+        {
+            set => SetEvent(nameof(Tapped), value, (ctl, handler) => ctl.Tapped += handler, (ctl, handler) => ctl.Tapped -= handler);
+        }
+    }
+
     public partial class FileImageSource
     {
         public String File

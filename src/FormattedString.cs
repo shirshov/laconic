@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using xf = Xamarin.Forms;
@@ -6,10 +7,10 @@ namespace Laconic
 {
     public partial class Span : Element<xf.Span>
     {
-        protected internal override xf.BindableObject CreateView() => throw new System.NotImplementedException();
+        protected internal override xf.BindableObject CreateView() => throw new NotImplementedException();
     }
     
-    public class FormattedString : Element<xf.FormattedString>, IEnumerable<Span>, IConvert
+    public class FormattedString : IConvert, IEnumerable<Span>
     {
         readonly List<Span> _spans = new List<Span>();
         
@@ -17,14 +18,13 @@ namespace Laconic
 
         public void Add(Span span) => _spans.Add(span);
 
-        public IEnumerator<Span> GetEnumerator() => throw new System.NotImplementedException();
-
+        public IEnumerator<Span> GetEnumerator() => throw new NotImplementedException();
+        
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        protected internal override xf.BindableObject CreateView() => throw new System.NotImplementedException();
 
         object IConvert.ToNative()
         {
+            // TODO: this is very inefficient. Must plug FormattedString into diff/patch properly.
             var ret = new xf.FormattedString();
             foreach (var span in _spans) {
                 var newSpan = new xf.Span();

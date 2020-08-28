@@ -31,7 +31,7 @@ namespace Laconic.Tests
             var img = new Image {Clip = new EllipseGeometry {Center = new xf.Point(10, 10), RadiusX = 3, RadiusY = 5}};
             var diff = Diff.Calculate(null, img, NoopExpander).ToArray();
 
-            diff[0].ShouldBeOfType<SetClip>();
+            diff[0].ShouldBeOfType<SetChildElement>();
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Laconic.Tests
             var img = new Image {Clip = new PathGeometry("M 10,100 C 100,0 200,200 300,100")};
             var diff = Diff.Calculate(null, img, NoopExpander);
 
-            diff.First().ShouldBeOfType<SetClip>();
+            diff.First().ShouldBeOfType<SetChildElement>();
         }
     }
 }

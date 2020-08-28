@@ -17,11 +17,11 @@ public interface MyRecords
 **What's generated:** each method in the interface becomes an immutable partial class, with a constructor, value equality and `With` method. Each parameter in the method becomes a property:
 
 ```csharp
-var johhny = new User("Johnny", "Smith");
-Console.WriteLine(user.FirstName); // prints "Johnny"
+var johnny = new User("Johnny", "Smith");
+Console.WriteLine(johnny.FirstName); // prints "Johnny"
 Console.WriteLine(johhny == new User("Johnny", "Smith")); // prints "true"
 
-var grownUp = rob.With(firstName: "John"); // values that are not supplied are copied from the original object
+var grownUp = johnny.With(firstName: "John"); // values that are not supplied are copied from the original object
 Console.WriteLine(johnny == grownUp); // prints "false"
 ```
 

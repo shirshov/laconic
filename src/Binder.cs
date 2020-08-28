@@ -199,13 +199,10 @@ namespace Laconic
 
                     var copy = _trackedElements.ToArray();
                     _trackedElements.Clear();
-                    var aliveTrackedElements = new List<TrackedElement>();
                     
                     foreach (var el in copy) {
                         if (!el.View.TryGetTarget(out var aliveView)) continue;
                         
-                        aliveTrackedElements.Add(el);
-
                         var newBlueprint = el.BlueprintMaker(context.State);
                         
                         // TODO: Diffs should run on the background thread

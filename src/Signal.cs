@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Laconic
+﻿namespace Laconic
 {
     public class Signal
     {
@@ -13,7 +11,7 @@ namespace Laconic
 
         public void Deconstruct(out object? p1, out object? p2) => (p1, p2) = (_p1, _p2);
 
-        public override string ToString() => $"{GetType()}: {_p1?.ToString()} {_p2?.ToString()}";
+        public override string ToString() => $"{GetType()}: {_p1} {_p2}";
     }
 
     public class Signal<T> : Signal

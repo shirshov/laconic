@@ -58,7 +58,7 @@ namespace Laconic
     {
         public ViewList Children { get; } = new ViewList();
 
-        IDictionary<Key, IElement> ILayout.Children => (IDictionary<Key, IElement>)Children;
+        IDictionary<Key, IElement> ILayout.Children => Children;
 
         public View this[Key key]
         {
@@ -164,7 +164,7 @@ namespace Laconic
     {
         public GridViewList Children { get; set; } = new GridViewList();
         
-        IDictionary<Key, IElement> ILayout.Children => (IDictionary<Key, IElement>)Children;
+        IDictionary<Key, IElement> ILayout.Children => Children;
 
         public View this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
         {
@@ -200,11 +200,19 @@ namespace Laconic
         }
     }
 
+    public partial class Expander : Layout<xf.Expander>
+    {
+        public View? Content {
+            get => GetValue<View?>(xf.Expander.ContentProperty);
+            set => SetValue(xf.Expander.ContentProperty, value);
+        }
+    }
+    
     public class AbsoluteLayout : Layout<xf.AbsoluteLayout>, ILayout
     {
         public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();
         
-        IDictionary<Key, IElement> ILayout.Children => (IDictionary<Key, IElement>)Children;
+        IDictionary<Key, IElement> ILayout.Children => Children;
 
         public View this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
             get => (View)Children[key];

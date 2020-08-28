@@ -69,6 +69,14 @@ namespace Laconic.CodeGen
                 Entry.TextProperty),
             [typeof(EntryCell)] = NotUsed,
             [typeof(EventTrigger)] = NotUsed,
+            [typeof(Expander)] = All
+                .WithoutBaseDeclaration()
+                .ExceptNotUsed(
+                    Expander.CommandProperty, 
+                    Expander.CommandParameterProperty, 
+                    Expander.ContentTemplateProperty,
+                    Expander.ForceUpdateSizeCommandProperty)
+                .ExceptWrittenManually(Expander.ContentProperty),
             [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FlyoutItem)] = NotUsed,
             [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),

@@ -37,6 +37,7 @@ namespace Laconic
                 xf.ContentView cv => cv.Content,
                 xf.ContentPage cp => cp.Content,
                 xf.ScrollView sv => sv.Content,
+                // xf.Expander ex => ex.Content,
                 // TODO: fallback to ContentAttribute
                 _ => throw new NotImplementedException("Unknown type of content view")
             };
@@ -62,6 +63,16 @@ namespace Laconic
             
             foreach (var op in operations) {
                 Action patchingAction = op switch {
+                    SetChildElementToNull co => () => element.SetValue(co.ChildElementProperty, null),
+                    SetChildElement co => () => {
+                        var newChildObject = co.CreateElement();
+                        Apply(newChildObject, co.Operations, dispatch);
+                        element.SetValue(co.ChildElementProperty, newChildObject);
+                    },
+                    UpdateChildElement co => () => {
+                        var childObject = (xf.BindableObject)element.GetValue(co.ChildElementProperty);
+                        Apply(childObject, co.Operations, dispatch);
+                    },
                     SetProperty p => () => element.SetValue(p.Property, ConvertToNative(p.Value)),
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
@@ -102,7 +113,7 @@ namespace Laconic
                         xf.AbsoluteLayout.SetLayoutFlags(element, (xf.AbsoluteLayoutFlags)ConvertToNative(flags));
                     },
                     WireEvent evt => () => {
-                        var subs = (Dictionary<string, EventSubscription>)element.GetValue(EventSubscription.EventSubscriptionsProperty);
+                        var subs = (Dictionary<string, EventSubscription>?)element.GetValue(EventSubscription.EventSubscriptionsProperty);
                         if (subs == null) {
                             subs = new Dictionary<string, EventSubscription>();
                             element.SetValue(EventSubscription.EventSubscriptionsProperty, subs);
@@ -137,13 +148,6 @@ namespace Laconic
                         var view = (xf.View) element;
                         Apply((xf.BindableObject) view.GestureRecognizers[ugr.Index], ugr.Operations, dispatch);
                     },
-                    SetClip sc => () => {
-                        var geomEl = (Element) sc.Geometry;
-                        var realGeom = geomEl.CreateView();
-                        foreach (var p in geomEl.ProvidedValues)
-                            realGeom.SetValue(p.Key, p.Value);
-                        element.SetValue(xf.VisualElement.ClipProperty, realGeom);
-                    },
                     AddToolbarItem tb => () => {
                          var view = (xf.ToolbarItem)tb.Blueprint.CreateView();
                          Apply(view, tb.Operations, dispatch);
@@ -170,6 +174,7 @@ namespace Laconic
 
         internal static object ConvertToNative(object value) => value switch {
             AbsoluteLayoutFlags _ => (xf.AbsoluteLayoutFlags)value,
+            ExpanderState _ => (xf.ExpanderState)value,
             FontAttributes _ => (xf.FontAttributes) value,
             ReturnType _ => (xf.ReturnType) value,
             IndicatorShape _ => (xf.IndicatorShape) value,
@@ -194,6 +199,21 @@ namespace Laconic
                 VisualMarker.Material => xf.VisualMarker.Material,
                 VisualMarker.MatchParent => xf.VisualMarker.MatchParent,
                 _ => throw new NotImplementedException($"Support for VisualMarker.{vm} is not implemented")
+            },
+            // Easing is a class in Xamarin.Forms
+            Easing e => e switch {
+                Easing.Linear => xf.Easing.Linear,
+                Easing.BounceIn => xf.Easing.BounceIn,
+                Easing.BounceOut => xf.Easing.BounceOut,
+                Easing.CubicIn => xf.Easing.CubicIn,
+                Easing.CubicOut => xf.Easing.CubicOut,
+                Easing.SinIn => xf.Easing.SinIn,
+                Easing.SinOut => xf.Easing.SinOut,
+                Easing.SpringIn => xf.Easing.SpringIn,
+                Easing.SpringOut => xf.Easing.SpringOut,
+                Easing.CubicInOut => xf.Easing.CubicInOut,
+                Easing.SinInOut => xf.Easing.SinInOut,
+                _ => throw new NotImplementedException($"Support for Easing.{e} is not implemented")
             },
             // Keyboard is a class in Xamarin.Forms
             Keyboard k => k switch {

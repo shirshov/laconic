@@ -6,7 +6,7 @@ namespace Laconic.Demo
             Margin = (30, 30),
             VerticalOptions = LayoutOptions.Center,
             FormattedText = new FormattedString {
-                new Span {Text = "As ", FontFamily = "AmericanTypewriter" },
+                new Span {Text = "As ", FontFamily = "AmericanTypewriter" }, // the font is iOS only
                 new Span {Text = "you ", FontSize = 30},
                 new Span {Text = "value ", FontAttributes = FontAttributes.Bold | FontAttributes.Italic},
                 new Span {Text = "your life or ",BackgroundColor = Color.Yellow },

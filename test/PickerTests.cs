@@ -1,5 +1,4 @@
 using Shouldly;
-using Xamarin.Forms;
 using Xunit;
 
 namespace Laconic.Tests
@@ -14,7 +13,7 @@ namespace Laconic.Tests
             {
                 Items = new [] {"0", "1", "2"}, 
                 SelectedIndex = s,
-                SelectedIndexChanged = s => new Signal(s)
+                SelectedIndexChanged = e => new Signal(e)
             });
             
              picker.SelectedIndex = 1;

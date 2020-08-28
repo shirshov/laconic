@@ -35,7 +35,7 @@ namespace Laconic
 
         protected T GetValue<T>(xf.BindableProperty property) => (T) ProvidedValues[property];
 
-        protected void SetValue(xf.BindableProperty property, object value) =>
+        protected void SetValue(xf.BindableProperty property, object? value) =>
             ProvidedValues[property] = value;
 
         public string AutomationId {
@@ -108,7 +108,7 @@ namespace Laconic
             }
         }
 
-        protected void SetEvent<TEventArgs>(string eventName, Func<TEventArgs, Signal> signalMaker,
+        protected void SetEvent<TEventArgs>(string eventName, Func<TEventArgs, Signal>? signalMaker,
             Action<T, EventHandler<TEventArgs>> subscribe,
             Action<T, EventHandler<TEventArgs>> unsubscribe) where TEventArgs : EventArgs
         {
@@ -163,6 +163,7 @@ namespace Laconic
         Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; }
     }
 
+    // TODO: bad name
     interface IConvert
     {
         object ToNative();
