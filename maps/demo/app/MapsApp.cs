@@ -1,29 +1,27 @@
 using System;
 using Laconic.CodeGeneration;
-using Xamarin.Forms.Maps;
-using xf = Xamarin.Forms;
+using m = Xamarin.Forms.Maps;
 
 namespace Laconic.Maps.Demo
 {
     [Records]
     interface AppStateRecords
     {
-        record State(MapType mapType, bool isShowingUser, bool trafficEnabled, bool hasScrollEnabled, bool hasZoomEnabled);
+        record State(m.MapType mapType, bool isShowingUser, bool trafficEnabled, bool hasScrollEnabled, bool hasZoomEnabled);
     }
 
-    [Flags]
     enum MapSwitch
     {
-        IsShowingUser = 0,
-        TrafficEnabled = 1,
-        HasScrollEnabled = 2,
-        HasZoomEnabled = 4
+        IsShowingUser,
+        TrafficEnabled,
+        HasScrollEnabled,
+        HasZoomEnabled
     }
     
     public class MapsApp : Xamarin.Forms.Application
     {
         static State Reducer(State state, Signal signal) => signal switch {
-            (MapType t, _) => state.With(mapType: t),
+            (m.MapType t, _) => state.With(mapType: t),
             (MapSwitch.IsShowingUser, bool val) => state.With(isShowingUser: val),
             (MapSwitch.TrafficEnabled, bool val) => state.With(trafficEnabled: val),
             (MapSwitch.HasScrollEnabled, bool val) => state.With(hasScrollEnabled: val),
@@ -33,19 +31,25 @@ namespace Laconic.Maps.Demo
         
         static View Controls(State state)
         {
-            static Button MapTypeButton (MapType type, bool isSelected) => new Button {
+            static Button MapTypeButton (m.MapType type, bool isSelected) => new Button {
                 Text = type.ToString(),
-                TextColor = isSelected ? Color.White : Color.DarkGray,
-                BackgroundColor = isSelected ? Color.DarkGray : Color.Default,
+                TextColor = Color.White,
+                BackgroundColor = isSelected ? (0, 0, 0, 130) : Color.Default,
                 HorizontalOptions = LayoutOptions.Fill,
                 CornerRadius = 15,
                 Clicked = () => new Signal(type)
             };
             
             var mapTypeControls = new Grid {
-                [0] = MapTypeButton(MapType.Street, state.MapType == MapType.Street),
-                [1, column: 1] = MapTypeButton(MapType.Satellite, state.MapType == MapType.Satellite),
-                [2, column: 2] = MapTypeButton(MapType.Hybrid, state.MapType == MapType.Hybrid),
+                ["bg", columnSpan: 3] = new BoxView {
+                    HeightRequest = 35,
+                    CornerRadius = 15, 
+                    BackgroundColor = (0, 0, 0, 40), 
+                    VerticalOptions = LayoutOptions.Center,
+                },
+                [0] = MapTypeButton(m.MapType.Street, state.MapType == m.MapType.Street),
+                [1, column: 1] = MapTypeButton(m.MapType.Satellite, state.MapType == m.MapType.Satellite),
+                [2, column: 2] = MapTypeButton(m.MapType.Hybrid, state.MapType == m.MapType.Hybrid),
             };
 
             static View SwitchRow(string text, bool isToggled, MapSwitch toggle) => new Grid {
@@ -60,13 +64,13 @@ namespace Laconic.Maps.Demo
             var line = new BoxView {HeightRequest = 1, Color = (0, 0, 0, 50)};
             
             return new StackLayout {
-                Padding = (20, 40),
+                Padding = (20, 20, 20, 50),
                 ["type"] = mapTypeControls,
-                ["l1"] = line,
+                // ["l1"] = line,
                 ["user"] = SwitchRow("Show your location", state.IsShowingUser, MapSwitch.IsShowingUser),
                 ["l2"] = line,
                 ["traffic"] = SwitchRow("Show traffic", state.TrafficEnabled, MapSwitch.TrafficEnabled),
-                ["l3"] = new BoxView { HeightRequest = 1, Color = Color.LightGray}, //line,
+                ["l3"] = line,
                 ["scroll"] = SwitchRow("Allow scrolling", state.HasScrollEnabled, MapSwitch.HasScrollEnabled),
                 ["l4"] = line,
                 ["zoom"] = SwitchRow("Allow zooming", state.HasZoomEnabled, MapSwitch.HasZoomEnabled),
@@ -80,7 +84,14 @@ namespace Laconic.Maps.Demo
                 IsShowingUser = state.IsShowingUser,
                 TrafficEnabled = state.TrafficEnabled,
                 HasScrollEnabled = state.HasScrollEnabled,
-                HasZoomEnabled = state.HasZoomEnabled
+                HasZoomEnabled = state.HasZoomEnabled,
+                Pins = {
+                    ["sydney"] = new Pin {
+                        Type = m.PinType.SavedPin,
+                        Label = "Sydney",
+                        Position = new m.Position(-33.86785, 151.20732)
+                    }
+                },
             },
             ["controls", row: 1] = Controls(state)
         };
@@ -89,7 +100,7 @@ namespace Laconic.Maps.Demo
 
         public MapsApp()
         {
-            _binder = Binder.Create(new State(MapType.Hybrid, false, false, true, true), Reducer);
+            _binder = Binder.Create(new State(m.MapType.Hybrid, false, false, true, true), Reducer);
 
             MainPage = _binder.CreateElement(s => new ContentPage {
                 Content = MainContent(s)

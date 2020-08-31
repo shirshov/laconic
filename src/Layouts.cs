@@ -44,16 +44,6 @@ namespace Laconic
         IDictionary<Key, IElement> Children { get; }
     }
 
-    // TODO: bad name
-    public interface ICustomElementCollection
-    {
-        IDictionary<Key, IElement> Children { get; }
-        void RemoveAt(xf.Element parent, int index);
-        void Insert(xf.Element parent, int index, xf.BindableObject child);
-        void Set(xf.Element parent, int index, xf.Element child);
-        xf.Element Get(xf.Element parent, int index);
-    }
-
     public partial class StackLayout : Layout<xf.StackLayout>, ILayout
     {
         public ViewList Children { get; } = new ViewList();

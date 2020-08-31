@@ -170,6 +170,14 @@ namespace Laconic
                 ));
             }
 
+            foreach (var info in ((Element) newElement).ElementLists.Inner) {
+                foreach (var listElement in info.Value.List) {
+                    var ops = ElementListDiff.Calculate(null, info.Value.List, expandWithContext);
+                    if (ops.Any())
+                        operations.Add(new UpdateChildElementList(info.Value.ListGetter, ops));
+                }
+            }
+
             switch (newElement) {
                 case IContentHost newViewAsContainer: {
                     var oldContent = (existingElement as IContentHost)?.Content;
@@ -189,12 +197,6 @@ namespace Laconic
                     var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children, expandWithContext);
                     if (diff.Length > 0)
                         operations.Add(new UpdateChildViews(diff.ToArray()));
-                    break;
-                }
-                case ICustomElementCollection col: {
-                    var diff = ViewListDiff.Calculate((existingElement as ICustomElementCollection)?.Children, col.Children, expandWithContext);
-                    if (diff.Length > 0)
-                        operations.Add(new UpdateChildElements(col, diff.ToArray()));
                     break;
                 }
                 case CollectionView c: {

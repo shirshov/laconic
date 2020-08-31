@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maps.Demo.iOS", "maps\demo\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maps.Demo", "maps\demo\app\Maps.Demo.csproj", "{EF33D290-4207-45D3-A45D-260F15D7D89C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapTests", "maps\test\MapTests.csproj", "{FBF39651-B58F-49E2-95D4-37CE8B06CE59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,18 @@ Global
 		{EF33D290-4207-45D3-A45D-260F15D7D89C}.Release|x64.Build.0 = Release|Any CPU
 		{EF33D290-4207-45D3-A45D-260F15D7D89C}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF33D290-4207-45D3-A45D-260F15D7D89C}.Release|x86.Build.0 = Release|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Debug|x64.Build.0 = Debug|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Debug|x86.Build.0 = Debug|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|x64.ActiveCfg = Release|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|x64.Build.0 = Release|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|x86.ActiveCfg = Release|Any CPU
+		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

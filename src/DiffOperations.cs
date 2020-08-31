@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Laconic.CodeGeneration;
+using xf = Xamarin.Forms;
 
 namespace Laconic
 {
@@ -12,23 +15,23 @@ namespace Laconic
         record AddToolbarItem(ToolbarItem blueprint, params DiffOperation[] operations);
         record RemoveToolbarItem(int index);
         record UpdateToolbarItem(int index, DiffOperation[] operations);
-        record SetProperty(Xamarin.Forms.BindableProperty property, object value);
-        record ResetProperty(Xamarin.Forms.BindableProperty property);
+        record SetProperty(xf.BindableProperty property, object value);
+        record ResetProperty(xf.BindableProperty property);
         record SetContent(View contentView, DiffOperation[] operations);
         record UpdateContent(DiffOperation[] operations);
         record RemoveContent();
-        record WireEvent(string eventName, Func<EventArgs, Signal> signalMaker, Action<Xamarin.Forms.BindableObject, EventHandler> subscribe);
-        record UnwireEvent(string eventName, Action<Xamarin.Forms.BindableObject, EventHandler> unsubscribe);
+        record WireEvent(string eventName, Func<EventArgs, Signal> signalMaker, Action<xf.BindableObject, EventHandler> subscribe);
+        record UnwireEvent(string eventName, Action<xf.BindableObject, EventHandler> unsubscribe);
         record UpdateChildViews(params ListOperation[] operations);
-        record SetChildElement(Xamarin.Forms.BindableProperty childElementProperty, 
-            Func<Xamarin.Forms.BindableObject> createElement, params DiffOperation[] operations);
-        record SetChildElementToNull(Xamarin.Forms.BindableProperty childElementProperty);
+        record SetChildElement(xf.BindableProperty childElementProperty, 
+            Func<xf.BindableObject> createElement, params DiffOperation[] operations);
+        record SetChildElementToNull(xf.BindableProperty childElementProperty);
         record UpdateChildElement(Xamarin.Forms.BindableProperty childElementProperty, DiffOperation[] operations);
-        record UpdateChildElements(ICustomElementCollection collection, params ListOperation[] operations);
+        record UpdateChildElementList(Func<xf.Element, IList> getList, params ListOperation[] operations);
         record UpdateItems(ListOperation[] operations);
         record GridPositionChange(GridPositionChangeType type, int value);
-        record RowDefinitionsChange(params Xamarin.Forms.RowDefinition[] definitions);
-        record ColumnDefinitionsChange(params Xamarin.Forms.ColumnDefinition[] definitions);
+        record RowDefinitionsChange(params xf.RowDefinition[] definitions);
+        record ColumnDefinitionsChange(params xf.ColumnDefinition[] definitions);
         record SetAbsoluteLayoutPositioning(Bounds bounds, AbsoluteLayoutFlags flags);
     }
     

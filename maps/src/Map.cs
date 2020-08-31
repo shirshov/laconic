@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using xf = Xamarin.Forms;
 
 namespace Laconic.Maps
 {
-    public class Pin : Element<xf.Maps.Pin>, IElement
+    public class Pin : Element<xf.Maps.Pin>
     {
         public xf.Maps.PinType Type
         {
@@ -29,9 +28,26 @@ namespace Laconic.Maps
         protected override xf.BindableObject CreateView() => new xf.Maps.Pin();
     }
     
-    public class Map : View<Xamarin.Forms.Maps.Map>, ICustomElementCollection
+    public class Map : View<Xamarin.Forms.Maps.Map>
     {
- //       public static readonly BindableProperty MoveToLastRegionOnLayoutChangeProperty = BindableProperty.Create(nameof (MoveToLastRegionOnLayoutChange), typeof (bool), typeof (Map), (object) true);
+        public Map()
+        {
+            // TODO: generic parameter, casting should not be necessary
+            ElementLists.Add<xf.Maps.Map>(nameof(Pins), map => (IList)map.Pins);
+            ElementLists.Add<xf.Maps.Map>(nameof(MapElements), map => (IList)map.MapElements);
+        }
+
+        public ElementList Pins => ElementLists[nameof(Pins)];
+
+        public ElementList MapElements => ElementLists[nameof(MapElements)];
+        
+        public xf.Maps.MapSpan? VisibleRegion {
+            set => SetValue(nameof(VisibleRegion), value, map => {
+                if (value != null)
+                    map.MoveToRegion(value);
+            });
+        }
+
         public xf.Maps.MapType MapType {
             get => GetValue<xf.Maps.MapType>(xf.Maps.Map.MapTypeProperty);
             set => SetValue(xf.Maps.Map.MapTypeProperty, value);
@@ -56,19 +72,5 @@ namespace Laconic.Maps
             get => GetValue<bool>(xf.Maps.Map.HasZoomEnabledProperty);
             set => SetValue(xf.Maps.Map.HasZoomEnabledProperty, value);
         }
-        
-        public IDictionary<Key, Pin> Pins { get; } = new Dictionary<Key, Pin>(); 
-
-        IDictionary<Key, IElement> ICustomElementCollection.Children => Pins.ToDictionary(x => x.Key, x => (IElement)x.Value);
-        
-        void ICustomElementCollection.RemoveAt(Xamarin.Forms.Element parent, int index) => (parent as Xamarin.Forms.Maps.Map).Pins.RemoveAt(index);
-
-        void ICustomElementCollection.Insert(Xamarin.Forms.Element parent, int index, Xamarin.Forms.BindableObject child) =>
-            (parent as Xamarin.Forms.Maps.Map).Pins.Insert(index, (Xamarin.Forms.Maps.Pin)child);
-
-        void ICustomElementCollection.Set(Xamarin.Forms.Element parent, int index, Xamarin.Forms.Element child) =>
-            (parent as Xamarin.Forms.Maps.Map).Pins[index] = (Xamarin.Forms.Maps.Pin) child;
-
-        Xamarin.Forms.Element ICustomElementCollection.Get(Xamarin.Forms.Element parent, int index) => (parent as Xamarin.Forms.Maps.Map).Pins[index];
     }
 }

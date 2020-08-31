@@ -284,5 +284,28 @@ namespace Laconic.Tests
             expander.Header.ShouldBeOfType<xf.Label>().Text.ShouldBe("h");
             expander.Content.ShouldBeOfType<xf.Label>().Text.ShouldBe("d");
         }
+
+        class Postprocessed : View<xf.BoxView>
+        {
+            protected internal override xf.BindableObject CreateView() => new xf.BoxView();
+
+            public bool IsProcessed;
+            
+            public bool IsToggled {
+                set => SetValue(nameof(IsToggled), value, el => { IsProcessed = true; });
+            }
+        }
+
+        [Fact]
+        public void property_is_post_processed()
+        {
+            var blueprint = new Postprocessed { IsToggled = true };
+
+            var binder = Binder.Create(0, (s, g) => s);
+
+            var view = binder.CreateElement(s => blueprint);
+            
+            blueprint.IsProcessed.ShouldBeTrue();
+        }
     }
 }

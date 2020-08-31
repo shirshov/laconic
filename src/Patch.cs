@@ -73,7 +73,12 @@ namespace Laconic
                         var childObject = (xf.BindableObject)element.GetValue(co.ChildElementProperty);
                         Apply(childObject, co.Operations, dispatch);
                     },
-                    SetProperty p => () => element.SetValue(p.Property, ConvertToNative(p.Value)),
+                    SetProperty p => () => {
+                        if (p.Value is PostProcessInfo info)
+                            info.Process(element);
+                        else
+                            element.SetValue(p.Property, ConvertToNative(p.Value));
+                    },
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
@@ -84,8 +89,8 @@ namespace Laconic
                     UpdateContent uc => () => withContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
                     UpdateChildViews uc => () => withContext.AddRange(ViewListPatch.Apply(
                         ((xf.Layout<xf.View>) element).Children, uc.Operations, dispatch)),
-                    UpdateChildElements uc => () => ViewListPatch
-                        .ApplyToChildElements((xf.Element)element, uc.Collection, uc.Operations, dispatch),
+                    UpdateChildElementList uc => () => ViewListPatch
+                        .ApplyToChildElements(uc.GetList((xf.Element)element), uc.Operations, dispatch),
                     RowDefinitionsChange rdc => () => {
                         var grid = (xf.Grid) element;
                         grid.RowDefinitions.Clear();
@@ -131,8 +136,11 @@ namespace Laconic
                         var sub = subs[evt.EventName];
                         evt.Unsubscribe(element, sub.EventHandler);
                     },
-                    UpdateItems ui => () => ViewListPatch.PatchItemsSource((xf.ItemsView) element, ui, dispatch, 
-                        (x, y) => ((IElement)x, (IElement)y)),
+                    UpdateItems ui => () => {
+                        xf.ItemsView itemsView = (xf.ItemsView) element;
+                        ViewListPatch.PatchItemsSource(itemsView, ui, dispatch,
+                            (x, y) => ((IElement) x, (IElement) y), itemsView.ItemsSource);
+                    },
                     AddGestureRecognizer agr => () => {
                         var view = (xf.View) element;
                         var realRec = agr.Blueprint.CreateReal();

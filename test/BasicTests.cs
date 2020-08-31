@@ -12,8 +12,7 @@ namespace Laconic.Tests
             new Label { Text = "a" }.Equals(new Label { Text = "a" }).ShouldBeTrue();
             new Label { Text = "a" }.Equals(new Label { Text = "b" }).ShouldBeFalse();
 
-            var res = (new Label {Text = "a"} == new Label {Text = "a"});
-                res.ShouldBeTrue();
+            (new Label {Text = "a"} == new Label {Text = "a"}).ShouldBeTrue();
             (new Label {Text = "a"} == new Label {Text = "b"}).ShouldBeFalse();
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -40,21 +41,21 @@ namespace Laconic
         }
 
         // TODO: this method should be somewhere else
-        internal static void ApplyToChildElements (xf.Element element, ICustomElementCollection list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
+        internal static void ApplyToChildElements (IList list, ListOperation[] operations, Action<Signal> dispatch)
         {
             foreach (var op in operations) {
                 Action patchAction = op switch {
-                    RemoveChild rc => () => list.RemoveAt(element, rc.Index),
-                    UpdateChild uc => () => Patch.Apply(list.Get(element, uc.Index), uc.Operations, dispatch),
+                    RemoveChild rc => () => list.RemoveAt(rc.Index),
+                    UpdateChild uc => () => Patch.Apply((xf.BindableObject)list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () => {
                         var real = (xf.View) Patch.CreateView((Element) rc.NewView);
                         Patch.Apply(real, rc.Operations, dispatch);
-                        list.Set(element, rc.Index, real);
+                        list[rc.Index] = real;
                     },
                     AddChild acv => () => {
                         var real = Patch.CreateView((Element) acv.Blueprint);
                         Patch.Apply(real, acv.Operations, dispatch);
-                        list.Insert(element, acv.Index, (xf.Element) real);
+                        list.Insert(acv.Index, (xf.Element) real);
                     },
                     _ => () => throw new InvalidOperationException($"Unknown Diff operation: {op.GetType()}")
                 };
@@ -65,9 +66,9 @@ namespace Laconic
         internal static void PatchItemsSource(xf.ItemsView itemsView, 
             UpdateItems update, 
             Action<Signal> dispatch, 
-            ExpandWithContext expandWithContext)
+            ExpandWithContext expandWithContext, IEnumerable itemsSource)
         {
-            if (itemsView.ItemsSource == null) {
+            if (itemsSource == null) {
                 var source = new ObservableCollection<BindingContextItem>();
 
                 foreach (var op in update.Operations.OfType<AddChild>())
@@ -77,7 +78,7 @@ namespace Laconic
                 itemsView.ItemsSource = source;
             }
             else {
-                var source = (ObservableCollection<BindingContextItem>) itemsView.ItemsSource;
+                var source = (ObservableCollection<BindingContextItem>) itemsSource;
                 foreach (var op in update.Operations) {
                     Action patchAction = op switch {
                         AddChild ac => () => source.Insert(ac.Index, new BindingContextItem(ac.ReuseKey, ac.Key, (View)ac.Blueprint)),
