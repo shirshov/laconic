@@ -172,7 +172,9 @@ namespace Laconic
 
             foreach (var info in ((Element) newElement).ElementLists.Inner) {
                 foreach (var listElement in info.Value.List) {
-                    var ops = ElementListDiff.Calculate(null, info.Value.List, expandWithContext);
+                    ElementListInfo? existingInfo = null;
+                    ((Element) existingElement)?.ElementLists?.Inner?.TryGetValue(info.Key, out existingInfo);
+                    var ops = ElementListDiff.Calculate(existingInfo?.List, info.Value.List, expandWithContext);
                     if (ops.Any())
                         operations.Add(new UpdateChildElementList(info.Value.ListGetter, ops));
                 }

@@ -85,8 +85,8 @@ namespace Laconic
                         RemoveChild rc => () => source.RemoveAt(rc.Index),
                         UpdateChild uc => () => {
                             var selector = (ItemsViewTemplateSelector) itemsView.ItemTemplate;
-                            selector.UpdateRendered(uc.Key, uc.Blueprint);
-                            source[uc.Index].Blueprint = uc.Blueprint;
+                            selector.UpdateRendered(uc.Key, (View)uc.Blueprint);
+                            source[uc.Index].Blueprint = (View)uc.Blueprint;
                         },
                         ReplaceChild _ => () => throw new InvalidOperationException("ItemsViewList should never" +
                             " replace child views"),

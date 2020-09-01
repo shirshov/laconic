@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ContextRequestList = System.Collections.Generic.List<(Laconic.IContextElement ContextElement, Laconic.LocalContext Context, Laconic.Element Rendered)>; 
                 
 [assembly: InternalsVisibleTo("LaconicTests")]
+[assembly: InternalsVisibleTo("MapTests")]
 
 namespace Laconic
 {

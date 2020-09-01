@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using xf = Xamarin.Forms;
 
 namespace Laconic
@@ -30,6 +31,14 @@ namespace Laconic
 
     public class ElementList : Dictionary<Key, Element>
     {
+        public static implicit operator ElementList(Dictionary<int, Element> source)
+        {
+            var res = new ElementList();
+            foreach (var p in source)
+                res.Add(p.Key, p.Value);
+
+            return res;
+        }
     }
 
     class ElementListInfo
@@ -80,7 +89,7 @@ namespace Laconic
 
         public ElementList this[string key] {
             get => Inner[key].List;
-            set => throw new InvalidOperationException("Use Add(string, ElementList) method instead of the indexer");
+            set => Inner[key] = new ElementListInfo(value, Inner[key].ListGetter);
         }
 
         ICollection<string> IDictionary<string, ElementList>.Keys { get; }
