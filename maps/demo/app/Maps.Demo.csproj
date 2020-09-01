@@ -24,6 +24,9 @@
   <ItemGroup>
     <None Remove="largest-cities.geojson" />
     <EmbeddedResource Include="largest-cities.geojson" />
+    <None Remove="Font Awesome 5 Free-Regular-400.otf" />
+    <None Remove="Font Awesome 5 Free-Solid-900.otf" />
+    <EmbeddedResource Include="Font Awesome 5 Free-Solid-900.otf" />
   </ItemGroup>
 
 </Project>

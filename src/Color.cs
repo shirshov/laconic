@@ -13,7 +13,7 @@ namespace Laconic
         record Rgba(byte r, byte g, byte b, byte a = 255);
     }
 
-    public readonly struct Color : IConvert
+    public readonly struct Color : IConvert, IEquatable<Color>
     {
         public static readonly Color AliceBlue = (240, 248, 255);
         public static readonly Color AntiqueWhite = (250, 235, 215);
@@ -184,8 +184,14 @@ namespace Laconic
             _ => throw new NotImplementedException($"Support for the color value '{_value}' is not implemented")
         };
 
+        public bool Equals(Color other) => _value.Equals(other._value);
+
+        public override bool Equals(object? obj) => obj is Color other && Equals(other);
+
         public override int GetHashCode() => _value.GetHashCode();
 
-        public override bool Equals(object obj) => _value.Equals(obj);
+        public static bool operator ==(Color left, Color right) => left.Equals(right);
+
+        public static bool operator !=(Color left, Color right) => !left.Equals(right);
     }
 }

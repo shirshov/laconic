@@ -36,7 +36,7 @@ namespace Laconic.Maps.Demo
 
                 return sourcePolygons.Select(
                     p => new Polygon {
-                        FillColor = (0, 0, 255, 5),
+                        FillColor = (0, 0, 255, 25),
                         StrokeColor = Color.Blue,
                         StrokeWidth = 1,
                         Geopath = p.Select(x => new Position(x.Latitude, x.Longitude)).ToList()

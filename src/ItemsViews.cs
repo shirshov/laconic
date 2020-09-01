@@ -4,6 +4,11 @@ using xf = Xamarin.Forms;
 
 namespace Laconic
 {
+    interface IItemSourceView
+    {
+        ItemsViewList Items { get; set; }
+    }
+    
     public abstract partial class ItemsView<T> : View<T> where T : xf.ItemsView, new()
     {
         public Func<Signal> RemainingItemsThresholdReached
@@ -14,7 +19,7 @@ namespace Laconic
         }
     }
 
-    public partial class CarouselView : ItemsView<xf.CarouselView>
+    public partial class CarouselView : ItemsView<xf.CarouselView>, IItemSourceView
     {
         public Func<xf.CurrentItemChangedEventArgs, Signal> CurrentItemChanged
         {
@@ -29,6 +34,8 @@ namespace Laconic
                 (ctl, handler) => ctl.PositionChanged += handler,
                 (ctl, handler) => ctl.PositionChanged -= handler);
         }
+        
+        public ItemsViewList Items { get; set; } = new ItemsViewList();
     }
 
     public abstract class StructuredItemsView<T> : ItemsView<T> where T : xf.StructuredItemsView, new()
@@ -62,7 +69,7 @@ namespace Laconic
         }
     }
 
-    public class CollectionView : SelectableItemsView<xf.CollectionView>
+    public class CollectionView : SelectableItemsView<xf.CollectionView>, IItemSourceView
     {
         public ItemsViewList Items { get; set; } = new ItemsViewList();
 

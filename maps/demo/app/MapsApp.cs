@@ -1,11 +1,14 @@
+using System;
 using System.Linq;
-using Laconic.CodeGeneration;
+using Xamarin.Forms;
+
+[assembly: ExportFont("Font Awesome 5 Free-Solid-900.otf", Alias = "IconFont")]
 
 namespace Laconic.Maps.Demo
 {
     public class MapsApp : Xamarin.Forms.Application
     {
-        static View Controls(State state)
+        static StackLayout Features(State state)
         {
             static Button MapTypeButton (MapType type, bool isSelected) => new Button {
                 Text = type.ToString(),
@@ -52,32 +55,72 @@ namespace Laconic.Maps.Demo
             };
         }
 
-        static Grid MainContent(State state, Polygon p) => new Grid {
-            RowDefinitions = "*, Auto",
+        static View CityRow(City city) => new StackLayout {
+            Orientation = StackOrientation.Horizontal,
+            Padding = (20, 0),
+            ["name"] = new Label { Text = city.Name,VerticalOptions = LayoutOptions.Center},
+            ["population"] = new Label { 
+                Text = city.Population.ToString(), 
+                FontSize = 10,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+            },
+            ["show"] = new ImageButton {
+                Source = new FontImageSource {
+                    FontFamily = "IconFont", 
+                    // Glyph = city.IsShownOnMap ? "\uf070" : "\uf06e", 
+                    Glyph = "\uf06e", 
+                    Color = city.IsShownOnMap ? Color.DarkGray : Color.Silver
+                },
+                BorderColor = Color.Silver,
+                BorderWidth = 1,
+                Clicked = () => new Signal("toggle-city", city.Name),
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center
+            },
+            
+            ["locate"] = new ImageButton {
+                Source = new FontImageSource {
+                    FontFamily = "IconFont", 
+                    Glyph = "\uf05b",
+                    Color = Color.Silver
+                },
+                Clicked = () => new Signal("toggle-city", city.Name),
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center
+            }
+        };
+        
+        static View Cities(City[] cities) => new StackLayout {
+            ["lbl"] = new Label { Text = "CITIES"},
+            ["lst"] = new CollectionView {
+                Items = cities.ToItemsList(x => "city", x => x.Name, CityRow)
+            }
+        };
+
+        static Grid MainContent(State state) => new Grid {
+            RowDefinitions = "*, 300",
             ["map"] = new Map {
                 MapType = state.MapType,
                 IsShowingUser = state.Features.IsShowingUser,
                 TrafficEnabled = state.Features.TrafficEnabled,
                 HasScrollEnabled = state.Features.HasScrollEnabled,
                 HasZoomEnabled = state.Features.HasZoomEnabled,
-                Pins = {
-                    ["Rome"] = new Pin {
-                        Type = PinType.SavedPin,
-                        Label = "Rome",
-                        Position = (41.890202, 12.492049)
-                    }
-                },
                 MapElements = (
-                        from c in state.Cities
-                        from poly in c.Boundaries
-                        select poly
-                    )
-                    .Select((p, i) => (Polygon: p, Index: i))
-                    .ToDictionary(x => x.Index, x => (Element)x.Polygon) // TODO: why the casting is required?
+                    from c in state.Cities
+                    from polyWithIndex in c.Boundaries.Select((p, i) => (Polygon: p, Index: i))
+                    where c.IsShownOnMap
+                    select (Key: $"{c.Name}({polyWithIndex.Index})", Polygon:  polyWithIndex.Polygon)
+                ).ToDictionary(x => x.Key, x => (Element) x.Polygon) // TODO: why the cast is required?
             },
-            ["controls", row: 1] = Controls(state)
+            ["controls", row: 1] = new CarouselView {
+                Items = {
+                    ["features", "f"] = Features(state), 
+                    ["cities", "c"] = Cities(state.Cities)
+                },
+            }
         };
-        
+
         readonly Binder<State> _binder;
 
         public MapsApp()
@@ -87,7 +130,7 @@ namespace Laconic.Maps.Demo
             _binder = Binder.Create(new State(MapType.Street, new Features(false, false, true, true),  cities), Reducers.Main);
 
             MainPage = _binder.CreateElement(s => new ContentPage {
-                Content = MainContent(s, cities[0].Boundaries[0])
+                Content = MainContent(s)
             });
         }
     }

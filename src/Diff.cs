@@ -170,14 +170,13 @@ namespace Laconic
                 ));
             }
 
-            foreach (var info in ((Element) newElement).ElementLists.Inner) {
-                foreach (var listElement in info.Value.List) {
-                    ElementListInfo? existingInfo = null;
-                    ((Element) existingElement)?.ElementLists?.Inner?.TryGetValue(info.Key, out existingInfo);
-                    var ops = ElementListDiff.Calculate(existingInfo?.List, info.Value.List, expandWithContext);
-                    if (ops.Any())
-                        operations.Add(new UpdateChildElementList(info.Value.ListGetter, ops));
-                }
+            foreach (var elList in ((Element) newElement).ElementLists.Inner) {
+                ElementListInfo? existingInfo = null;
+                ((Element) existingElement)?.ElementLists?.Inner?.TryGetValue(elList.Key, out existingInfo);
+                var newInfo = elList.Value;
+                var ops = ElementListDiff.Calculate(existingInfo?.List, newInfo.List, expandWithContext);
+                if (ops.Any())
+                    operations.Add(new UpdateChildElementList(newInfo.ListGetter, ops));
             }
 
             switch (newElement) {
@@ -201,8 +200,8 @@ namespace Laconic
                         operations.Add(new UpdateChildViews(diff.ToArray()));
                     break;
                 }
-                case CollectionView c: {
-                    var diff = ViewListDiff.Calculate((existingElement as CollectionView)?.Items, c.Items, expandWithContext);
+                case IItemSourceView c: {
+                    var diff = ViewListDiff.Calculate((existingElement as IItemSourceView)?.Items, c.Items, expandWithContext);
                     if (diff.Any())
                         operations.Add(new UpdateItems(diff));
                     break;

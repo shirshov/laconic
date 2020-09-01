@@ -39,6 +39,15 @@ namespace Laconic
 
             return res;
         }
+        
+        public static implicit operator ElementList(Dictionary<string, Element> source)
+        {
+            var res = new ElementList();
+            foreach (var p in source)
+                res.Add(p.Key, p.Value);
+
+            return res;
+        }
     }
 
     class ElementListInfo

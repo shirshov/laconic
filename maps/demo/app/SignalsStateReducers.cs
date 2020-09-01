@@ -1,3 +1,4 @@
+using System.Linq;
 using Laconic.CodeGeneration;
 
 namespace Laconic.Maps.Demo
@@ -28,9 +29,15 @@ namespace Laconic.Maps.Demo
             _ => features
         };
 
+        static City[] Cities(City[] cities, Signal signal) => signal switch {
+            ("toggle-city", string cityName) => cities
+                .Select(c => c.Name == cityName ? c.With(isShownOnMap: !c.IsShownOnMap) : c).ToArray(),
+            _ => cities
+        };
+        
         public static State Main(State state, Signal signal) => signal switch {
             (MapType t, _) => state.With(mapType: t),
-            _ => state.With(features: Features(state.Features, signal))
+            _ => state.With(features: Features(state.Features, signal), cities: Cities(state.Cities, signal))
         };
         
     }
