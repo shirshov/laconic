@@ -34,10 +34,11 @@ namespace Laconic.Maps
             set => ElementLists[nameof(MapElements)] = value;
         }
 
-        public xf.Maps.MapSpan? VisibleRegion {
+        public Maps.MapSpan VisibleRegion {
             set => SetValue(nameof(VisibleRegion), value, map => {
                 if (value != null)
-                    map.MoveToRegion(value);
+                    map.MoveToRegion(new xf.Maps.MapSpan(
+                        new xf.Maps.Position(value.Center.Latitude, value.Center.Longitude), value.LatitudeDegrees, value.LongitudeDegrees));
             });
         }
 
