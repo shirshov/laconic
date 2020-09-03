@@ -878,11 +878,6 @@ namespace Laconic
             get => GetValue<String>(xf.SearchBar.PlaceholderProperty);
             set => SetValue(xf.SearchBar.PlaceholderProperty, value);
         }
-        public Object SearchCommandParameter
-        {
-            get => GetValue<Object>(xf.SearchBar.SearchCommandParameterProperty);
-            set => SetValue(xf.SearchBar.SearchCommandParameterProperty, value);
-        }
         public Color TextColor
         {
             get => GetValue<Color>(xf.SearchBar.TextColorProperty);

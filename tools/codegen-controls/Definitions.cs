@@ -151,7 +151,7 @@ namespace Laconic.CodeGen
             [typeof(ScrollView)] = All
                 .WithoutBaseDeclaration()
                 .ExceptManuallyWrittenEvents(nameof(ScrollView.Scrolled), nameof(ScrollView.ScrollToRequested)),
-            [typeof(SearchBar)] = All.ExceptNotUsed(SearchBar.SearchCommandProperty, SearchBar.SearchCommandProperty),
+            [typeof(SearchBar)] = All.ExceptNotUsed(SearchBar.SearchCommandProperty, SearchBar.SearchCommandParameterProperty),
             [typeof(SearchHandler)] = NotUsed,
             [typeof(SelectableItemsView)] = All.WithoutBaseDeclaration()
                 .TakeGenericParameter()
