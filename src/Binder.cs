@@ -105,11 +105,6 @@ namespace Laconic
             
             UpdateElementContexts(contextRequests, newElementsWithContext);
             
-            foreach (var (contextId, newView) in newElementsWithContext) {
-                var info = _elementContexts.First(x => x.Value.Context.Id == contextId).Value;
-                info.Context.ViewCreated?.Invoke((xf.VisualElement) newView);
-            }
-            
             _trackedElements.Add(new TrackedElement(new WeakReference<xf.VisualElement>(view), blueprint, blueprintMaker));
             
             return view;
@@ -213,11 +208,6 @@ namespace Laconic
                         var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
 
                         UpdateElementContexts(contextRequests, newElementsWithContext);
-
-                        foreach (var (contextId, view) in newElementsWithContext) {
-                            var info = _elementContexts.First(x => x.Value.Context.Id == contextId).Value;
-                            info.Context.ViewCreated?.Invoke((xf.VisualElement) view);
-                        }
 
                         _trackedElements.Add(el.With(newBlueprint));
                     }

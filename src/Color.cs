@@ -175,7 +175,9 @@ namespace Laconic
         public static Color FromHsla(double h, double s, double l, double a = 1.0)
             => new Color(new Hsla(h, s, l, a));
 
-        object IConvert.ToNative() => _value switch {
+        object IConvert.ToNative() => ToXamarinFormsColor();
+        
+        public Xamarin.Forms.Color ToXamarinFormsColor() => _value switch {
             Default _ => Xamarin.Forms.Color.Default,
             Accent _ => Xamarin.Forms.Color.Accent,
             Hex h => Xamarin.Forms.Color.FromHex(h.Value),

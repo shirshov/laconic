@@ -78,7 +78,7 @@ namespace Laconic.Maps.Tests
         public void VisibleRegion_changed()
         {
             static Map MapMaker(int s) => new Map {
-                VisibleRegion = maps.MapSpan.FromCenterAndRadius(new maps.Position(0, 0), maps.Distance.FromMeters(100))
+                VisibleRegion = MapSpan.FromCenterAndRadius(new Position(0, 0), Distance.FromMeters(100))
             };
 
             var binder = Binder.CreateForTest(0, (s, g) => s + 1);

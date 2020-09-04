@@ -34,8 +34,6 @@ namespace Laconic
             Id = Guid.NewGuid();
         }
 
-        public Action<xf.VisualElement>? ViewCreated { get; set; }
-        
         internal T GetValue<T>(string key) => (T)_values[key];
 
         internal void SetValue<T>(string key, T value) => _values[key] = value!;
