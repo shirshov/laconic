@@ -137,7 +137,7 @@ namespace Laconic
             if (!_templates.ContainsKey(contextItem.ReuseKey)) {
                 var template = new xf.DataTemplate(() => {
                     var newRealView = (xf.View) Patch.CreateView((Element) contextItem.Blueprint);
-                    var diff = Diff.Calculate(null, contextItem.Blueprint, _expandWithContext);
+                    var diff = Diff.Calculate(null, (Element)contextItem.Blueprint, _expandWithContext);
                     Patch.Apply(newRealView, diff, _dispatch);
                     newRealView.BindingContextChanged += OnBindingContextChanged;
                     _renderedBlueprints[newRealView] = (contextItem.Key, contextItem.Blueprint);
@@ -157,7 +157,7 @@ namespace Laconic
                 var contextItem = (BindingContextItem) realView.BindingContext;
                 _renderedBlueprints.TryGetValue(realView, out var value);
 
-                Patch.Apply(realView, Diff.Calculate(value.Blueprint, contextItem.Blueprint, _expandWithContext), _dispatch);
+                Patch.Apply(realView, Diff.Calculate((Element)value.Blueprint, (Element)contextItem.Blueprint, _expandWithContext), _dispatch);
                 _renderedBlueprints[realView] = (contextItem.Key, contextItem.Blueprint);
             }
         }
@@ -166,7 +166,7 @@ namespace Laconic
         {
             foreach (var (view, rendered) in _renderedBlueprints.Select(x => (x.Key, x.Value)).ToArray()) {
                 if (rendered.Key == key) {
-                    var diff = Diff.Calculate(rendered.Blueprint, newBlueprint, _expandWithContext);
+                    var diff = Diff.Calculate((Element)rendered.Blueprint, (Element)newBlueprint, _expandWithContext);
                     Patch.Apply(view, diff, _dispatch);
                     _renderedBlueprints[view] = (key, newBlueprint);
                 }

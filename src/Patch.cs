@@ -4,31 +4,31 @@ using xf = Xamarin.Forms;
 
 namespace Laconic
 {
-    class EventSubscription
-    {
-        public static readonly xf.BindableProperty EventSubscriptionsProperty = xf.BindableProperty.CreateAttached(
-            nameof(EventSubscriptionsProperty), 
-            typeof(Dictionary<string, EventSubscription>), 
-            typeof(EventSubscription), null);
-
-        readonly Action<Signal> _dispatch;
-        public Func<EventArgs, Signal> SignalMaker;
-        
-        public EventSubscription(Func<EventArgs, Signal> signalMaker, Action<Signal> dispatch)
-        {
-            SignalMaker = signalMaker;
-            _dispatch = dispatch;
-        }
-
-        public void EventHandler(object sender, EventArgs e)
-        {
-            var signal = SignalMaker(e);
-            _dispatch(signal);
-        }
-    }
-    
     static class Patch
     {
+        class EventSubscription
+        {
+            public static readonly xf.BindableProperty EventSubscriptionsProperty = xf.BindableProperty.CreateAttached(
+                nameof(EventSubscriptionsProperty), 
+                typeof(Dictionary<string, EventSubscription>), 
+                typeof(EventSubscription), null);
+
+            readonly Action<Signal> _dispatch;
+            public Func<EventArgs, Signal> SignalMaker;
+            
+            public EventSubscription(Func<EventArgs, Signal> signalMaker, Action<Signal> dispatch)
+            {
+                SignalMaker = signalMaker;
+                _dispatch = dispatch;
+            }
+
+            public void EventHandler(object sender, EventArgs e)
+            {
+                var signal = SignalMaker(e);
+                _dispatch(signal);
+            }
+        }
+    
         internal static List<(Guid ContextId, xf.BindableObject Element)> Apply(xf.BindableObject element, 
             IEnumerable<DiffOperation> operations,
             Action<Signal> dispatch)
@@ -37,7 +37,6 @@ namespace Laconic
                 xf.ContentView cv => cv.Content,
                 xf.ContentPage cp => cp.Content,
                 xf.ScrollView sv => sv.Content,
-                // xf.Expander ex => ex.Content,
                 // TODO: fallback to ContentAttribute
                 _ => throw new NotImplementedException("Unknown type of content view")
             };
@@ -139,7 +138,7 @@ namespace Laconic
                     UpdateItems ui => () => {
                         xf.ItemsView itemsView = (xf.ItemsView) element;
                         ViewListPatch.PatchItemsSource(itemsView, ui, dispatch,
-                            (x, y) => ((IElement) x, (IElement) y), itemsView.ItemsSource);
+                            (x, y) => ((Element) x, (Element) y), itemsView.ItemsSource);
                     },
                     AddGestureRecognizer agr => () => {
                         var view = (xf.View) element;

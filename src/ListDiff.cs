@@ -31,7 +31,7 @@ namespace Laconic
 	/// <summary>
 	/// The type of <see cref="ListDiffAction{S,D}"/>.
 	/// </summary>
-	public enum ListDiffActionType
+	enum ListDiffActionType
 	{
 		/// <summary>
 		/// Update the SourceItem to make it like the DestinationItem
@@ -52,7 +52,7 @@ namespace Laconic
 	/// </summary>
 	/// <typeparam name="S">The type of the source list elements</typeparam>
 	/// <typeparam name="D">The type of the destination list elements</typeparam>
-	public struct ListDiffAction<S, D>
+	struct ListDiffAction<S, D>
 	{
 		/// <summary>
 		/// The action to take in order to merge the source list into the destination.
@@ -101,7 +101,7 @@ namespace Laconic
 	/// </summary>
 	/// <typeparam name="S">The type of the source list elements</typeparam>
 	/// <typeparam name="D">The type of the destination list elements</typeparam>
-	public class ListDiff<S, D>
+	class ListDiff<S, D>
 	{
 		/// <summary>
 		/// The actions needed to transform a source list to a destination list.
@@ -222,7 +222,7 @@ namespace Laconic
 	/// <summary>
 	/// Extensions for IEnumerable and IList to generate diffs and to merge lists.
 	/// </summary>
-	public static class ListDiffExtensions
+	static class ListDiffExtensions
 	{
 		/// <summary>
 		/// Merges <see cref="P:source"/> into <see cref="P:destination"/> by first creating a diff

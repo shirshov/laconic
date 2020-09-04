@@ -6,7 +6,7 @@ namespace Laconic.Tests
 {
     public class GridTests
     {
-        (IElement, IElement) NoopExpander(IContextElement? x, IContextElement y) => ((IElement) x, (IElement) y);
+        (Element, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element) x, (Element) y);
         
         [Fact]
         public void should_set_RowDefinitions_from_string()

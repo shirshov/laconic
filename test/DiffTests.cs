@@ -8,7 +8,7 @@ namespace Laconic.Tests
 {
     public class DiffTests
     {
-        (IElement, IElement) NoopExpander(IContextElement? x, IContextElement y) => ((IElement) x, (IElement) y);
+        (Element, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element) x, (Element) y);
         
         [Fact]
         public void should_update_property()

@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Laconic
 {
-    public class ViewList : IDictionary<Key, IElement>
+    public class ViewList : IDictionary<Key, View>
     {
-        readonly Dictionary<Key, IElement> _internalStorage = new Dictionary<Key, IElement>();
+        readonly Dictionary<Key, View> _internalStorage = new Dictionary<Key, View>();
 
         public ViewList()
         {
@@ -19,7 +19,7 @@ namespace Laconic
                 _internalStorage.Add(key, view);
         }
 
-        public IElement this[Key key]
+        public View this[Key key]
         {
             get => _internalStorage[key];
             set => _internalStorage.Add(key, value);
@@ -29,39 +29,39 @@ namespace Laconic
 
         internal IEnumerable<Key> Keys => _internalStorage.Keys;
 
-        ICollection<Key> IDictionary<Key, IElement>.Keys => _internalStorage.Keys;
-        ICollection<IElement> IDictionary<Key, IElement>.Values => throw new NotImplementedException();
+        ICollection<Key> IDictionary<Key, View>.Keys => _internalStorage.Keys;
+        ICollection<View> IDictionary<Key, View>.Values => throw new NotImplementedException();
 
-        int ICollection<KeyValuePair<Key, IElement>>.Count => _internalStorage.Count;
+        int ICollection<KeyValuePair<Key, View>>.Count => _internalStorage.Count;
 
-        bool ICollection<KeyValuePair<Key, IElement>>.IsReadOnly => throw new NotImplementedException();
+        bool ICollection<KeyValuePair<Key, View>>.IsReadOnly => throw new NotImplementedException();
 
-        public void Add(Key key, IElement value) => _internalStorage.Add(key, value);
+        public void Add(Key key, View value) => _internalStorage.Add(key, value);
 
-        void ICollection<KeyValuePair<Key, IElement>>.Add(KeyValuePair<Key, IElement> item) =>
+        void ICollection<KeyValuePair<Key, View>>.Add(KeyValuePair<Key, View> item) =>
             throw new NotImplementedException();
 
-        void ICollection<KeyValuePair<Key, IElement>>.Clear() => throw new NotImplementedException();
+        void ICollection<KeyValuePair<Key, View>>.Clear() => throw new NotImplementedException();
 
-        bool ICollection<KeyValuePair<Key, IElement>>.Contains(KeyValuePair<Key, IElement> item) =>
+        bool ICollection<KeyValuePair<Key, View>>.Contains(KeyValuePair<Key, View> item) =>
             throw new NotImplementedException();
 
         public bool ContainsKey(Key key) => _internalStorage.ContainsKey(key);
 
-        void ICollection<KeyValuePair<Key, IElement>>.CopyTo(KeyValuePair<Key, IElement>[] array, int arrayIndex) =>
+        void ICollection<KeyValuePair<Key, View>>.CopyTo(KeyValuePair<Key, View>[] array, int arrayIndex) =>
             throw new NotImplementedException();
 
-        IEnumerator<KeyValuePair<Key, IElement>> IEnumerable<KeyValuePair<Key, IElement>>.GetEnumerator() =>
+        IEnumerator<KeyValuePair<Key, View>> IEnumerable<KeyValuePair<Key, View>>.GetEnumerator() =>
             _internalStorage.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => _internalStorage.GetEnumerator();
 
-        bool IDictionary<Key, IElement>.Remove(Key key) => throw new NotImplementedException();
+        bool IDictionary<Key, View>.Remove(Key key) => throw new NotImplementedException();
 
-        bool ICollection<KeyValuePair<Key, IElement>>.Remove(KeyValuePair<Key, IElement> item) =>
+        bool ICollection<KeyValuePair<Key, View>>.Remove(KeyValuePair<Key, View> item) =>
             throw new NotImplementedException();
 
-        bool IDictionary<Key, IElement>.TryGetValue(Key key, out IElement value) => throw new NotImplementedException();
+        bool IDictionary<Key, View>.TryGetValue(Key key, out View value) => throw new NotImplementedException();
 
         public static implicit operator ViewList(Dictionary<Key, View> source) =>
             new ViewList(source.Select(x => (x.Key, x.Value)));

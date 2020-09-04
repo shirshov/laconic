@@ -6,7 +6,7 @@ using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInf
 
 namespace Laconic
 {
-    delegate (IElement?, IElement) ExpandWithContext(IContextElement? existingElement, IContextElement newElement);
+    delegate (Element?, Element) ExpandWithContext(IContextElement? existingElement, IContextElement newElement);
     
     static class Diff
     {
@@ -23,7 +23,7 @@ namespace Laconic
                             yield return new SetProperty(newProp.Key, newProp.Value!);
                     }
                     else if (newProp.Value is Element child) {
-                        var childDiff = Calculate((IElement)existingPropValue, child, expandWithContext).ToArray();
+                        var childDiff = Calculate((Element)existingPropValue, child, expandWithContext).ToArray();
                         if (childDiff.Length > 0)
                             yield return new UpdateChildElement(newProp.Key, childDiff);
                     }
@@ -140,7 +140,7 @@ namespace Laconic
             }
         }
         
-        public static IEnumerable<DiffOperation> Calculate(IElement? existingElement, IElement newElement, 
+        public static IEnumerable<DiffOperation> Calculate(Element? existingElement, Element newElement, 
              ExpandWithContext expandWithContext)
         {
             var operations = new List<DiffOperation>();
@@ -170,7 +170,7 @@ namespace Laconic
                 ));
             }
 
-            foreach (var elList in ((Element) newElement).ElementLists.Inner) {
+            foreach (var elList in newElement.ElementLists.Inner) {
                 ElementListInfo? existingInfo = null;
                 ((Element) existingElement)?.ElementLists?.Inner?.TryGetValue(elList.Key, out existingInfo);
                 var newInfo = elList.Value;
@@ -185,10 +185,10 @@ namespace Laconic
                     var newContent = newViewAsContainer.Content;
                     DiffOperation? op = (oldContent, newContent) switch {
                         (null, null) => null,
-                        (null, var n) => new SetContent(n, Calculate(null, n, expandWithContext).ToArray()),
+                        (null, var n) => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
                         (_, null) => new RemoveContent(),
-                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, n, expandWithContext).ToArray()),
-                        var (o, n) => new UpdateContent(Calculate(o, n, expandWithContext).ToArray())
+                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
+                        var (o, n) => new UpdateContent(Calculate((Element)o, (Element)n, expandWithContext).ToArray())
                     };
                     if (op != null)
                         operations.Add(op);

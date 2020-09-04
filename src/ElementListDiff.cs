@@ -50,7 +50,7 @@ namespace Laconic
                                 .Calculate(null, newView, expandWithContext);
                             res.Add(new AddChild(action.SourceItem,
                                 "TODO: Refactor this",
-                                index, (View) newView, items.ToArray())
+                                index, newView, items.ToArray())
                             );
                         }
                         else if (existingView.GetType() != newView.GetType()) {

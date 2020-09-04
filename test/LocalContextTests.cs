@@ -32,9 +32,9 @@ namespace Laconic.Tests
             });
 
             var context = new LocalContext(null);
-            IElement existingExpanded = null;
+            Element existingExpanded = null;
 
-            (IElement, IElement) ExpandWithContext(IContextElement existing, IContextElement newOne)
+            (Element, Element) ExpandWithContext(IContextElement existing, IContextElement newOne)
             {
                 existingExpanded ??= existing?.Make(context);
                 return (existingExpanded, newOne.Make(context));

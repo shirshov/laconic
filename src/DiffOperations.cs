@@ -38,10 +38,10 @@ namespace Laconic
     [Union]
     interface __ListOperation
     {
-        record AddChild(Key key, string reuseKey, int index, IElement blueprint, DiffOperation[] operations);
+        record AddChild(Key key, string reuseKey, int index, Element blueprint, DiffOperation[] operations);
         record AddChildWithContext(Key key, string reuseKey, int index, View blueprint, Guid contextId, DiffOperation[] operations);
         record RemoveChild(int index);
-        record UpdateChild(Key key, int index, IElement blueprint,DiffOperation[] operations);
-        record ReplaceChild(int index, IElement newView, DiffOperation[] operations);
+        record UpdateChild(Key key, int index, Element blueprint,DiffOperation[] operations);
+        record ReplaceChild(int index, Element newView, DiffOperation[] operations);
     }
 }

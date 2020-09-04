@@ -41,14 +41,14 @@ namespace Laconic
 
     interface ILayout
     {
-        IDictionary<Key, IElement> Children { get; }
+        IDictionary<Key, View> Children { get; }
     }
 
     public partial class StackLayout : Layout<xf.StackLayout>, ILayout
     {
         public ViewList Children { get; } = new ViewList();
 
-        IDictionary<Key, IElement> ILayout.Children => Children;
+        IDictionary<Key, View> ILayout.Children => Children;
 
         public View this[Key key]
         {
@@ -154,7 +154,7 @@ namespace Laconic
     {
         public GridViewList Children { get; set; } = new GridViewList();
         
-        IDictionary<Key, IElement> ILayout.Children => Children;
+        IDictionary<Key, View> ILayout.Children => Children;
 
         public View this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
         {
@@ -202,7 +202,7 @@ namespace Laconic
     {
         public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();
         
-        IDictionary<Key, IElement> ILayout.Children => Children;
+        IDictionary<Key, View> ILayout.Children => Children;
 
         public View this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
             get => (View)Children[key];
