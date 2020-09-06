@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maps.Demo", "maps\demo\app\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapTests", "maps\test\MapTests.csproj", "{FBF39651-B58F-49E2-95D4-37CE8B06CE59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maps.Demo.iOS", "maps\demo\ios\Maps.Demo.iOS.csproj", "{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.iOS", "demo\ios\Demo.iOS.csproj", "{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maps.Demo.iOS", "maps\demo\ios\Maps.Demo.iOS.csproj", "{15795A57-E7FB-4693-AD40-CA3DCBB26D59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,16 +162,8 @@ Global
 		{FBF39651-B58F-49E2-95D4-37CE8B06CE59}.Release|iPhone.Build.0 = Release|Any CPU
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|x64.ActiveCfg = Debug|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|x64.Build.0 = Debug|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|x86.ActiveCfg = Debug|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|x86.Build.0 = Debug|iPhoneSimulator
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|x64.ActiveCfg = Release|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|x64.Build.0 = Release|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|x86.ActiveCfg = Release|iPhoneSimulator
-		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|x86.Build.0 = Release|iPhoneSimulator
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
@@ -178,6 +172,18 @@ Global
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Debug|iPhone.Build.0 = Debug|iPhone
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|iPhone.ActiveCfg = Release|iPhone
 		{FD4BCD24-EBC3-497A-A0C2-3E790AEC1A64}.Release|iPhone.Build.0 = Release|iPhone
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Debug|iPhone.Build.0 = Debug|iPhone
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Release|iPhone.ActiveCfg = Release|iPhone
+		{15795A57-E7FB-4693-AD40-CA3DCBB26D59}.Release|iPhone.Build.0 = Release|iPhone
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
