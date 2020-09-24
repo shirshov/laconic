@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
+using Xamarin.Forms.Shapes;
 
 namespace Laconic.CodeGen
 {
@@ -9,19 +10,23 @@ namespace Laconic.CodeGen
     {
         public static readonly Definitions NotUsed = new Definitions();
         public static readonly Definitions WrittenManually = new Definitions();
+        public static readonly Definitions NotImplemented = new Definitions();
+
 
         static readonly Definitions All = new Definitions();
 
         public static readonly Dictionary<Type, Definitions> Defs = new Dictionary<Type, Definitions>
         {
+            [typeof(AbsoluteLayout)] = WrittenManually,
             [typeof(ActivityIndicator)] = All,
+            [typeof(AdaptiveTrigger)] = NotUsed,
             [typeof(Application)] = NotUsed,
-            [typeof(AppLinkEntry)] = NotUsed,
-            [typeof(BackButtonBehavior)] = NotUsed,
-            [typeof(BaseMenuItem)] = NotUsed,
-            [typeof(BaseShellItem)] = NotUsed,
-            [typeof(Behavior)] = NotUsed,
-            // [typeof(Behavior`1)] = NotUsed,
+            [typeof(AppLinkEntry)] = NotImplemented,
+            [typeof(BackButtonBehavior)] = NotImplemented,
+            [typeof(BaseMenuItem)] = NotImplemented,
+            [typeof(BaseShellItem)] = NotImplemented,
+            [typeof(Behavior)] = NotImplemented,
+            [typeof(Behavior<>)] = NotImplemented,
             [typeof(BoxView)] = All,
             [typeof(Button)] = All
                 .ExceptNotUsed(Button.CommandProperty, Button.CommandParameterProperty)
@@ -41,16 +46,16 @@ namespace Laconic.CodeGen
             [typeof(CheckBox)] = All
                 .WithoutBaseDeclaration()
                 .ExceptManuallyWrittenEvents(nameof(CheckBox.CheckedChanged)),
-            [typeof(ClickGestureRecognizer)] = NotUsed,
+            [typeof(ClickGestureRecognizer)] = NotImplemented,
             [typeof(CollectionView)] = WrittenManually,
             [typeof(ColumnDefinition)] = WrittenManually,
-            [typeof(ContentPage)] =
-                WrittenManually, //All.WithoutBaseDeclaration().ExceptWrittenManually(ContentPage.ContentProperty),
+            [typeof(CompareStateTrigger)] = NotUsed,
+            [typeof(ContentPage)] = WrittenManually,
             [typeof(ContentPresenter)] = NotUsed,
-            [typeof(ContentView)] =
-                NotUsed, //All.WithoutBaseDeclaration().ExceptWrittenManually(ContentView.ContentProperty),
+            [typeof(ContentView)] = WrittenManually,
             [typeof(DataTrigger)] = NotUsed,
             [typeof(DatePicker)] = All.ExceptManuallyWrittenEvents(nameof(DatePicker.DateSelected)),
+            [typeof(DeviceStateTrigger)] = NotUsed,
             [typeof(Editor)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                 Editor.CharacterSpacingProperty,
                 Editor.PlaceholderColorProperty,
@@ -78,7 +83,9 @@ namespace Laconic.CodeGen
                     Expander.ForceUpdateSizeCommandProperty)
                 .ExceptWrittenManually(Expander.ContentProperty),
             [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
-            [typeof(FlyoutItem)] = NotUsed,
+            [typeof(FileMediaSource)] = NotImplemented,
+            [typeof(FlexLayout)] = NotUsed,
+            [typeof(FlyoutItem)] = NotImplemented,
             [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FormattedString)] = WrittenManually,
             [typeof(Frame)] = All.WithoutBaseDeclaration(),
@@ -93,15 +100,15 @@ namespace Laconic.CodeGen
                     Grid.ColumnProperty,
                     Grid.RowSpanProperty,
                     Grid.ColumnSpanProperty),
-            [typeof(GridItemsLayout)] = NotUsed,
+            [typeof(GridItemsLayout)] = NotImplemented,
             [typeof(GroupableItemsView)] = NotUsed,
-            [typeof(HtmlWebViewSource)] = NotUsed,
+            [typeof(HtmlWebViewSource)] = NotImplemented,
             [typeof(Image)] = All,
             [typeof(ImageButton)] = All.ExceptNotUsed(
                 ImageButton.CommandProperty,
                 ImageButton.CommandParameterProperty),
             [typeof(ImageCell)] = NotUsed,
-            [typeof(ImageSource)] = NotUsed,
+            [typeof(ImageSource)] = WrittenManually,
             [typeof(IndicatorView)] = All
                 .ExceptNotUsed(
                     IndicatorView.IndicatorTemplateProperty,
@@ -110,7 +117,7 @@ namespace Laconic.CodeGen
                 .WithoutBaseDeclaration()
                 .TakeGenericParameter()
                 .ExceptManuallyWrittenEvents(nameof(InputView.TextChanged)),
-            [typeof(ItemsLayout)] = NotUsed,
+            [typeof(ItemsLayout)] = NotImplemented,
             [typeof(ItemsView)] = All
                 .WithoutBaseDeclaration()
                 .TakeGenericParameter()
@@ -123,31 +130,36 @@ namespace Laconic.CodeGen
                     nameof(ItemsView.Scrolled),
                     nameof(ItemsView.ScrollToRequested),
                     "RemainingItemsThresholdReached"),
-            // [typeof(ItemsView`1)] = NotUsed,
+            [typeof(ItemsView<>)] = WrittenManually,
             [typeof(Label)] = All,
-            [typeof(Layout)] = NotUsed,
-            // [typeof(Layout`1)] = NotUsed,
-            [typeof(LinearItemsLayout)] = NotUsed,
-            [typeof(MasterDetailPage)] = NotUsed,
-            [typeof(Menu)] = NotUsed,
-            [typeof(MenuItem)] = NotUsed,
-            // [typeof(MultiPage`1)] = NotUsed,
+            [typeof(Layout)] = WrittenManually,
+            [typeof(Layout<>)] = WrittenManually,
+            [typeof(LinearItemsLayout)] = NotImplemented,
+            [typeof(MasterDetailPage)] = NotImplemented,
+            [typeof(MediaElement)] = NotImplemented,
+            [typeof(MediaSource)] = NotImplemented,
+            [typeof(Menu)] = NotImplemented,
+            [typeof(MenuItem)] = NotImplemented,
+            [typeof(MultiPage<>)] = NotUsed,
             [typeof(MultiTrigger)] = NotUsed,
             [typeof(NavigableElement)] = NotUsed,
-            [typeof(NavigationPage)] = NotUsed,
-            [typeof(OpenGLView)] = NotUsed,
+            [typeof(NavigationPage)] = NotImplemented,
+            [typeof(OpenGLView)] = NotImplemented,
+            [typeof(OrientationStateTrigger)] = NotUsed,
             [typeof(Page)] = All.TakeGenericParameter().WithoutBaseDeclaration(),
-            [typeof(PanGestureRecognizer)] = NotUsed,
+            [typeof(PanGestureRecognizer)] = NotImplemented,
             [typeof(Picker)] = All
                 .ExceptNotUsed(Picker.ItemsSourceProperty)
                 .ExceptManuallyWrittenEvents(nameof(Picker.SelectedIndexChanged)),
-            [typeof(PinchGestureRecognizer)] = NotUsed,
+            [typeof(PinchGestureRecognizer)] = NotImplemented,
             [typeof(ProgressBar)] = All,
+            [typeof(RadioButton)] = NotImplemented,
             [typeof(RefreshView)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                     RefreshView.CommandProperty,
                     RefreshView.CommandParameterProperty)
                 .ExceptManuallyWrittenEvents(nameof(RefreshView.Refreshing)),
-            [typeof(RowDefinition)] = NotUsed,
+            [typeof(RowDefinition)] = WrittenManually,
+            [typeof(RelativeLayout)] = NotImplemented,
             [typeof(ScrollView)] = All
                 .WithoutBaseDeclaration()
                 .ExceptManuallyWrittenEvents(nameof(ScrollView.Scrolled), nameof(ScrollView.ScrollToRequested)),
@@ -160,11 +172,11 @@ namespace Laconic.CodeGen
                     SelectableItemsView.SelectionChangedCommandParameterProperty)
                 .ExceptWrittenManually(SelectableItemsView.SelectedItemsProperty)
                 .ExceptManuallyWrittenEvents(nameof(SelectableItemsView.SelectionChanged)),
-            [typeof(Shell)] = NotUsed,
-            [typeof(ShellContent)] = NotUsed,
-            [typeof(ShellGroupItem)] = NotUsed,
-            [typeof(ShellItem)] = NotUsed,
-            [typeof(ShellSection)] = NotUsed,
+            [typeof(Shell)] = NotImplemented,
+            [typeof(ShellContent)] = NotImplemented,
+            [typeof(ShellGroupItem)] = NotImplemented,
+            [typeof(ShellItem)] = NotImplemented,
+            [typeof(ShellSection)] = NotImplemented,
             [typeof(Slider)] = All
                 .ExceptNotUsed(Slider.DragCompletedCommandProperty, Slider.DragStartedCommandProperty)
                 .ExceptNotUsedEvents(nameof(Slider.ValueChanged)),
@@ -173,34 +185,36 @@ namespace Laconic.CodeGen
                 .ExceptNotUsed(Span.FontProperty, Span.StyleProperty),
             
             [typeof(StackLayout)] = All.WithoutBaseDeclaration(),
-            [typeof(Stepper)] = NotUsed,
-            [typeof(StreamImageSource)] = NotUsed,
+            [typeof(StateTrigger)] = NotUsed,
+            [typeof(StateTriggerBase)] = NotUsed,
+            [typeof(Stepper)] = NotImplemented,
+            [typeof(StreamImageSource)] = NotImplemented,
             [typeof(StructuredItemsView)] = All
                 .ExceptNotUsed(
                     StructuredItemsView.FooterTemplateProperty,
                     StructuredItemsView.HeaderTemplateProperty),
-            [typeof(SwipeGestureRecognizer)] = NotUsed,
-            [typeof(SwipeItem)] = NotUsed,
-            [typeof(SwipeItems)] = NotUsed,
-            [typeof(SwipeItemView)] = NotUsed,
-            [typeof(SwipeView)] = NotUsed,
+            [typeof(SwipeGestureRecognizer)] = NotImplemented,
+            [typeof(SwipeItem)] = NotImplemented,
+            [typeof(SwipeItems)] = NotImplemented,
+            [typeof(SwipeItemView)] = NotImplemented,
+            [typeof(SwipeView)] = NotImplemented,
             [typeof(Switch)] = All.ExceptManuallyWrittenEvents(nameof(Switch.Toggled)),
             [typeof(SwitchCell)] = NotUsed,
-            [typeof(Tab)] = NotUsed,
-            [typeof(TabBar)] = NotUsed,
+            [typeof(Tab)] = NotImplemented,
+            [typeof(TabBar)] = NotImplemented,
             [typeof(TableSectionBase)] = NotUsed,
-            // [typeof(TableSectionBase`1)] = NotUsed,
+            [typeof(TableSectionBase<>)] = NotUsed,
             [typeof(TableView)] = NotUsed,
-            [typeof(TapGestureRecognizer)] = NotUsed,
-            // [typeof(TemplatedItemsList`2)] = NotUsed,
+            [typeof(TapGestureRecognizer)] = WrittenManually,
             [typeof(TemplatedPage)] = NotUsed,
             [typeof(TemplatedView)] = NotUsed,
             [typeof(TextCell)] = NotUsed,
             [typeof(TimePicker)] = All,
-            [typeof(ToolbarItem)] = NotUsed,
+            [typeof(ToolbarItem)] = WrittenManually,
             [typeof(Trigger)] = NotUsed,
             [typeof(TriggerBase)] = NotUsed,
             [typeof(UriImageSource)] = WrittenManually, // Requires calling Xamarin.Forms.Init()
+            [typeof(UriMediaSource)] = NotImplemented,
             [typeof(UrlWebViewSource)] = NotUsed, 
             [typeof(View)] = WrittenManually,
             [typeof(ViewCell)] = NotUsed,
@@ -216,8 +230,41 @@ namespace Laconic.CodeGen
                     nameof(VisualElement.Focused),
                     nameof(VisualElement.Unfocused)
                 ),
-            [typeof(WebView)] = NotUsed,
-            [typeof(WebViewSource)] = NotUsed,
+            [typeof(WebView)] = NotImplemented,
+            [typeof(WebViewSource)] = NotImplemented,
+            // Shapes
+            [typeof(Ellipse)] = WrittenManually,
+            [typeof(EllipseGeometry)] = WrittenManually,
+            [typeof(Geometry)] = WrittenManually,
+            [typeof(GeometryGroup)] = NotImplemented,
+            [typeof(Line)] = WrittenManually,
+            [typeof(LineGeometry)] = WrittenManually,
+            [typeof(LineSegment)] = NotImplemented,
+            [typeof(Path)] = WrittenManually,
+            [typeof(PathFigure)] = WrittenManually,
+            [typeof(Polygon)] = WrittenManually,
+            [typeof(Polyline)] = WrittenManually,
+            [typeof(Xamarin.Forms.Shapes.Rectangle)] = WrittenManually,
+            [typeof(Shape)] = WrittenManually,
+            [typeof(ArcSegment)] = NotImplemented,
+            [typeof(BezierSegment)] = NotImplemented,
+            [typeof(CompositeTransform)] = NotImplemented,
+            [typeof(MatrixTransform)] = NotImplemented,
+            [typeof(PathGeometry)] = NotImplemented,
+            [typeof(PathSegment)] = NotImplemented,
+            [typeof(PolyBezierSegment)] = NotImplemented,
+            [typeof(PolyLineSegment)] = NotImplemented,
+            [typeof(PolyQuadraticBezierSegment)] = NotImplemented,
+            [typeof(QuadraticBezierSegment)] = NotImplemented,
+            [typeof(RectangleGeometry)] = NotImplemented,
+            [typeof(RotateTransform)] = NotImplemented,
+            [typeof(ScaleTransform)] = NotImplemented,
+            [typeof(SkewTransform)] = NotImplemented,
+            [typeof(Transform)] = NotImplemented,
+            [typeof(TransformGroup)] = NotImplemented,
+            [typeof(TranslateTransform)] = NotImplemented,
+            // Misc
+            [typeof(Xamarin.Forms.Internals.TemplatedItemsList<,>)] = NotUsed,
         };
 
         Definitions ExceptNotUsed(params BindableProperty[] props) => NewWithMore(props);

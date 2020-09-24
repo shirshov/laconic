@@ -39,7 +39,8 @@ namespace Laconic.CodeGen
             var notIgnored = flatList
                 .Where(x => Definitions.Defs.ContainsKey(x.Type)
                             && Definitions.Defs[x.Type] != Definitions.NotUsed
-                            && Definitions.Defs[x.Type] != Definitions.WrittenManually)
+                            && Definitions.Defs[x.Type] != Definitions.WrittenManually
+                            && Definitions.Defs[x.Type] != Definitions.NotImplemented)
                 .OrderBy(x => x.Type.Name);
 
             static IEnumerable<EventInfo> GetEvents(Type type) => type
@@ -119,12 +120,52 @@ namespace Laconic.CodeGen
             s += "}";
 
             File.WriteAllText("../../src/Controls.Generated.cs", s);
+
+            var rep = Report();
+            Console.WriteLine(rep);
+            File.WriteAllText("../../binding-report.md", rep);
         }
 
-        static void PrintDict(IEnumerable<(Type Type, Type Base)> items)
+        static string Report()
         {
-            foreach (var el in items.OrderBy(x => x.Type.Name))
-                Console.WriteLine($" [typeof({el.Type.Name})] = NotUsed,");
+            var flatList = new List<(Type Type, Type Base)>();
+
+            AddDirectDescendants(typeof(BindableObject), flatList);
+            AddDirectDescendants(typeof(Layout<View>), flatList);
+
+            var res = "";
+
+            // res += "## WRITTEN MANUALLY\n\n";
+            // res += flatList
+            //     .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.WrittenManually)
+            //     .Select(x => x.Type.Name)
+            //     .OrderBy(x => x)
+            //     .Aggregate("", (c, n) => c + n + "\n\n");
+
+            res += "## NOT USED\n\n";
+            res += flatList
+                .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.NotUsed)
+                .Select(x => x.Type.Name)
+                .OrderBy(x => x)
+                .Aggregate("", (c, n) => c + n + "\n\n");
+
+            res += "## NOT IMPLEMENTED\n\n";
+            res += flatList
+                .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.NotImplemented)
+                .Select(x => x.Type.Name)
+                .OrderBy(x => x)
+                .Aggregate("", (c, n) => c + n + "\n\n");
+
+            var undefined = flatList
+                .Where(x => ! Definitions.Defs.ContainsKey(x.Type))
+                .Select(x => x.Type.Name)
+                .OrderBy(x => x);
+            if (undefined.Any()) {
+                res += "## UNDEFINED\n\n";
+                res += undefined.Aggregate("", (c, n) => c + n + "\n\n");
+            }
+
+            return res;
         }
     }
 }
