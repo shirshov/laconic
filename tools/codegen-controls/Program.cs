@@ -64,18 +64,19 @@ namespace Laconic.CodeGen
 
                 foreach (var c in all.Select(x => x.Type))
                 {
-                    yield return "public " + (c.IsAbstract ? "abstract " : "") + $"partial class {c.Name}"
+                    yield return "    public " + (c.IsAbstract ? "abstract " : "") + $"partial class {c.Name}"
                                  + (Definitions.Defs[c].HasGenericParameter ? "<T>" : "")
-                                 + (Definitions.Defs[c].DoNotInherit ? " {" : $" : View<xf.{c.Name}> {{");
+                                 + (Definitions.Defs[c].DoNotInherit ? "\n    {" : $" : View<xf.{c.Name}>\n    {{");
                     foreach (var p in GetProps(c))
                     {
                         var bindableProperty = (BindableProperty) p.GetValue(null);
                         var propName = bindableProperty.PropertyName;
                         var propType = bindableProperty.ReturnType;
-                        yield return $"    public {WithXfPrefix(propType)} {propName} {{";
-                        yield return $"       get => GetValue<{WithXfPrefix(propType)}>(xf.{c.Name}.{p.Name});";
-                        yield return $"       set => SetValue(xf.{c.Name}.{p.Name}, value);";
-                        yield return "    }";
+                        yield return $"        public {WithXfPrefix(propType)} {propName}";
+                        yield return  "        {";
+                        yield return $"            get => GetValue<{WithXfPrefix(propType)}>(xf.{c.Name}.{p.Name});";
+                        yield return $"            set => SetValue(xf.{c.Name}.{p.Name}, value);";
+                        yield return  "        }";
                     }
 
                     foreach (var e in GetEvents(c))
@@ -91,15 +92,12 @@ namespace Laconic.CodeGen
                             genericParam += type.Name + ",";
                         }
 
-                        // var parameter = genTypes.Length == 0 ? "" : $"xf.{genTypes[0].DeclaringType == null ? "+", } {genTypes[0].Name}, ";
-                        yield return $"    public Func<{genericParam}Signal> {e.Name} {{";
-                        //yield return $"       get => (Expression<Func<{genericParam}Signal>>)Events[nameof({e.Name})];";
-                        yield return
-                            $"       set => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
-                        yield return "    }";
+                        yield return $"        public Func<{genericParam}Signal> {e.Name}";
+                        yield return  "        {";
+                        yield return $"            set => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
+                        yield return  "        }";
                     }
-
-                    yield return "}\n";
+                    yield return "    }\n";
                 }
             }
 
@@ -114,7 +112,7 @@ namespace Laconic.CodeGen
                     + "using xf = Xamarin.Forms;\n"
                     + "using Laconic.Shapes;\n"
                     + "// ReSharper disable all\n\n"
-                    + "namespace Laconic \n{";
+                    + "namespace Laconic\n{\n";
 
             s += GetDef();
 
