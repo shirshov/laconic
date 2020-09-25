@@ -1143,6 +1143,33 @@ namespace Laconic
         }
     }
 
+    public partial class SwipeItem
+    {
+        public Color BackgroundColor
+        {
+            get => GetValue<Color>(xf.SwipeItem.BackgroundColorProperty);
+            set => SetValue(xf.SwipeItem.BackgroundColorProperty, value);
+        }
+        public Boolean IsVisible
+        {
+            get => GetValue<Boolean>(xf.SwipeItem.IsVisibleProperty);
+            set => SetValue(xf.SwipeItem.IsVisibleProperty, value);
+        }
+    }
+
+    public partial class SwipeView : View<xf.SwipeView>
+    {
+        public Double Threshold
+        {
+            get => GetValue<Double>(xf.SwipeView.ThresholdProperty);
+            set => SetValue(xf.SwipeView.ThresholdProperty, value);
+        }
+        public Func<Signal> CloseRequested
+        {
+            set => SetEvent(nameof(CloseRequested), value, (ctl, handler) => ctl.CloseRequested += handler, (ctl, handler) => ctl.CloseRequested -= handler);
+        }
+    }
+
     public partial class Switch : View<xf.Switch>
     {
         public Boolean IsToggled

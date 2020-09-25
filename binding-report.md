@@ -156,13 +156,7 @@ StreamImageSource
 
 SwipeGestureRecognizer
 
-SwipeItem
-
-SwipeItems
-
 SwipeItemView
-
-SwipeView
 
 Tab
 

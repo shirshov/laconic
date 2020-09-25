@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using xf = Xamarin.Forms;
+﻿using xf = Xamarin.Forms;
 
 [assembly: xf.ExportFont("DIN Condensed Bold.ttf", Alias = "DINBold")]
 [assembly: xf.ExportFont("Font Awesome 5 Free-Solid-900.otf", Alias = "IconFont")]
@@ -34,6 +33,7 @@ namespace Laconic.Demo
             AddSample<LoginShape>("Shapes - Login Page");
             AddSample<BrushesPage>("Brushes");
             AddSample<RadioButtonPage>("RadioButton");
+            AddSample<SwipeViewPage>("SwipeView");
             AddSample<WebViewPage>("WebView");
         }
     }

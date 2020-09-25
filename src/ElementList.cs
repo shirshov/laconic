@@ -17,6 +17,7 @@ namespace Laconic
             ListGetter = listGetter;
         }
     }
+    
     public class ElementList : Dictionary<Key, Element>
     {
         public static implicit operator ElementList(Dictionary<int, Element> source)
@@ -37,7 +38,6 @@ namespace Laconic
             return res;
         }
     }
-    
     
     public class ElementListCollection : IDictionary<string, ElementList>
     {
@@ -82,5 +82,4 @@ namespace Laconic
         ICollection<string> IDictionary<string, ElementList>.Keys { get; }
         ICollection<ElementList> IDictionary<string, ElementList>.Values { get; }
     }
-
 }

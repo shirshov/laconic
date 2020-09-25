@@ -190,10 +190,22 @@ namespace Laconic.CodeGen
                     StructuredItemsView.FooterTemplateProperty,
                     StructuredItemsView.HeaderTemplateProperty),
             [typeof(SwipeGestureRecognizer)] = NotImplemented,
-            [typeof(SwipeItem)] = NotImplemented,
-            [typeof(SwipeItems)] = NotImplemented,
+            [typeof(SwipeItem)] = All
+                .WithoutBaseDeclaration()
+                .ExceptManuallyWrittenEvents(nameof(SwipeItem.Invoked)),
+            [typeof(SwipeItems)] = WrittenManually,
             [typeof(SwipeItemView)] = NotImplemented,
-            [typeof(SwipeView)] = NotImplemented,
+            [typeof(SwipeView)] = All
+                .ExceptWrittenManually(
+                    SwipeView.LeftItemsProperty,
+                    SwipeView.RightItemsProperty,
+                    SwipeView.TopItemsProperty,
+                    SwipeView.BottomItemsProperty)
+                .ExceptManuallyWrittenEvents(nameof(SwipeView.OpenRequested))
+                .ExceptManuallyWrittenEvents(
+                    nameof(SwipeView.SwipeChanging),
+                    nameof(SwipeView.SwipeStarted),
+                    nameof(SwipeView.SwipeEnded)),
             [typeof(Switch)] = All.ExceptManuallyWrittenEvents(nameof(Switch.Toggled)),
             [typeof(SwitchCell)] = NotUsed,
             [typeof(Tab)] = NotImplemented,

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using xf = Xamarin.Forms;
 
@@ -53,20 +54,19 @@ namespace Laconic
         public int SelectedIndex { get; }
         public SelectedIndexChangedEventArgs(int selectedIndex) => SelectedIndex = selectedIndex;
     }
-    
+
     public partial class Picker
     {
-        public IList<string> Items
-        {
+        public IList<string> Items {
             set => SetValue(xf.Picker.ItemsSourceProperty, value);
         }
-        
+
         public Func<SelectedIndexChangedEventArgs, Signal> SelectedIndexChanged {
-            set => SetEvent(nameof(SelectedIndexChanged), value, 
-                (ctl, handler) => ctl.SelectedIndexChanged += (s, e) => 
-                    handler(s, new SelectedIndexChangedEventArgs( ((xf.Picker)s).SelectedIndex)),
-                (ctl, handler) => ctl.SelectedIndexChanged -= (s, e) => 
-                    handler(s, new SelectedIndexChangedEventArgs( ((xf.Picker)s).SelectedIndex)));
+            set => SetEvent(nameof(SelectedIndexChanged), value,
+                (ctl, handler) => ctl.SelectedIndexChanged += (s, e) =>
+                    handler(s, new SelectedIndexChangedEventArgs(((xf.Picker) s).SelectedIndex)),
+                (ctl, handler) => ctl.SelectedIndexChanged -= (s, e) =>
+                    handler(s, new SelectedIndexChangedEventArgs(((xf.Picker) s).SelectedIndex)));
         }
     }
 
@@ -81,12 +81,12 @@ namespace Laconic
 
     public partial class Entry : InputView<xf.Entry>
     {
-        
+
     }
 
     public partial class Editor : InputView<xf.Editor>
     {
-        
+
     }
 
     public partial class RadioButton
