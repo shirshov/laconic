@@ -81,11 +81,11 @@ namespace Laconic.Demo
 
         public CalculatorPage()
         {
-            var plainButtonColor = "eee";
-            var darkerButtonColor = "ddd";
-            var orangeButtonColor = "E8AD00";
+            const string plainButtonColor = "eee";
+            const string darkerButtonColor = "ddd";
+            const string orangeButtonColor = "E8AD00";
 
-            Button CalcButton(string text, Signal signal, Color backgroundColor, Color? textColor = null
+            static Button CalcButton(string text, Signal signal, Color backgroundColor, Color? textColor = null
                 ) => new Button {
                 Text = text,
                 BackgroundColor = backgroundColor,
