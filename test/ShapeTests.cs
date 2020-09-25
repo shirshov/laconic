@@ -9,7 +9,7 @@ namespace Laconic.Tests
 {
     public class ShapeTests
     {
-        (Element, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element) x, (Element) y);
+        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
         
         [Fact]
         public void Line_diff()

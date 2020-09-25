@@ -12,13 +12,13 @@ namespace Laconic
         readonly Dictionary<Key, (int Row, int Column, int RowSpan, int ColumnSpan)> _positioning =
             new Dictionary<Key, (int Row, int Column, int RowSpan, int ColumnSpan)>();
 
-        public void Add(Key key, View blueprint, int row = 0, int column = 0, int rowSpan = 1, int columnSpan = 1)
+        public void Add(Key key, View? blueprint, int row = 0, int column = 0, int rowSpan = 1, int columnSpan = 1)
         {
            base.Add(key, blueprint);
            SetPositioning(key, row, column, rowSpan, columnSpan);
         }
         
-        public static implicit operator GridViewList(Dictionary<(Key Key, int Row, int Column), View> source)
+        public static implicit operator GridViewList(Dictionary<(Key Key, int Row, int Column), View?> source)
         {
             var res = new GridViewList();
             foreach (var item in source)
@@ -35,7 +35,7 @@ namespace Laconic
     {
         internal readonly Dictionary<Key, string> ReuseKeys = new Dictionary<Key, string>();
 
-        public View this[string reuseKey, Key key]
+        public View? this[string reuseKey, Key key]
         {
             set
             {
@@ -44,7 +44,7 @@ namespace Laconic
             }
         }
 
-        public void Add(string reuseKey, Key key, View view)
+        public void Add(string reuseKey, Key key, View? view)
         {
             Add(key, view);
             ReuseKeys[key] = reuseKey;

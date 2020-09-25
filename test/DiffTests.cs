@@ -8,14 +8,14 @@ namespace Laconic.Tests
 {
     public class DiffTests
     {
-        (Element, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element) x, (Element) y);
+        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
         
         [Fact]
         public void should_update_property()
         {
             var operations = Diff.Calculate(new Label {Text = "foo"}, new Label {Text = "bar"}, NoopExpander);
             operations.Count().ShouldBe(1);
-            var op = operations.First() as SetProperty;
+            var op = (SetProperty)operations.First();
             op.Property.ShouldBe(xf.Label.TextProperty);
             op.Value.ShouldBe("bar");
         }
@@ -27,6 +27,31 @@ namespace Laconic.Tests
             operations.First()
                 .ShouldBeOfType<ResetProperty>()
                 .Property.ShouldBe(xf.Label.TextProperty);
+        }
+        
+        [Fact]
+        public void handle_settings_prop_value_to_null()
+        {
+            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label { Text = null}, NoopExpander);
+            operations.First()
+                .ShouldBeOfType<SetProperty>()
+                .Property.ShouldBe(xf.Label.TextProperty);
+        }
+
+        [Fact]
+        public void handle_existing_prop_value_being_null()
+        {
+            var operations = Diff.Calculate(new Label { Text = null}, new Label {Text = "foo"}, NoopExpander);
+            operations.First()
+                .ShouldBeOfType<SetProperty>()
+                .Property.ShouldBe(xf.Label.TextProperty);
+        }
+
+        [Fact]
+        public void handle_both_prop_values_being_null()
+        {
+            var operations = Diff.Calculate(new Label { Text = null}, new Label {Text = null}, NoopExpander);
+            operations.ShouldBeEmpty();
         }
 
         [Fact]

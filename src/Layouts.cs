@@ -41,14 +41,14 @@ namespace Laconic
 
     interface ILayout
     {
-        IDictionary<Key, View> Children { get; }
+        IDictionary<Key, View?> Children { get; }
     }
 
     public partial class StackLayout : Layout<xf.StackLayout>, ILayout
     {
         public ViewList Children { get; } = new ViewList();
 
-        IDictionary<Key, View> ILayout.Children => Children;
+        IDictionary<Key, View?> ILayout.Children => Children;
 
         public View this[Key key]
         {
@@ -154,11 +154,11 @@ namespace Laconic
     {
         public GridViewList Children { get; set; } = new GridViewList();
         
-        IDictionary<Key, View> ILayout.Children => Children;
+        IDictionary<Key, View?> ILayout.Children => Children;
 
-        public View this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
+        public View? this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
         {
-            get => (View)Children[key];
+            get => Children[key];
             set
             {
                 Children[key] = value;
@@ -194,10 +194,10 @@ namespace Laconic
     {
         public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();
         
-        IDictionary<Key, View> ILayout.Children => Children;
+        IDictionary<Key, View?> ILayout.Children => Children;
 
-        public View this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
-            get => (View)Children[key];
+        public View? this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
+            get => Children[key];
             set {
                 Children[key] = value;
                 Children.SetPositioning(key, new Bounds(bounds.x, bounds.y, bounds.width, bounds.height), flags);

@@ -13,13 +13,13 @@ namespace Laconic
     public abstract class Element : IEquatable<Element>
     {
         public Dictionary<Xamarin.Forms.BindableProperty, object?> ProvidedValues { get; } =
-            new Dictionary<Xamarin.Forms.BindableProperty, object>();
+            new Dictionary<Xamarin.Forms.BindableProperty, object?>();
 
         // TODO: this should be hidden from the app developer
         public Dictionary<string, EventInfo> Events { get; } = new Dictionary<string, EventInfo>();
 
         // TODO: this should be hidden from the app developer
-        protected T GetValue<T>(Xamarin.Forms.BindableProperty property) => (T) ProvidedValues[property];
+        protected T GetValue<T>(Xamarin.Forms.BindableProperty property) => (T)ProvidedValues[property]!;
 
         protected void SetValue(Xamarin.Forms.BindableProperty property, object? value) =>
             ProvidedValues[property] = value;
@@ -60,8 +60,9 @@ namespace Laconic
             foreach (var item in other.ProvidedValues) {
                 if (!ProvidedValues.TryGetValue(item.Key, out var val))
                     return false;
-
-                if (!val.Equals(item.Value))
+                if (val == null & item.Value == null)
+                    return true;
+                if (! val!.Equals(item.Value))
                     return false;
             }
             return true;
@@ -93,22 +94,16 @@ namespace Laconic
             Process = process;
         }
 
-        public bool Equals(PostProcessInfo? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (Value == null && other.Value != null) return false;
-            if (Value == null && other.Value == null) return true;
-            return Value.Equals(other.Value);
-        }
+        public bool Equals(PostProcessInfo? other) => (other?.Value, Value) switch {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            var (v1, v2) => v1.Equals(v2)
+        };
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((PostProcessInfo) obj);
-        }
+        public override bool Equals(object? other) => Equals(other as PostProcessInfo);
 
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Value?.GetHashCode() ?? base.GetHashCode();
 
         public static bool operator ==(PostProcessInfo? left, PostProcessInfo? right) => Equals(left, right);
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using xf = Xamarin.Forms;
-using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object>;
+using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object?>;
 using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInfo>;
 
 namespace Laconic
@@ -17,16 +17,20 @@ namespace Laconic
                 if (existingValues.TryGetValue(newProp.Key, out var existingPropValue)) {
                     // Picker doesn't like items being changed while SelectedIndexChanged is being fired
                     if (newProp.Key == xf.Picker.ItemsSourceProperty) {
-                        var oldItems = (IList<string>) existingPropValue;
+                        var oldItems =  existingPropValue as IList<string> ?? new List<string>();
                         var newItems = (IList<string>) newProp.Value!;
                         if (!newItems.SequenceEqual(oldItems))
                             yield return new SetProperty(newProp.Key, newProp.Value!);
                     }
                     else if (newProp.Value is Element child) {
-                        var childDiff = Calculate((Element)existingPropValue, child, expandWithContext).ToArray();
+                        var childDiff = Calculate(existingPropValue as Element, child, expandWithContext).ToArray();
                         if (childDiff.Length > 0)
                             yield return new UpdateChildElement(newProp.Key, childDiff);
                     }
+                    else if (existingPropValue == null & newProp.Value == null)
+                        break;
+                    else if (existingPropValue == null)
+                        yield return new SetProperty(newProp.Key, newProp.Value!);
                     else if (!existingPropValue.Equals(newProp.Value))
                         yield return new SetProperty(newProp.Key, newProp.Value!);
                 }
@@ -172,7 +176,7 @@ namespace Laconic
 
             foreach (var elList in newElement.ElementLists.Inner) {
                 ElementListInfo? existingInfo = null;
-                ((Element) existingElement)?.ElementLists?.Inner?.TryGetValue(elList.Key, out existingInfo);
+                existingElement?.ElementLists?.Inner?.TryGetValue(elList.Key, out existingInfo);
                 var newInfo = elList.Value;
                 var ops = ElementListDiff.Calculate(existingInfo?.List, newInfo.List, expandWithContext);
                 if (ops.Any())

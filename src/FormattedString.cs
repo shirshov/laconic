@@ -29,7 +29,8 @@ namespace Laconic
             foreach (var span in _spans) {
                 var newSpan = new xf.Span();
                 foreach (var p in span.ProvidedValues)
-                    newSpan.SetValue(p.Key, Patch.ConvertToNative(p.Value));
+                    if (p.Value != null)
+                        newSpan.SetValue(p.Key, Patch.ConvertToNative(p.Value));
                 ret.Spans.Add(newSpan);
             }
 

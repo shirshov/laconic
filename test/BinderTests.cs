@@ -29,11 +29,11 @@ namespace Laconic.Tests
         [Fact]
         public void signal_is_processed()
         {
-            Signal signalIntercepted = null;
+            var signalIntercepted = new Signal("");
             var binder = Binder.Create("state", (state, signal) =>
             {
                 signalIntercepted = signal;
-                return (string) signal.Payload;
+                return (string) signal.Payload!;
             });
             binder.ProcessSignal(new TestSignal("new state"));
             signalIntercepted.Payload.ShouldBe("new state");
@@ -43,7 +43,7 @@ namespace Laconic.Tests
         [Fact]
         public void view_changes_after_signal()
         {
-            var binder = Binder.Create("state", (state, signal) => (string) signal.Payload);
+            var binder = Binder.Create("state", (state, signal) => (string) signal.Payload!);
             var view = binder.CreateElement(state => new Label {Text = state});
             view.Text.ShouldBe("state");
             binder.ProcessSignal(new TestSignal("new state"));
@@ -53,7 +53,7 @@ namespace Laconic.Tests
         [Fact]
         public void child_view_change_after_signal()
         {
-            var binder = Binder.Create("state", (state, signal) => (string) signal.Payload);
+            var binder = Binder.Create("state", (state, signal) => (string) signal.Payload!);
             var stackLayout = binder.CreateElement(state => new StackLayout {[1] = new Label {Text = state}});
             var label = (xf.Label) stackLayout.Children[0];
             label.Text.ShouldBe("state");

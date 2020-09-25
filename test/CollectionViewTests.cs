@@ -7,7 +7,7 @@ namespace Laconic.Tests
 {
     public class CollectionViewTests
     {
-        (Element, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element) x, (Element) y);
+        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
         
         [Fact]
         public void should_create_ItemsSource()
