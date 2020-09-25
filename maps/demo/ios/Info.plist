@@ -25,7 +25,7 @@
     <key>CFBundleDisplayName</key>
     <string>Laconic.Maps Demo</string>
     <key>CFBundleIdentifier</key>
-    <string>laconic.demo</string>
+    <string>laconic.maps.demo</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>UILaunchStoryboardName</key>

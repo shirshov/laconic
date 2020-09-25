@@ -130,8 +130,6 @@ PolyQuadraticBezierSegment
 
 QuadraticBezierSegment
 
-RadioButton
-
 RectangleGeometry
 
 RelativeLayout
@@ -151,8 +149,6 @@ ShellItem
 ShellSection
 
 SkewTransform
-
-Stepper
 
 StreamImageSource
 

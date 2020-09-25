@@ -1,6 +1,8 @@
-﻿using xf = Xamarin.Forms;
+﻿using System.Globalization;
+using xf = Xamarin.Forms;
 
 [assembly: xf.ExportFont("DIN Condensed Bold.ttf", Alias = "DINBold")]
+[assembly: xf.ExportFont("Font Awesome 5 Free-Solid-900.otf", Alias = "IconFont")]
 
 namespace Laconic.Demo
 {
@@ -20,7 +22,6 @@ namespace Laconic.Demo
             }
 
             MainPage = shell;
-
             AddSample<CounterPage>("Counter");
             AddSample<DynamicGrid>("Dynamic Grid");
             AddSample<CalculatorPage>("Calculator (Grid)");
@@ -32,6 +33,7 @@ namespace Laconic.Demo
             AddSample<Shapes>("Shapes");
             AddSample<LoginShape>("Shapes - Login Page");
             AddSample<BrushesPage>("Brushes");
+            AddSample<RadioButtonPage>("RadioButton");
         }
     }
 }

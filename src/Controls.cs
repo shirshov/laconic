@@ -88,4 +88,13 @@ namespace Laconic
     {
         
     }
+
+    public partial class RadioButton
+    {
+        public Func<xf.CheckedChangedEventArgs, Signal> CheckedChanged {
+            set => SetEvent(nameof(CheckedChanged), value,
+                (ctl, handler) => ctl.CheckedChanged += handler,
+                (ctl, handler) => ctl.CheckedChanged -= handler);
+        }
+    }
 }

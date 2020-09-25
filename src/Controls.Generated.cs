@@ -800,6 +800,75 @@ namespace Laconic
         }
     }
 
+    public partial class RadioButton : View<xf.RadioButton>
+    {
+        public Color BorderColor
+        {
+            get => GetValue<Color>(xf.RadioButton.BorderColorProperty);
+            set => SetValue(xf.RadioButton.BorderColorProperty, value);
+        }
+        public Double BorderWidth
+        {
+            get => GetValue<Double>(xf.RadioButton.BorderWidthProperty);
+            set => SetValue(xf.RadioButton.BorderWidthProperty, value);
+        }
+        public Double CharacterSpacing
+        {
+            get => GetValue<Double>(xf.RadioButton.CharacterSpacingProperty);
+            set => SetValue(xf.RadioButton.CharacterSpacingProperty, value);
+        }
+        public Object Content
+        {
+            get => GetValue<Object>(xf.RadioButton.ContentProperty);
+            set => SetValue(xf.RadioButton.ContentProperty, value);
+        }
+        public Int32 CornerRadius
+        {
+            get => GetValue<Int32>(xf.RadioButton.CornerRadiusProperty);
+            set => SetValue(xf.RadioButton.CornerRadiusProperty, value);
+        }
+        public FontAttributes FontAttributes
+        {
+            get => GetValue<FontAttributes>(xf.RadioButton.FontAttributesProperty);
+            set => SetValue(xf.RadioButton.FontAttributesProperty, value);
+        }
+        public String FontFamily
+        {
+            get => GetValue<String>(xf.RadioButton.FontFamilyProperty);
+            set => SetValue(xf.RadioButton.FontFamilyProperty, value);
+        }
+        public Double FontSize
+        {
+            get => GetValue<Double>(xf.RadioButton.FontSizeProperty);
+            set => SetValue(xf.RadioButton.FontSizeProperty, value);
+        }
+        public String GroupName
+        {
+            get => GetValue<String>(xf.RadioButton.GroupNameProperty);
+            set => SetValue(xf.RadioButton.GroupNameProperty, value);
+        }
+        public Boolean IsChecked
+        {
+            get => GetValue<Boolean>(xf.RadioButton.IsCheckedProperty);
+            set => SetValue(xf.RadioButton.IsCheckedProperty, value);
+        }
+        public Color TextColor
+        {
+            get => GetValue<Color>(xf.RadioButton.TextColorProperty);
+            set => SetValue(xf.RadioButton.TextColorProperty, value);
+        }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.RadioButton.TextTransformProperty);
+            set => SetValue(xf.RadioButton.TextTransformProperty, value);
+        }
+        public Object Value
+        {
+            get => GetValue<Object>(xf.RadioButton.ValueProperty);
+            set => SetValue(xf.RadioButton.ValueProperty, value);
+        }
+    }
+
     public partial class RefreshView
     {
         public Boolean IsRefreshing
@@ -1022,6 +1091,30 @@ namespace Laconic
         {
             get => GetValue<Double>(xf.StackLayout.SpacingProperty);
             set => SetValue(xf.StackLayout.SpacingProperty, value);
+        }
+    }
+
+    public partial class Stepper : View<xf.Stepper>
+    {
+        public Double Increment
+        {
+            get => GetValue<Double>(xf.Stepper.IncrementProperty);
+            set => SetValue(xf.Stepper.IncrementProperty, value);
+        }
+        public Double Maximum
+        {
+            get => GetValue<Double>(xf.Stepper.MaximumProperty);
+            set => SetValue(xf.Stepper.MaximumProperty, value);
+        }
+        public Double Minimum
+        {
+            get => GetValue<Double>(xf.Stepper.MinimumProperty);
+            set => SetValue(xf.Stepper.MinimumProperty, value);
+        }
+        public Double Value
+        {
+            get => GetValue<Double>(xf.Stepper.ValueProperty);
+            set => SetValue(xf.Stepper.ValueProperty, value);
         }
     }
 

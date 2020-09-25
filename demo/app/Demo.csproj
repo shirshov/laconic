@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="DIN Condensed Bold.ttf" />
     <EmbeddedResource Include="DIN Condensed Bold.ttf" />
+    <EmbeddedResource Include="Font Awesome 5 Free-Solid-900.otf" />
   </ItemGroup>
 </Project>

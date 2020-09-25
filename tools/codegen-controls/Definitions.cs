@@ -148,7 +148,7 @@ namespace Laconic.CodeGen
             [typeof(PinchGestureRecognizer)] = NotImplemented,
             [typeof(ProgressBar)] = All,
             [typeof(RadialGradientBrush)] = WrittenManually,
-            [typeof(RadioButton)] = NotImplemented,
+            [typeof(RadioButton)] = All.ExceptManuallyWrittenEvents(nameof(RadioButton.CheckedChanged)),
             [typeof(RefreshView)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                     RefreshView.CommandProperty,
                     RefreshView.CommandParameterProperty)
@@ -183,7 +183,7 @@ namespace Laconic.CodeGen
             [typeof(StackLayout)] = All.WithoutBaseDeclaration(),
             [typeof(StateTrigger)] = NotUsed,
             [typeof(StateTriggerBase)] = NotUsed,
-            [typeof(Stepper)] = NotImplemented,
+            [typeof(Stepper)] = All.ExceptManuallyWrittenEvents(nameof(Stepper.ValueChanged)),
             [typeof(StreamImageSource)] = NotImplemented,
             [typeof(StructuredItemsView)] = All
                 .ExceptNotUsed(
