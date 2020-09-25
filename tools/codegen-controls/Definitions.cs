@@ -97,7 +97,7 @@ namespace Laconic.CodeGen
                     Grid.ColumnSpanProperty),
             [typeof(GridItemsLayout)] = NotImplemented,
             [typeof(GroupableItemsView)] = NotUsed,
-            [typeof(HtmlWebViewSource)] = NotImplemented,
+            [typeof(HtmlWebViewSource)] = NotUsed,
             [typeof(Image)] = All,
             [typeof(ImageButton)] = All.ExceptNotUsed(
                 ImageButton.CommandProperty,
@@ -225,8 +225,13 @@ namespace Laconic.CodeGen
                     nameof(VisualElement.Focused),
                     nameof(VisualElement.Unfocused)
                 ),
-            [typeof(WebView)] = NotImplemented,
-            [typeof(WebViewSource)] = NotImplemented,
+            [typeof(WebView)] = All
+                .ExceptManuallyWrittenEvents(
+                    nameof(WebView.EvalRequested), 
+                    nameof(WebView.Navigated),
+                    nameof(WebView.Navigating))
+                .ExceptNotUsedEvents(nameof(WebView.EvaluateJavaScriptRequested)),
+            [typeof(WebViewSource)] = NotUsed,
             // Shapes
             [typeof(Ellipse)] = WrittenManually,
             [typeof(EllipseGeometry)] = WrittenManually,

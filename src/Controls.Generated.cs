@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Net;
 using System.Collections;
 using xf = Xamarin.Forms;
 using Laconic.Shapes;
@@ -1326,6 +1327,32 @@ namespace Laconic
         {
             get => GetValue<Double>(xf.VisualElement.WidthRequestProperty);
             set => SetValue(xf.VisualElement.WidthRequestProperty, value);
+        }
+    }
+
+    public partial class WebView : View<xf.WebView>
+    {
+        public CookieContainer Cookies
+        {
+            get => GetValue<CookieContainer>(xf.WebView.CookiesProperty);
+            set => SetValue(xf.WebView.CookiesProperty, value);
+        }
+        public xf.WebViewSource Source
+        {
+            get => GetValue<xf.WebViewSource>(xf.WebView.SourceProperty);
+            set => SetValue(xf.WebView.SourceProperty, value);
+        }
+        public Func<Signal> GoBackRequested
+        {
+            set => SetEvent(nameof(GoBackRequested), value, (ctl, handler) => ctl.GoBackRequested += handler, (ctl, handler) => ctl.GoBackRequested -= handler);
+        }
+        public Func<Signal> GoForwardRequested
+        {
+            set => SetEvent(nameof(GoForwardRequested), value, (ctl, handler) => ctl.GoForwardRequested += handler, (ctl, handler) => ctl.GoForwardRequested -= handler);
+        }
+        public Func<Signal> ReloadRequested
+        {
+            set => SetEvent(nameof(ReloadRequested), value, (ctl, handler) => ctl.ReloadRequested += handler, (ctl, handler) => ctl.ReloadRequested -= handler);
         }
     }
 }

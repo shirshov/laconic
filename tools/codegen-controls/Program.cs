@@ -109,6 +109,7 @@ namespace Laconic.CodeGen
         {
             var s = "#nullable enable\n"
                     + "using System;\n"
+                    + "using System.Net;\n"
                     + "using System.Collections;\n"
                     + "using xf = Xamarin.Forms;\n"
                     + "using Laconic.Shapes;\n"

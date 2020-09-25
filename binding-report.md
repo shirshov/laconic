@@ -24,6 +24,8 @@ GestureElement
 
 GroupableItemsView
 
+HtmlWebViewSource
+
 ImageCell
 
 MasterDetailPage
@@ -66,6 +68,8 @@ UrlWebViewSource
 
 ViewCell
 
+WebViewSource
+
 ## Not Implemented
 
 AppLinkEntry
@@ -95,8 +99,6 @@ FlyoutPage
 GeometryGroup
 
 GridItemsLayout
-
-HtmlWebViewSource
 
 ItemsLayout
 
@@ -171,10 +173,6 @@ Transform
 TransformGroup
 
 TranslateTransform
-
-WebView
-
-WebViewSource
 
 ## Undefined
 

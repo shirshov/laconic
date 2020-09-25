@@ -34,6 +34,7 @@ namespace Laconic.Demo
             AddSample<LoginShape>("Shapes - Login Page");
             AddSample<BrushesPage>("Brushes");
             AddSample<RadioButtonPage>("RadioButton");
+            AddSample<WebViewPage>("WebView");
         }
     }
 }
