@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Laconic.CodeGeneration" Version="0.9.3-beta" />
     <PackageReference Include="System.Threading.Channels" Version="4.7.1" />
-    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1487-pre1" />
   </ItemGroup>
 
 </Project>

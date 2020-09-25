@@ -1,4 +1,4 @@
-## NOT USED
+## Not Used
 
 AdaptiveTrigger
 
@@ -22,11 +22,11 @@ FlexLayout
 
 GestureElement
 
-GestureRecognizer
-
 GroupableItemsView
 
 ImageCell
+
+MasterDetailPage
 
 MultiPage`1
 
@@ -66,7 +66,7 @@ UrlWebViewSource
 
 ViewCell
 
-## NOT IMPLEMENTED
+## Not Implemented
 
 AppLinkEntry
 
@@ -88,9 +88,9 @@ ClickGestureRecognizer
 
 CompositeTransform
 
-FileMediaSource
-
 FlyoutItem
+
+FlyoutPage
 
 GeometryGroup
 
@@ -104,13 +104,7 @@ LinearItemsLayout
 
 LineSegment
 
-MasterDetailPage
-
 MatrixTransform
-
-MediaElement
-
-MediaSource
 
 Menu
 
@@ -182,9 +176,15 @@ TransformGroup
 
 TranslateTransform
 
-UriMediaSource
-
 WebView
 
 WebViewSource
+
+## Undefined
+
+DragGestureRecognizer
+
+DropGestureRecognizer
+
+RoundRectangleGeometry
 

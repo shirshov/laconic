@@ -89,7 +89,7 @@ namespace Laconic
                     UpdateChildViews uc => () => withContext.AddRange(ViewListPatch.Apply(
                         ((xf.Layout<xf.View>) element).Children, uc.Operations, dispatch)),
                     UpdateChildElementList uc => () => ViewListPatch
-                        .ApplyToChildElements(uc.GetList((xf.Element)element), uc.Operations, dispatch),
+                        .ApplyToChildElements(uc.GetList(element), uc.Operations, dispatch),
                     RowDefinitionsChange rdc => () => {
                         var grid = (xf.Grid) element;
                         grid.RowDefinitions.Clear();
@@ -181,7 +181,6 @@ namespace Laconic
 
         internal static object ConvertToNative(object value) => value switch {
             AbsoluteLayoutFlags _ => (xf.AbsoluteLayoutFlags)value,
-            ExpanderState _ => (xf.ExpanderState)value,
             FontAttributes _ => (xf.FontAttributes) value,
             ReturnType _ => (xf.ReturnType) value,
             IndicatorShape _ => (xf.IndicatorShape) value,
@@ -196,6 +195,7 @@ namespace Laconic
             ItemSizingStrategy _ => (xf.ItemSizingStrategy) value,
             FlowDirection _ => (xf.FlowDirection) value,
             TextAlignment _ => (xf.TextAlignment) value,
+            TextTransform _ => (xf.TextTransform) value,
             Aspect _ => (xf.Aspect) value,
             ClearButtonVisibility _ => (xf.ClearButtonVisibility) value,
             EditorAutoSizeOption _ => (xf.EditorAutoSizeOption) value,

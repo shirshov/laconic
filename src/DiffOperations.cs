@@ -27,7 +27,7 @@ namespace Laconic
             Func<xf.BindableObject> createElement, params DiffOperation[] operations);
         record SetChildElementToNull(xf.BindableProperty childElementProperty);
         record UpdateChildElement(Xamarin.Forms.BindableProperty childElementProperty, DiffOperation[] operations);
-        record UpdateChildElementList(Func<xf.Element, IList> getList, params ListOperation[] operations);
+        record UpdateChildElementList(Func<xf.BindableObject, IList> getList, params ListOperation[] operations);
         record UpdateItems(ListOperation[] operations);
         record GridPositionChange(GridPositionChangeType type, int value);
         record RowDefinitionsChange(params xf.RowDefinition[] definitions);

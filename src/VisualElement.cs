@@ -16,6 +16,12 @@ namespace Laconic
             get => GetValue<VisualMarker>(xf.VisualElement.VisualProperty);
             set => SetValue(xf.VisualElement.VisualProperty, value);
         }
+        
+        public IBrush Background
+        {
+            get => GetValue<IBrush>(xf.VisualElement.BackgroundProperty);
+            set => SetValue(xf.VisualElement.BackgroundProperty, value);
+        }
     }
 
 }		

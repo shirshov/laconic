@@ -9,9 +9,9 @@ namespace Laconic
     class ElementListInfo
     {
         public readonly ElementList List;
-        public readonly Func<xf.Element, IList> ListGetter;
+        public readonly Func<xf.BindableObject, IList> ListGetter;
         
-        public ElementListInfo(ElementList list, Func<xf.Element, IList> listGetter)
+        public ElementListInfo(ElementList list, Func<xf.BindableObject, IList> listGetter)
         {
             List = list;
             ListGetter = listGetter;
@@ -44,7 +44,7 @@ namespace Laconic
         internal readonly Dictionary<string, ElementListInfo>  Inner = new Dictionary<string, ElementListInfo>();
 
         public void Add<TListOwner>(string listName, Func<TListOwner, IList> listGetter)
-            where TListOwner : xf.Element =>
+            where TListOwner : xf.BindableObject =>
             Inner.Add(listName, new ElementListInfo(new ElementList(), el => listGetter((TListOwner)el)));
 
         IEnumerator<KeyValuePair<string, ElementList>> IEnumerable<KeyValuePair<string, ElementList>>.GetEnumerator() => throw new NotImplementedException();

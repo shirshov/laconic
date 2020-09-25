@@ -28,6 +28,7 @@ namespace Laconic.CodeGen
             [typeof(Behavior)] = NotImplemented,
             [typeof(Behavior<>)] = NotImplemented,
             [typeof(BoxView)] = All,
+            [typeof(Brush)] = WrittenManually,
             [typeof(Button)] = All
                 .ExceptNotUsed(Button.CommandProperty, Button.CommandParameterProperty)
                 .ExceptWrittenManually(Button.ContentLayoutProperty),
@@ -74,23 +75,17 @@ namespace Laconic.CodeGen
                 Entry.TextProperty),
             [typeof(EntryCell)] = NotUsed,
             [typeof(EventTrigger)] = NotUsed,
-            [typeof(Expander)] = All
-                .WithoutBaseDeclaration()
-                .ExceptNotUsed(
-                    Expander.CommandProperty, 
-                    Expander.CommandParameterProperty, 
-                    Expander.ContentTemplateProperty,
-                    Expander.ForceUpdateSizeCommandProperty)
-                .ExceptWrittenManually(Expander.ContentProperty),
             [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
-            [typeof(FileMediaSource)] = NotImplemented,
             [typeof(FlexLayout)] = NotUsed,
             [typeof(FlyoutItem)] = NotImplemented,
+            [typeof(FlyoutPage)] = NotImplemented,
             [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FormattedString)] = WrittenManually,
             [typeof(Frame)] = All.WithoutBaseDeclaration(),
             [typeof(GestureElement)] = NotUsed,
-            [typeof(GestureRecognizer)] = NotUsed,
+            [typeof(GestureRecognizer)] = WrittenManually,
+            [typeof(GradientBrush)] = WrittenManually,
+            [typeof(GradientStop)] = WrittenManually,
             [typeof(Grid)] = All
                 .WithoutBaseDeclaration()
                 .ExceptWrittenManually(
@@ -134,10 +129,9 @@ namespace Laconic.CodeGen
             [typeof(Label)] = All,
             [typeof(Layout)] = WrittenManually,
             [typeof(Layout<>)] = WrittenManually,
+            [typeof(LinearGradientBrush)] = WrittenManually,
             [typeof(LinearItemsLayout)] = NotImplemented,
-            [typeof(MasterDetailPage)] = NotImplemented,
-            [typeof(MediaElement)] = NotImplemented,
-            [typeof(MediaSource)] = NotImplemented,
+            [typeof(MasterDetailPage)] = NotUsed, // Obsolete in XF 5.0
             [typeof(Menu)] = NotImplemented,
             [typeof(MenuItem)] = NotImplemented,
             [typeof(MultiPage<>)] = NotUsed,
@@ -153,6 +147,7 @@ namespace Laconic.CodeGen
                 .ExceptManuallyWrittenEvents(nameof(Picker.SelectedIndexChanged)),
             [typeof(PinchGestureRecognizer)] = NotImplemented,
             [typeof(ProgressBar)] = All,
+            [typeof(RadialGradientBrush)] = WrittenManually,
             [typeof(RadioButton)] = NotImplemented,
             [typeof(RefreshView)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                     RefreshView.CommandProperty,
@@ -180,6 +175,7 @@ namespace Laconic.CodeGen
             [typeof(Slider)] = All
                 .ExceptNotUsed(Slider.DragCompletedCommandProperty, Slider.DragStartedCommandProperty)
                 .ExceptNotUsedEvents(nameof(Slider.ValueChanged)),
+            [typeof(SolidColorBrush)] = WrittenManually,
             [typeof(Span)] = All
                 .WithoutBaseDeclaration()
                 .ExceptNotUsed(Span.FontProperty, Span.StyleProperty),
@@ -214,13 +210,12 @@ namespace Laconic.CodeGen
             [typeof(Trigger)] = NotUsed,
             [typeof(TriggerBase)] = NotUsed,
             [typeof(UriImageSource)] = WrittenManually, // Requires calling Xamarin.Forms.Init()
-            [typeof(UriMediaSource)] = NotImplemented,
             [typeof(UrlWebViewSource)] = NotUsed, 
             [typeof(View)] = WrittenManually,
             [typeof(ViewCell)] = NotUsed,
             [typeof(VisualElement)] = All.WithoutBaseDeclaration().TakeGenericParameter()
                 .ExceptNotUsed(VisualElement.BehaviorsProperty, VisualElement.TriggersProperty)
-                .ExceptWrittenManually(VisualElement.VisualProperty)
+                .ExceptWrittenManually(VisualElement.VisualProperty, VisualElement.BackgroundProperty)
                 .ExceptNotUsedEvents(
                     nameof(VisualElement.BatchCommitted),
                     nameof(VisualElement.ChildrenReordered),

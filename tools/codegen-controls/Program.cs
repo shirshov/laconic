@@ -54,7 +54,7 @@ namespace Laconic.CodeGen
                 {
                     var providedByLaconic = new[] {
                         "Color", "Thickness", "ImageSource", "Keyboard", "FormattedString", 
-                        "CornerRadius", "Easing", "View"
+                        "CornerRadius", "Easing", "View", "Brush"
                     };
 
                     return type.Namespace == "Xamarin.Forms" &&
@@ -142,14 +142,14 @@ namespace Laconic.CodeGen
             //     .OrderBy(x => x)
             //     .Aggregate("", (c, n) => c + n + "\n\n");
 
-            res += "## NOT USED\n\n";
+            res += "## Not Used\n\n";
             res += flatList
                 .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.NotUsed)
                 .Select(x => x.Type.Name)
                 .OrderBy(x => x)
                 .Aggregate("", (c, n) => c + n + "\n\n");
 
-            res += "## NOT IMPLEMENTED\n\n";
+            res += "## Not Implemented\n\n";
             res += flatList
                 .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.NotImplemented)
                 .Select(x => x.Type.Name)
@@ -161,7 +161,7 @@ namespace Laconic.CodeGen
                 .Select(x => x.Type.Name)
                 .OrderBy(x => x);
             if (undefined.Any()) {
-                res += "## UNDEFINED\n\n";
+                res += "## Undefined\n\n";
                 res += undefined.Aggregate("", (c, n) => c + n + "\n\n");
             }
 

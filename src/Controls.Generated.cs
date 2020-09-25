@@ -97,6 +97,11 @@ namespace Laconic
             get => GetValue<String>(xf.Button.TextProperty);
             set => SetValue(xf.Button.TextProperty, value);
         }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.Button.TextTransformProperty);
+            set => SetValue(xf.Button.TextTransformProperty, value);
+        }
         public Func<Signal> Clicked
         {
             set => SetEvent(nameof(Clicked), value, (ctl, handler) => ctl.Clicked += handler, (ctl, handler) => ctl.Clicked -= handler);
@@ -132,6 +137,11 @@ namespace Laconic
         {
             get => GetValue<xf.LinearItemsLayout>(xf.CarouselView.ItemsLayoutProperty);
             set => SetValue(xf.CarouselView.ItemsLayoutProperty, value);
+        }
+        public Boolean Loop
+        {
+            get => GetValue<Boolean>(xf.CarouselView.LoopProperty);
+            set => SetValue(xf.CarouselView.LoopProperty, value);
         }
         public Thickness PeekAreaInsets
         {
@@ -205,6 +215,11 @@ namespace Laconic
         {
             get => GetValue<Color>(xf.DatePicker.TextColorProperty);
             set => SetValue(xf.DatePicker.TextColorProperty, value);
+        }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.DatePicker.TextTransformProperty);
+            set => SetValue(xf.DatePicker.TextTransformProperty, value);
         }
     }
 
@@ -301,49 +316,6 @@ namespace Laconic
         public Func<Signal> Completed
         {
             set => SetEvent(nameof(Completed), value, (ctl, handler) => ctl.Completed += handler, (ctl, handler) => ctl.Completed -= handler);
-        }
-    }
-
-    public partial class Expander
-    {
-        public Easing CollapseAnimationEasing
-        {
-            get => GetValue<Easing>(xf.Expander.CollapseAnimationEasingProperty);
-            set => SetValue(xf.Expander.CollapseAnimationEasingProperty, value);
-        }
-        public UInt32 CollapseAnimationLength
-        {
-            get => GetValue<UInt32>(xf.Expander.CollapseAnimationLengthProperty);
-            set => SetValue(xf.Expander.CollapseAnimationLengthProperty, value);
-        }
-        public Easing ExpandAnimationEasing
-        {
-            get => GetValue<Easing>(xf.Expander.ExpandAnimationEasingProperty);
-            set => SetValue(xf.Expander.ExpandAnimationEasingProperty, value);
-        }
-        public UInt32 ExpandAnimationLength
-        {
-            get => GetValue<UInt32>(xf.Expander.ExpandAnimationLengthProperty);
-            set => SetValue(xf.Expander.ExpandAnimationLengthProperty, value);
-        }
-        public View Header
-        {
-            get => GetValue<View>(xf.Expander.HeaderProperty);
-            set => SetValue(xf.Expander.HeaderProperty, value);
-        }
-        public Boolean IsExpanded
-        {
-            get => GetValue<Boolean>(xf.Expander.IsExpandedProperty);
-            set => SetValue(xf.Expander.IsExpandedProperty, value);
-        }
-        public ExpanderState State
-        {
-            get => GetValue<ExpanderState>(xf.Expander.StateProperty);
-            set => SetValue(xf.Expander.StateProperty, value);
-        }
-        public Func<Signal> Tapped
-        {
-            set => SetEvent(nameof(Tapped), value, (ctl, handler) => ctl.Tapped += handler, (ctl, handler) => ctl.Tapped -= handler);
         }
     }
 
@@ -579,6 +551,11 @@ namespace Laconic
             get => GetValue<String>(xf.InputView.TextProperty);
             set => SetValue(xf.InputView.TextProperty, value);
         }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.InputView.TextTransformProperty);
+            set => SetValue(xf.InputView.TextTransformProperty, value);
+        }
     }
 
     public abstract partial class ItemsView<T>
@@ -687,6 +664,11 @@ namespace Laconic
             get => GetValue<String>(xf.Label.TextProperty);
             set => SetValue(xf.Label.TextProperty, value);
         }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.Label.TextTransformProperty);
+            set => SetValue(xf.Label.TextTransformProperty, value);
+        }
         public TextType TextType
         {
             get => GetValue<TextType>(xf.Label.TextTypeProperty);
@@ -762,6 +744,11 @@ namespace Laconic
             get => GetValue<Double>(xf.Picker.FontSizeProperty);
             set => SetValue(xf.Picker.FontSizeProperty, value);
         }
+        public TextAlignment HorizontalTextAlignment
+        {
+            get => GetValue<TextAlignment>(xf.Picker.HorizontalTextAlignmentProperty);
+            set => SetValue(xf.Picker.HorizontalTextAlignmentProperty, value);
+        }
         public Int32 SelectedIndex
         {
             get => GetValue<Int32>(xf.Picker.SelectedIndexProperty);
@@ -777,6 +764,11 @@ namespace Laconic
             get => GetValue<Color>(xf.Picker.TextColorProperty);
             set => SetValue(xf.Picker.TextColorProperty, value);
         }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.Picker.TextTransformProperty);
+            set => SetValue(xf.Picker.TextTransformProperty, value);
+        }
         public Color TitleColor
         {
             get => GetValue<Color>(xf.Picker.TitleColorProperty);
@@ -786,6 +778,11 @@ namespace Laconic
         {
             get => GetValue<String>(xf.Picker.TitleProperty);
             set => SetValue(xf.Picker.TitleProperty, value);
+        }
+        public TextAlignment VerticalTextAlignment
+        {
+            get => GetValue<TextAlignment>(xf.Picker.VerticalTextAlignmentProperty);
+            set => SetValue(xf.Picker.VerticalTextAlignmentProperty, value);
         }
     }
 
@@ -1007,6 +1004,11 @@ namespace Laconic
             get => GetValue<String>(xf.Span.TextProperty);
             set => SetValue(xf.Span.TextProperty, value);
         }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.Span.TextTransformProperty);
+            set => SetValue(xf.Span.TextTransformProperty, value);
+        }
     }
 
     public partial class StackLayout
@@ -1097,6 +1099,11 @@ namespace Laconic
         {
             get => GetValue<Color>(xf.TimePicker.TextColorProperty);
             set => SetValue(xf.TimePicker.TextColorProperty, value);
+        }
+        public TextTransform TextTransform
+        {
+            get => GetValue<TextTransform>(xf.TimePicker.TextTransformProperty);
+            set => SetValue(xf.TimePicker.TextTransformProperty, value);
         }
         public TimeSpan Time
         {

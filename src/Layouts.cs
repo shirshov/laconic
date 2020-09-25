@@ -190,14 +190,6 @@ namespace Laconic
         }
     }
 
-    public partial class Expander : Layout<xf.Expander>
-    {
-        public View? Content {
-            get => GetValue<View?>(xf.Expander.ContentProperty);
-            set => SetValue(xf.Expander.ContentProperty, value);
-        }
-    }
-    
     public class AbsoluteLayout : Layout<xf.AbsoluteLayout>, ILayout
     {
         public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();

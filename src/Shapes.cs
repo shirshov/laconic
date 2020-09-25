@@ -87,8 +87,8 @@ namespace Laconic.Shapes
             set => SetValue(Shape.AspectProperty, value);
         }
 
-        public Color Fill {
-            get => GetValue<Color>(Shape.FillProperty);
+        public IBrush Fill {
+            get => GetValue<IBrush>(Shape.FillProperty);
             set => SetValue(Shape.FillProperty, value);
         }
 
@@ -112,8 +112,8 @@ namespace Laconic.Shapes
             set => SetValue(Shape.StrokeLineJoinProperty, value);
         }
 
-        public Color Stroke {
-            get => GetValue<Color>(Shape.StrokeProperty);
+        public IBrush Stroke {
+            get => GetValue<IBrush>(Shape.StrokeProperty);
             set => SetValue(Shape.StrokeProperty, value);
         }
 

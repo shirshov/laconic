@@ -1,9 +1,10 @@
 using System;
+using System.Data.Common;
 using System.Globalization;
 
 namespace Laconic
 {
-    public readonly struct Point
+    public readonly struct Point : IConvert
     {
         public static Point Zero;
 
@@ -23,6 +24,8 @@ namespace Laconic
 
         public override string ToString() =>
             $"{{X={X.ToString(CultureInfo.InvariantCulture)} Y={Y.ToString(CultureInfo.InvariantCulture)}}}";
+
+        public object ToNative() => new Xamarin.Forms.Point(X, Y);
 
         public Point(double x, double y)
         {
@@ -73,6 +76,8 @@ namespace Laconic
             return true;
         }
 
+        public static implicit operator Point((double X, double Y) value) => new Point(value.X, value.Y);
+        
         public double Distance(Point other) => Math.Sqrt(Math.Pow(X - other.X, 2.0) + Math.Pow(Y - other.Y, 2.0));
 
         public void Deconstruct(out double x, out double y)

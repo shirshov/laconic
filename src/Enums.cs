@@ -153,6 +153,14 @@ namespace Laconic
         End = xf.TextAlignment.End,
         Center = xf.TextAlignment.Center
     }
+    
+    public enum TextTransform
+    {
+        None = 0 ,
+        Default,
+        Lowercase,
+        Uppercase
+    }
 
     public enum Aspect
     {

@@ -11,18 +11,19 @@ namespace Laconic.Demo
             _binder = Binder.Create("", (s, g) => s);
 
             Content = _binder.CreateElement(s => new ScrollView {
+                Padding = 20,
                 Content = new StackLayout {
-                    ["lineLbl"] = new Label {Text = "Line"},
                     ["line"] = new Line {
                         X1 = 40,
                         Y1 = 0,
                         X2 = 0,
                         Y2 = 120,
-                        Stroke = Color.Red
+                        Stroke = Brush.Red,
+                        StrokeThickness = 5
                     },
                     ["rect"] = new Rectangle {
-                        Fill = Color.Blue,
-                        Stroke = Color.Black,
+                        Fill = Brush.Blue,
+                        Stroke = Brush.Black,
                         StrokeThickness = 3,
                         RadiusX = 50,
                         RadiusY = 10,
@@ -32,7 +33,8 @@ namespace Laconic.Demo
                     },
                     ["path"] = new Path {
                         Data = "M 10,100 C 100,0 200,200 300,100", 
-                        Stroke = Color.Black, 
+                        Stroke = Brush.Black, 
+                        StrokeThickness = 3,
                         Aspect = Stretch.Uniform
                     }
                 }

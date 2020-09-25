@@ -9,6 +9,7 @@ namespace Laconic
     {
         object ToNative();
     }
+    
     public abstract class Element : IEquatable<Element>
     {
         public Dictionary<Xamarin.Forms.BindableProperty, object?> ProvidedValues { get; } =

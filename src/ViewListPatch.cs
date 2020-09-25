@@ -18,12 +18,12 @@ namespace Laconic
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
                     UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () => {
-                        var real = (xf.View) Patch.CreateView((Element) rc.NewView);
+                        var real = (xf.View) Patch.CreateView(rc.NewView);
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
-                        var real = Patch.CreateView((Element) acv.Blueprint);
+                        var real = Patch.CreateView(acv.Blueprint);
                         Patch.Apply(real, acv.Operations, dispatch);
                         list.Insert(acv.Index, (xf.View) real);
                     },
@@ -48,14 +48,14 @@ namespace Laconic
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
                     UpdateChild uc => () => Patch.Apply((xf.BindableObject)list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () => {
-                        var real = (xf.View) Patch.CreateView((Element) rc.NewView);
+                        var real = (xf.View) Patch.CreateView(rc.NewView);
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
-                        var real = Patch.CreateView((Element) acv.Blueprint);
+                        var real = Patch.CreateView(acv.Blueprint);
                         Patch.Apply(real, acv.Operations, dispatch);
-                        list.Insert(acv.Index, (xf.Element) real);
+                        list.Insert(acv.Index, real);
                     },
                     _ => () => throw new InvalidOperationException($"Unknown Diff operation: {op.GetType()}")
                 };
