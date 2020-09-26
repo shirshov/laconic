@@ -7,6 +7,6 @@
         <Description>Compile-time code generation of records and discriminated unions for C# 8</Description>
         <Copyright>Copyright (c) Alex Shirshov. All rights reserved.</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/shirshov/laconic</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/shirshov/laconic/tree/master/codegen</PackageProjectUrl>
     </PropertyGroup>
 </Project>

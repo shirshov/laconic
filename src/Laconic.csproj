@@ -5,6 +5,16 @@
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <PackageVersion>5.0.0.1487-beta1</PackageVersion>
+    <Authors>Alex Shirshov</Authors>
+    <Summary>MVU library for Xamarin.Forms</Summary>
+    <Description>Write your Model-View-Update code for Xamarin.Forms in React+Redux fashion</Description>
+    <Copyright>Copyright (c) Alex Shirshov. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/shirshov/laconic</PackageProjectUrl>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Laconic.CodeGeneration" Version="0.9.3-beta" />
