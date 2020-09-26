@@ -1,17 +1,14 @@
 using System;
-using Laconic.CodeGeneration;
 
 namespace Laconic
 {
-    [Union]
-    interface __Value
-    {
-        record Default();
-        record Accent();
-        record Hex(string value);
-        record Hsla(double h, double s, double l, double a = 1.0);
-        record Rgba(byte r, byte g, byte b, byte a = 255);
-    }
+    interface ColorSource { }
+
+    class Default : ColorSource {};
+    class Accent : ColorSource {};
+    record Hex(string Value) : ColorSource;
+    record Hsla(double H, double S, double L, double A = 1.0) : ColorSource;
+    record Rgba(byte R, byte G, byte B, byte A = 255) : ColorSource;
 
     public readonly struct Color : IConvert, IEquatable<Color>
     {
@@ -168,9 +165,9 @@ namespace Laconic
         public static implicit operator Color((byte r, byte g, byte b, byte a) rgbValues)
             => new Color(new Rgba(rgbValues.r, rgbValues.g, rgbValues.b, rgbValues.a));
 
-        readonly Value _value;
+        readonly ColorSource _value;
 
-        Color(Value value) => _value = value;
+        Color(ColorSource value) => _value = value;
 
         public static Color FromHsla(double h, double s, double l, double a = 1.0)
             => new Color(new Hsla(h, s, l, a));

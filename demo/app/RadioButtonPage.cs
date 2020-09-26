@@ -9,7 +9,7 @@ namespace Laconic.Demo
             static RadioButton CalendarButton(string text, string iconGlyph, bool isChecked) => new RadioButton {
                 CheckedChanged = e => new Signal("cal", text),
                 Content = new Frame {
-                    BorderColor = isChecked ? "#FF3300" : "F3F2F1",
+                    BorderColor = isChecked ? "FF3300" : "F3F2F1",
                     BackgroundColor="F3F2F1",
                     HasShadow = false,
                     HeightRequest = 100,

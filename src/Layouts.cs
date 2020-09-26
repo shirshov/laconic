@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Laconic.CodeGeneration;
 using xf = Xamarin.Forms;
-using Evt = System.Linq.Expressions.Expression<System.Func<Laconic.Signal>>;
 
 namespace Laconic
 {
@@ -205,13 +203,8 @@ namespace Laconic
         }
     }
     
-    [Records]
-    interface AbsoluteLayoutTypes
-    {
-        // TODO: should this be a Rectangle?
-        record Bounds(double x, double y, double width, double height);
-        record AbsLayoutInfo(Bounds bounds, AbsoluteLayoutFlags flags);
-    }
+    record Bounds(double X, double Y, double Width, double Height);
+    record AbsLayoutInfo(Bounds Bounds, AbsoluteLayoutFlags Flags);
     
     public class AbsoluteLayoutViewList : ViewList
     {
