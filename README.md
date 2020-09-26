@@ -96,7 +96,7 @@ namespace Laconic.Demo
         {
 
             _binder = Binder.Create(0, Reducer);
-            MainPage = _binder.CreatePage(Counter);
+            MainPage = _binder.CreateElement(Counter);
         }
     }
 }
