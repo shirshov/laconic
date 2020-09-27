@@ -52,6 +52,7 @@ Here's a complete working app:
 
 ``` csharp
 using System;
+using Laconic;
 
 namespace Laconic.Demo
 {
