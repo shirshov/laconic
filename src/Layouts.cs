@@ -44,7 +44,7 @@ namespace Laconic
 
     public partial class StackLayout : Layout<xf.StackLayout>, ILayout
     {
-        public ViewList Children { get; } = new ViewList();
+        public ViewList Children { get; set; } = new ViewList();
 
         IDictionary<Key, View?> ILayout.Children => Children;
 

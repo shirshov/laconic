@@ -110,11 +110,16 @@ namespace Laconic
             return view;
         }
 
+        bool _suppressEvents;
+
         public void Send(Signal? signal)
         {
             if (signal == null)
                 return;
             
+            if (_suppressEvents)
+                return;
+
             if (_synchronizationContext is TestSynchronizationContext)
                 ProcessSignal(signal);
             else 
@@ -179,7 +184,10 @@ namespace Laconic
                     var isViewAlive = info.View.TryGetTarget(out var view); 
                     if (!isViewAlive)
                         throw new InvalidOperationException("View with local context was disposed.");
+
+                    _suppressEvents = true;
                     var newElementsWithContext = Patch.Apply(view, diff, Send);
+                    _suppressEvents = false;
                     
                     UpdateElementContexts(contextRequests, newElementsWithContext);
                     _elementContexts[contextElement] = info.With(newBlueprint); 
@@ -205,7 +213,9 @@ namespace Laconic
                         var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
                             (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
+                        _suppressEvents = true;
                         var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
+                        _suppressEvents = false;
 
                         UpdateElementContexts(contextRequests, newElementsWithContext);
 
