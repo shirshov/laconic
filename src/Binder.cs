@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using xf = Xamarin.Forms;
+using System.Runtime.ExceptionServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
@@ -193,13 +194,24 @@ namespace Laconic
                     _elementContexts[contextElement] = info.With(newBlueprint); 
                 }, null);
             } else {
-                var context = _middlewarePipeline(
-                    new MiddlewareContext<TState>(State, signal), 
-                    c => new MiddlewareContext<TState>(_mainReducer(c.State, signal), signal));
+                ExceptionDispatchInfo? reducerException = null;
+                MiddlewareContext<TState>? context = null;
+                try {
+                    context = _middlewarePipeline(
+                        new MiddlewareContext<TState>(State, signal), 
+                        c => new MiddlewareContext<TState>(_mainReducer(c.State, signal), signal));
+                }
+                catch (Exception ex)
+                {
+                    reducerException = ExceptionDispatchInfo.Capture(ex);
+                }
 
                 // This runs on the main thread. 
                 // TODO: do diffing on the background one
                 _synchronizationContext.Send(_ => {
+
+                    if (reducerException != null)
+                        reducerException.Throw();
 
                     var copy = _trackedElements.ToArray();
                     _trackedElements.Clear();
@@ -207,7 +219,7 @@ namespace Laconic
                     foreach (var el in copy) {
                         if (!el.View.TryGetTarget(out var aliveView)) continue;
                         
-                        var newBlueprint = el.BlueprintMaker(context.State);
+                        var newBlueprint = el.BlueprintMaker(context!.State);
                         
                         // TODO: Diffs should run on the background thread
                         var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
@@ -221,7 +233,7 @@ namespace Laconic
 
                         _trackedElements.Add(el.With(newBlueprint));
                     }
-                    State = context.State;
+                    State = context!.State;
                 }, null);
             }
         }
