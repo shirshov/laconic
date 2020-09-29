@@ -1,5 +1,4 @@
 using System;
-using Laconic.CodeGeneration;
 
 // The UI code is ported from here:
 //  https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/layouts/grid
@@ -16,16 +15,13 @@ namespace Laconic.Demo
     class EqualsSignal : Signal { public EqualsSignal() : base(null) { } }
     class ClearSignal : Signal { public ClearSignal() : base(null) { } }
 
-    [Union]
-    interface __State
-    {
-        record Initial();
-        record Operand(double value);
-        record OperandOperator(double operand, Operator op);
-        record OperandOperatorOperand(double operand1, Operator op, double operand2);
-        record Result(double value);
-        record Error();
-    }
+    interface CalculatorState {}
+    class Initial : CalculatorState {}
+    record Operand(double Value) : CalculatorState;
+    record OperandOperator(double Operand, Operator Op) : CalculatorState;
+    record OperandOperatorOperand(double Operand1, Operator Op, double Operand2) : CalculatorState;
+    record Result(double Value) : CalculatorState;
+    class Error : CalculatorState {}
 
     public class CalculatorPage : Xamarin.Forms.ContentPage
     {
@@ -37,7 +33,7 @@ namespace Laconic.Demo
             _ => throw new NotImplementedException($"Operator not implemented: {@operator}")
         };
 
-        static State Calculate(State state, Signal signal) => state switch {
+        static CalculatorState Calculate(CalculatorState state, Signal signal) => state switch {
             OperandOperatorOperand (_, Operator.Divide, 0.0) => new Error(),
             OperandOperatorOperand (var operand1, var @operator, var operand2) => signal switch {
                 EqualsSignal _ => new Result(CalculateOperation(operand1, operand2, @operator)),
@@ -48,7 +44,7 @@ namespace Laconic.Demo
             _ => state
         };
 
-        static State MainReducer(State state, Signal signal) => signal switch {
+        static CalculatorState MainReducer(CalculatorState state, Signal signal) => signal switch {
             ClearSignal _ => new Initial(),
             DigitSignal (int digit, null) => state switch {
                 var s when s is Initial || s is Error || s is Result => new Operand(digit),
@@ -69,7 +65,7 @@ namespace Laconic.Demo
             _ => throw new NotImplementedException($"Signal support is not implemented: {signal}")
         };
 
-        static string Display(State state) => state switch {
+        static string Display(CalculatorState state) => state switch {
             Initial _ => "0",
             Operand op => op.Value.ToString(),
             OperandOperator (var op, _) => op.ToString(),
@@ -97,7 +93,7 @@ namespace Laconic.Demo
 
             BackgroundColor = Xamarin.Forms.Color.FromHex("404040");
 
-            State initialState = new Initial();
+            CalculatorState initialState = new Initial();
             var binder = Binder.Create(initialState, MainReducer);
 
             Content = binder.CreateElement(s => new Grid {

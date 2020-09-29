@@ -1,26 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\Laconic.csproj" />
-    <!--ProjectReference Include="..\..\codegen\src\attributes\CodeGen.Attributes.csproj" />
-    <PackageReference Include="CodeGeneration.Roslyn.Tool" Version="0.7.63" PrivateAssets="all" />
-    <ProjectReference Include="..\..\codegen\src\generators\CodeGen.Generators.csproj" OutputItemType="CodeGenerationRoslynPlugin" /-->
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Chance.NET" Version="2.2.0" />
-    <PackageReference Include="Laconic.CodeGeneration" Version="0.9.3-beta" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0-preview.3.20214.6" />
   </ItemGroup>
 
