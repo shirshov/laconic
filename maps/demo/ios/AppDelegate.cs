@@ -1,6 +1,5 @@
 ﻿using Foundation;
 using UIKit;
-using Xamarin;
 
 namespace Laconic.Maps.Demo
 {
@@ -10,8 +9,7 @@ namespace Laconic.Maps.Demo
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Xamarin.Forms.Forms.Init();
-            FormsMaps.Init();
-            // FormsMaterial.Init();
+            Xamarin.FormsMaps.Init();
             
             LoadApplication(new MapsApp());
 

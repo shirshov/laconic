@@ -42,7 +42,7 @@ namespace Laconic
 // Records won't work without this 
 namespace System.Runtime.CompilerServices
 {
-    public sealed class IsExternalInit
+    sealed class IsExternalInit
     {
     }
 }

@@ -55,7 +55,7 @@ namespace Laconic.Demo
             },
             OperatorSignal (Operator @operator, _) => state switch {
                 var s when s is Initial || s is Error => state,
-                Result r => new OperandOperator(r.Value, @operator), // TODO: single value records should be implicitly cast?
+                Result r => new OperandOperator(r.Value, @operator),
                 Operand operand => new OperandOperator(operand.Value, @operator),
                 OperandOperator(var operand, _) => new OperandOperator(operand, @operator),
                 OperandOperatorOperand _ => Calculate(state, signal),
@@ -82,7 +82,7 @@ namespace Laconic.Demo
             const string orangeButtonColor = "E8AD00";
 
             static Button CalcButton(string text, Signal signal, Color backgroundColor, Color? textColor = null
-                ) => new Button {
+                ) => new() {
                 Text = text,
                 BackgroundColor = backgroundColor,
                 TextColor = textColor ?? Color.Black,

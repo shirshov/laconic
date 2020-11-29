@@ -38,3 +38,11 @@ namespace Laconic.Demo
         }
     }
 }
+
+// Records won't work without this 
+namespace System.Runtime.CompilerServices
+{
+    sealed class IsExternalInit
+    {
+    }
+}

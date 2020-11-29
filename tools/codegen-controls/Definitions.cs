@@ -131,7 +131,9 @@ namespace Laconic.CodeGen
             [typeof(Layout<>)] = WrittenManually,
             [typeof(LinearGradientBrush)] = WrittenManually,
             [typeof(LinearItemsLayout)] = NotImplemented,
+#pragma warning disable CS0618 // Type or member is obsolete
             [typeof(MasterDetailPage)] = NotUsed, // Obsolete in XF 5.0
+#pragma warning restore CS0618 // Type or member is obsolete
             [typeof(Menu)] = NotImplemented,
             [typeof(MenuItem)] = NotImplemented,
             [typeof(MultiPage<>)] = NotUsed,
