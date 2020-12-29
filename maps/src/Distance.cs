@@ -6,9 +6,6 @@ namespace Laconic.Maps
     /// <remarks>To be added.</remarks>
     public struct Distance
     {
-        const double MetersPerMile = 1609.344;
-        const double MetersPerKilometer = 1000.0;
-
         public Distance(double meters) => this.Meters = meters;
         
         public double Meters { get; }
@@ -38,7 +35,7 @@ namespace Laconic.Maps
             return new Distance(kilometers * 1000.0);
         }
 
-        public static Distance BetweenPositions(Xamarin.Forms.Maps.Position position1, Xamarin.Forms.Maps.Position position2)
+        public static Distance BetweenPositions(Position position1, Position position2)
         {
             var radians1 = position1.Latitude.ToRadians();
             var radians2 = position1.Longitude.ToRadians();
@@ -53,9 +50,9 @@ namespace Laconic.Maps
             return FromKilometers(12742.0 * Math.Atan2(Math.Sqrt(d), Math.Sqrt(1.0 - d)));
         }
 
-        public bool Equals(Xamarin.Forms.Maps.Distance other) => this.Meters.Equals(other.Meters);
+        public bool Equals(Distance other) => this.Meters.Equals(other.Meters);
 
-        public override bool Equals(object obj) => obj != null && obj is Distance other && Equals(other);
+        public override bool Equals(object? obj) => obj is Distance other && Equals(other);
 
         public override int GetHashCode() => Meters.GetHashCode();
 
@@ -66,8 +63,6 @@ namespace Laconic.Maps
 
     static class GeographyUtils
     {
-        internal const double EarthRadiusKm = 6371.0;
-
         public static double ToRadians(this double degrees) => degrees * Math.PI / 180.0;
 
         public static double ToDegrees(this double radians) => radians / Math.PI * 180.0;

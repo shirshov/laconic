@@ -136,9 +136,9 @@ namespace Laconic
                         evt.Unsubscribe(element, sub.EventHandler);
                     },
                     UpdateItems ui => () => {
-                        xf.ItemsView itemsView = (xf.ItemsView) element;
+                        var itemsView = (xf.ItemsView) element;
                         ViewListPatch.PatchItemsSource(itemsView, ui, dispatch,
-                            (x, y) => ((Element) x, (Element) y), itemsView.ItemsSource);
+                            (x, y) => ((Element) x!, (Element) y), itemsView.ItemsSource);
                     },
                     AddGestureRecognizer agr => () => {
                         var view = (xf.View) element;

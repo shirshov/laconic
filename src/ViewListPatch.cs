@@ -66,7 +66,7 @@ namespace Laconic
         internal static void PatchItemsSource(xf.ItemsView itemsView, 
             UpdateItems update, 
             Action<Signal> dispatch, 
-            ExpandWithContext expandWithContext, IEnumerable itemsSource)
+            ExpandWithContext expandWithContext, IEnumerable? itemsSource)
         {
             if (itemsSource == null) {
                 var source = new ObservableCollection<BindingContextItem>();

@@ -99,9 +99,9 @@ namespace Laconic
                     else {
                         var existingRecog = existingRecognizers[action.DestinationItem];
                         var newRecog = newRecognizers[action.DestinationItem];
-                        var ops = Calculate((Element) existingRecog, (Element) newRecog, expandWithContext);
-                        if (ops.Any())
-                            yield return new UpdateGestureRecognizer(index, ops.ToArray());
+                        var ops = Calculate((Element) existingRecog, (Element) newRecog, expandWithContext).ToArray();
+                        if (ops.Length > 0)
+                            yield return new UpdateGestureRecognizer(index, ops);
                         index++;
                     }
                 }
@@ -135,9 +135,9 @@ namespace Laconic
                     else {
                         var existingItem = existingItems[action.DestinationItem];
                         var newItem = newItems[action.DestinationItem];
-                        var ops = Calculate(existingItem, newItem, expandWithContext);
-                        if (ops.Any())
-                            yield return new UpdateToolbarItem(index, ops.ToArray());
+                        var ops = Calculate(existingItem, newItem, expandWithContext).ToArray();
+                        if (ops.Length > 0)
+                            yield return new UpdateToolbarItem(index, ops);
                         index++;
                     }
                 }
@@ -153,7 +153,7 @@ namespace Laconic
 
             if (newElement is IContextElement contextElement) {
                 var (existingExpanded, newExpanded) = expandWithContext((IContextElement)existingElement!, contextElement);
-                return Calculate((Element)existingExpanded!, newExpanded!, expandWithContext);
+                return Calculate(existingExpanded!, newExpanded!, expandWithContext);
             }
             
             operations.AddRange(CalcPropertyDiff(existingElement?.ProvidedValues ?? new PropDict(),

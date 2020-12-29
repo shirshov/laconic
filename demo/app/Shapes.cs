@@ -8,9 +8,9 @@ namespace Laconic.Demo
 
         protected override void OnAppearing()
         {
-            _binder = Binder.Create("", (s, g) => s);
+            _binder = Binder.Create("", (s, _) => s);
 
-            Content = _binder.CreateElement(s => new ScrollView {
+            Content = _binder.CreateElement(_ => new ScrollView {
                 Padding = 20,
                 Content = new StackLayout {
                     ["line"] = new Line {

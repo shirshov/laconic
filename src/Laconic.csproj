@@ -7,7 +7,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <PackageVersion>5.0.0.1709-pre4.1</PackageVersion>
+    <PackageVersion>5.0.0.1829-pre6.1</PackageVersion>
     <Authors>Alex Shirshov</Authors>
     <Summary>MVU library for Xamarin.Forms</Summary>
     <Description>Write your Model-View-Update code for Xamarin.Forms in React+Redux fashion</Description>
@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Threading.Channels" Version="5.0.0" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1709-pre4" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1829-pre6" />
   </ItemGroup>
 
 </Project>

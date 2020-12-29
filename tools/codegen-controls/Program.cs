@@ -75,8 +75,8 @@ namespace Laconic.CodeGen
                         var propType = bindableProperty.ReturnType;
                         yield return $"        public {WithXfPrefix(propType)} {propName}";
                         yield return  "        {";
-                        yield return $"            get => GetValue<{WithXfPrefix(propType)}>(xf.{c.Name}.{p.Name});";
-                        yield return $"            set => SetValue(xf.{c.Name}.{p.Name}, value);";
+                        yield return $"            internal get => GetValue<{WithXfPrefix(propType)}>(xf.{c.Name}.{p.Name});";
+                        yield return $"            init => SetValue(xf.{c.Name}.{p.Name}, value);";
                         yield return  "        }";
                     }
 
@@ -95,7 +95,7 @@ namespace Laconic.CodeGen
 
                         yield return $"        public Func<{genericParam}Signal> {e.Name}";
                         yield return  "        {";
-                        yield return $"            set => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
+                        yield return $"            init => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
                         yield return  "        }";
                     }
                     yield return "    }\n";
@@ -105,7 +105,7 @@ namespace Laconic.CodeGen
             return String.Join("\n", GenerateAll(notIgnored).ToArray());
         }
 
-        static void Main(string[] args)
+        static void Main(string[] _)
         {
             var s = "#nullable enable\n"
                     + "using System;\n"

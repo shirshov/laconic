@@ -29,7 +29,7 @@ namespace Laconic.Maps
         {
             if (obj == null)
                 return false;
-            if ((object) this == obj)
+            if (this == obj)
                 return true;
             return (object) (obj as MapSpan) != null && this.Equals((MapSpan) obj);
         }
@@ -38,9 +38,9 @@ namespace Laconic.Maps
         
         public override int GetHashCode() => (Center.GetHashCode() * 397 ^ LongitudeDegrees.GetHashCode()) * 397 ^ LatitudeDegrees.GetHashCode();
 
-        public static bool operator ==(MapSpan left, MapSpan right) => Equals((object) left, (object) right);
+        public static bool operator ==(MapSpan left, MapSpan right) => Equals(left, right);
 
-        public static bool operator !=(MapSpan left, MapSpan right) => !Equals((object) left, (object) right);
+        public static bool operator !=(MapSpan left, MapSpan right) => !Equals(left, right);
         
         public MapSpan WithZoom(double zoomFactor)
         {
@@ -52,13 +52,13 @@ namespace Laconic.Maps
 
         static double DistanceToLongitudeDegrees(Position position, Distance distance)
         {
-            var num = MapSpan.LatitudeCircumferenceKm(position);
+            var num = LatitudeCircumferenceKm(position);
             return distance.Kilometers / num * 360.0;
         }
 
-        private bool Equals(MapSpan other)
+        bool Equals(MapSpan other)
         {
-            if (Center.Equals((object) other.Center))
+            if (Center.Equals(other.Center))
             {
                 var num = LongitudeDegrees;
                 if (num.Equals(other.LongitudeDegrees))

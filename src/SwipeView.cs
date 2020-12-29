@@ -94,8 +94,8 @@ namespace Laconic
 
         public void RemoveAt(int index) => _source.RemoveAt(index);
 
-        public bool IsFixedSize { get; }
-        public bool IsReadOnly { get; }
+        public bool IsFixedSize { get; } = false;
+        public bool IsReadOnly { get; } = false;
 
         public object this[int index] {
             get => _source[index];

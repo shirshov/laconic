@@ -8,7 +8,7 @@ namespace Laconic
 
         readonly double _height;
 
-        public static readonly Size Zero;
+        public static readonly Size Zero = new();
 
         public bool IsZero {
             get {

@@ -12,34 +12,34 @@ namespace Laconic
     
     public abstract class Element : IEquatable<Element>
     {
-        public Dictionary<Xamarin.Forms.BindableProperty, object?> ProvidedValues { get; } =
-            new Dictionary<Xamarin.Forms.BindableProperty, object?>();
+        public Dictionary<xf.BindableProperty, object?> ProvidedValues { get; } =
+            new Dictionary<xf.BindableProperty, object?>();
 
         // TODO: this should be hidden from the app developer
         public Dictionary<string, EventInfo> Events { get; } = new Dictionary<string, EventInfo>();
 
         // TODO: this should be hidden from the app developer
-        protected T GetValue<T>(Xamarin.Forms.BindableProperty property) => (T)ProvidedValues[property]!;
+        protected T GetValue<T>(xf.BindableProperty property) => (T)ProvidedValues[property]!;
 
-        protected void SetValue(Xamarin.Forms.BindableProperty property, object? value) =>
+        protected void SetValue(xf.BindableProperty property, object? value) =>
             ProvidedValues[property] = value;
 
         protected internal readonly ElementListCollection ElementLists = new ElementListCollection();
 
         public string AutomationId {
-            get => GetValue<string>(Xamarin.Forms.Element.AutomationIdProperty);
-            set => SetValue(Xamarin.Forms.Element.AutomationIdProperty, value);
+            get => GetValue<string>(xf.Element.AutomationIdProperty);
+            set => SetValue(xf.Element.AutomationIdProperty, value);
         }
 
         public string ClassId {
-            get => GetValue<string>(Xamarin.Forms.Element.ClassIdProperty);
-            set => SetValue(Xamarin.Forms.Element.ClassIdProperty, value);
+            get => GetValue<string>(xf.Element.ClassIdProperty);
+            set => SetValue(xf.Element.ClassIdProperty, value);
         }
 
-        protected internal abstract Xamarin.Forms.BindableObject CreateView();
+        protected internal abstract xf.BindableObject CreateView();
         
         public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)
-            where T : Xamarin.Forms.VisualElement, new() => new ContextElement<T>(maker);
+            where T : xf.VisualElement, new() => new ContextElement<T>(maker);
 
         public override bool Equals(object other) => other is Element el && Equals(el);
 
@@ -112,7 +112,8 @@ namespace Laconic
     
     public abstract class Element<T> : Element where T : xf.BindableObject
     {
-        protected void SetValue(string name, object value, Action<T> process) 
+        protected void SetValue(string name, object? value, Action<T> process) 
+			// TODO: this doesn't allow more than one postprocessed property 
             => ProvidedValues[PostProcessInfo.PostProcessedProperty] = new PostProcessInfo(value, el => process((T)el));
 
         protected void SetEvent<TEventArgs>(string eventName, Func<TEventArgs, Signal>? signalMaker,
@@ -139,7 +140,7 @@ namespace Laconic
         {
             if (signalMaker != null) {
                 Events[eventName] = new EventInfo(
-                    e => signalMaker(), 
+                    _ => signalMaker(), 
                     (ctl, handler) => subscribe((T) ctl, handler),
                     (ctl, handler) => unsubscribe((T)ctl, handler)
                 );

@@ -181,9 +181,9 @@ namespace Laconic
 
         public Func<RefreshingEventArgs, Signal> Refreshing {
             set => SetEvent(nameof(Refreshing), value, 
-                (ctl, handler) => ctl.Refreshing += (s, e) => 
+                (ctl, handler) => ctl.Refreshing += (s, _) => 
                     handler(s, new RefreshingEventArgs( ((xf.RefreshView)s).IsRefreshing)),
-                (ctl, handler) => ctl.Refreshing -= (s, e) => 
+                (ctl, handler) => ctl.Refreshing -= (s, _) => 
                     handler(s, new RefreshingEventArgs( ((xf.RefreshView)s).IsRefreshing)));
         }
     }
