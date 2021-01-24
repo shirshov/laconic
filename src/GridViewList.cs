@@ -9,8 +9,7 @@ namespace Laconic
         internal void SetPositioning(Key key, int row, int column, int rowSpan, int columnSpan) =>
             _positioning[key] = (row, column, rowSpan, columnSpan);
 
-        readonly Dictionary<Key, (int Row, int Column, int RowSpan, int ColumnSpan)> _positioning =
-            new Dictionary<Key, (int Row, int Column, int RowSpan, int ColumnSpan)>();
+        readonly Dictionary<Key, (int Row, int Column, int RowSpan, int ColumnSpan)> _positioning = new();
 
         public void Add(Key key, View? blueprint, int row = 0, int column = 0, int rowSpan = 1, int columnSpan = 1)
         {
@@ -33,11 +32,11 @@ namespace Laconic
 
     public class ItemsViewList : ViewList
     {
-        internal readonly Dictionary<Key, string> ReuseKeys = new Dictionary<Key, string>();
+        internal readonly Dictionary<Key, string> ReuseKeys = new();
 
         public View? this[string reuseKey, Key key]
         {
-            set
+            init
             {
                 base[key] = value;
                 ReuseKeys[key] = reuseKey;

@@ -22,21 +22,33 @@ namespace Laconic
         public View? Content { get; set; }
 
         public Func<Xamarin.Forms.SwipeStartedEventArgs, Signal> SwipeStarted {
-            set => SetEvent(nameof(SwipeStarted), value,
+            init => SetEvent(nameof(SwipeStarted), value,
                 (ctl, handler) => ctl.SwipeStarted += handler,
                 (ctl, handler) => ctl.SwipeStarted -= handler);
         }
 
         public Func<Xamarin.Forms.SwipeEndedEventArgs, Signal> SwipeEnded {
-            set => SetEvent(nameof(SwipeEnded), value,
+            init => SetEvent(nameof(SwipeEnded), value,
                 (ctl, handler) => ctl.SwipeEnded += handler,
                 (ctl, handler) => ctl.SwipeEnded -= handler);
         }
 
         public Func<Xamarin.Forms.SwipeChangingEventArgs, Signal> SwipeChanging {
-            set => SetEvent(nameof(SwipeChanging), value,
+            init => SetEvent(nameof(SwipeChanging), value,
                 (ctl, handler) => ctl.SwipeChanging += handler,
                 (ctl, handler) => ctl.SwipeChanging -= handler);
+        }
+
+        public Func<Xamarin.Forms.OpenRequestedEventArgs, Signal> OpenRequested {
+            init => SetEvent(nameof(OpenRequested), value, 
+                (ctl, handler) => ctl.OpenRequested += handler,
+                (ctl, handler) => ctl.OpenRequested -= handler);
+        }
+        
+        public Func<Xamarin.Forms.CloseRequestedEventArgs, Signal> CloseRequested {
+            init => SetEvent(nameof(CloseRequested), value, 
+                (ctl, handler) => ctl.CloseRequested += handler,
+                (ctl, handler) => ctl.CloseRequested -= handler);
         }
     }
     
@@ -44,24 +56,24 @@ namespace Laconic
     {
         // TODO: this properties are up the hierarchy in XF
         public bool IsEnabled {
-            set => SetValue(xf.MenuItem.IsEnabledProperty, value);
+            init => SetValue(xf.MenuItem.IsEnabledProperty, value);
         }
 
         public bool IsDestructive {
-            set => SetValue(xf.MenuItem.IsDestructiveProperty, value);
+            init => SetValue(xf.MenuItem.IsDestructiveProperty, value);
         }
 
         public string Text {
-            set => SetValue(xf.MenuItem.TextProperty, value);
+            init => SetValue(xf.MenuItem.TextProperty, value);
         }
 
         public ImageSource IconImageSource {
-            set => SetValue(xf.MenuItem.IconImageSourceProperty, value);
+            init => SetValue(xf.MenuItem.IconImageSourceProperty, value);
         }
 
         // TODO: this event is declared EventHandler<EventArgs> Invoked, but not EventHandler Invoked ?
         public Func<EventArgs, Signal> Invoked {
-            set => SetEvent(nameof(Invoked), value,
+            init => SetEvent(nameof(Invoked), value,
                 (ctl, handler) => ctl.Invoked += handler,
                 (ctl, handler) => ctl.Invoked -= handler);
         }

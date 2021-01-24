@@ -203,8 +203,9 @@ namespace Laconic.CodeGen
                     SwipeView.RightItemsProperty,
                     SwipeView.TopItemsProperty,
                     SwipeView.BottomItemsProperty)
-                .ExceptManuallyWrittenEvents(nameof(SwipeView.OpenRequested))
                 .ExceptManuallyWrittenEvents(
+                    nameof(SwipeView.OpenRequested),
+                    nameof(SwipeView.CloseRequested),
                     nameof(SwipeView.SwipeChanging),
                     nameof(SwipeView.SwipeStarted),
                     nameof(SwipeView.SwipeEnded)),

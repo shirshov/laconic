@@ -1164,10 +1164,6 @@ namespace Laconic
             internal get => GetValue<Double>(xf.SwipeView.ThresholdProperty);
             init => SetValue(xf.SwipeView.ThresholdProperty, value);
         }
-        public Func<Signal> CloseRequested
-        {
-            init => SetEvent(nameof(CloseRequested), value, (ctl, handler) => ctl.CloseRequested += handler, (ctl, handler) => ctl.CloseRequested -= handler);
-        }
     }
 
     public partial class Switch : View<xf.Switch>
