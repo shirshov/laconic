@@ -11,32 +11,27 @@ namespace Laconic
             var res = new List<ListOperation>();
                 
             if (existingItems == null || existingItems.Count == 0) {
-                foreach (var item in newItems.Where(p => p.Value != null)) {
-                    var childOps = Diff.Calculate(null, item.Value, expandWithContext).ToArray();
-                    if (item.Value is IContextElement withContext)
-                        res.Add(new AddChildWithContext(item.Key, "TODO: Refactor", res.Count, (View) item.Value,
-                            withContext.ContextId, childOps));
+                foreach (var (key, el) in newItems.Where(p => p.Value != null)) {
+                    var childOps = Diff.Calculate(null, el, expandWithContext).ToArray();
+                    // TODO: Refactor. Reuse key shouldn't be necessary when it's not used
+                    if (el is IContextElement withContext)
+                        res.Add(new AddChildWithContext(key, "", res.Count, (View) el, withContext.ContextId, childOps));
                     else
-                        res.Add(new AddChild(item.Key, "TODO: Refactor", res.Count, item.Value, childOps));
+                        res.Add(new AddChild(key, "", res.Count, el, childOps));
                 }
             }
             else {
 
                 var listDiff = new ListDiff<Key, Key>(
                     existingItems.Where(x => x.Value != null).Select(x => x.Key),
-                    newItems.Where(p => p.Value != null).Select(p => p.Key).ToArray());
+                    newItems.Where(p => p.Value != null).Select(p => p.Key));
 
                 var index = 0;
                 foreach (var action in listDiff.Actions) {
                     if (action.ActionType == ListDiffActionType.Add) {
                         var newItem = newItems[action.DestinationItem];
-                        var childOps = Diff.Calculate(null, newItem, expandWithContext);
-                        res.Add(
-                            new AddChild(action.DestinationItem,
-                                "TODO: Refactor this",
-                                index,
-                                newItem!, childOps.ToArray())
-                        );
+                        var childOps = Diff.Calculate(null, newItem, expandWithContext).ToArray();
+                        res.Add(new AddChild(action.DestinationItem, "TODO: Refactor this", index, newItem!, childOps));
                         index++;
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
@@ -46,24 +41,17 @@ namespace Laconic
                         var existingView = existingItems[action.SourceItem];
                         var newView = newItems[action.SourceItem];
                         if (existingView == null) {
-                            var items = Diff
-                                .Calculate(null, newView, expandWithContext);
-                            res.Add(new AddChild(action.SourceItem,
-                                "TODO: Refactor this",
-                                index, newView, items.ToArray())
-                            );
+                            var items = Diff.Calculate(null, newView, expandWithContext).ToArray();
+                            res.Add(new AddChild(action.SourceItem, "TODO: Refactor this", index, newView, items));
                         }
                         else if (existingView.GetType() != newView.GetType()) {
-                            res.Add(new ReplaceChild(index, newView,
-                                Diff.Calculate(null, newView, expandWithContext)
-                                    .ToArray()));
+                            var ops = Diff.Calculate(null, newView, expandWithContext).ToArray();
+                            res.Add(new ReplaceChild(index, newView, ops));
                         }
                         else {
-                            var patch = Diff.Calculate(existingView, newView, expandWithContext)
-                                .ToArray();
+                            var patch = Diff.Calculate(existingView, newView, expandWithContext).ToArray();
                             if (patch.Any())
-                                res.Add(new UpdateChild(action.DestinationItem, index, newView,
-                                    patch.ToArray()));
+                                res.Add(new UpdateChild(action.DestinationItem, index, newView, patch));
                         }
 
                         index++;

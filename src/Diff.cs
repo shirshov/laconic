@@ -153,7 +153,7 @@ namespace Laconic
 
             if (newElement is IContextElement contextElement) {
                 var (existingExpanded, newExpanded) = expandWithContext((IContextElement)existingElement!, contextElement);
-                return Calculate(existingExpanded!, newExpanded!, expandWithContext);
+                return Calculate(existingExpanded, newExpanded, expandWithContext);
             }
             
             operations.AddRange(CalcPropertyDiff(existingElement?.ProvidedValues ?? new PropDict(),

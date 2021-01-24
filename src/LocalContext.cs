@@ -9,6 +9,7 @@ namespace Laconic
         Guid Id { get; }
         object? Payload { get; }
     }
+    
     class SetLocalStateSignal<T> : Signal<T>, ILocalContextSignal
     {
         readonly Guid _id;
@@ -26,7 +27,7 @@ namespace Laconic
         internal const string LOCAL_STATE_KEY = "laconic.localstate";
         
         internal readonly Guid Id;
-        readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+        readonly Dictionary<string, object> _values = new();
 
         internal LocalContext(Action<Signal> dispatch)
         {
