@@ -12,11 +12,10 @@ namespace Laconic
     
     public abstract class Element : IEquatable<Element>
     {
-        public Dictionary<xf.BindableProperty, object?> ProvidedValues { get; } =
-            new Dictionary<xf.BindableProperty, object?>();
+        public Dictionary<xf.BindableProperty, object?> ProvidedValues { get; } = new();
 
         // TODO: this should be hidden from the app developer
-        public Dictionary<string, EventInfo> Events { get; } = new Dictionary<string, EventInfo>();
+        public Dictionary<string, EventInfo> Events { get; } = new();
 
         // TODO: this should be hidden from the app developer
         protected T GetValue<T>(xf.BindableProperty property) => (T)ProvidedValues[property]!;
@@ -24,7 +23,7 @@ namespace Laconic
         protected void SetValue(xf.BindableProperty property, object? value) =>
             ProvidedValues[property] = value;
 
-        protected internal readonly ElementListCollection ElementLists = new ElementListCollection();
+        protected internal readonly ElementListCollection ElementLists = new();
 
         public string AutomationId {
             get => GetValue<string>(xf.Element.AutomationIdProperty);
@@ -39,7 +38,7 @@ namespace Laconic
         protected internal abstract xf.BindableObject CreateView();
         
         public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)
-            where T : xf.VisualElement, new() => new ContextElement<T>(maker);
+            where T : xf.VisualElement, new() => new(maker);
 
         public override bool Equals(object other) => other is Element el && Equals(el);
 
