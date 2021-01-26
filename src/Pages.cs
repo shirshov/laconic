@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using xf = Xamarin.Forms;
 
@@ -7,16 +8,16 @@ namespace Laconic
     public class ToolbarItem : Element<xf.ToolbarItem>
     {
         public ImageSource IconImageSource {
-			set => SetValue(xf.MenuItem.IconImageSourceProperty, value);
+			init => SetValue(xf.MenuItem.IconImageSourceProperty, value);
 		}
 
         public string Text {
-            set => SetValue(xf.MenuItem.TextProperty, value);
+            init => SetValue(xf.MenuItem.TextProperty, value);
         }
         
-        public System.Func<Signal> Clicked
+        public Func<Signal> Clicked
         {
-            set => SetEvent(nameof(Clicked), value,
+            init => SetEvent(nameof(Clicked), value,
                 (ctl, handler) => ctl.Clicked += handler,
                 (ctl, handler) => ctl.Clicked -= handler);
         }
@@ -24,7 +25,12 @@ namespace Laconic
         protected internal override xf.BindableObject CreateView() => new xf.ToolbarItem();
     }
 
-    public abstract partial class Page<T> : VisualElement<T> where T : Xamarin.Forms.Page, new()
+    public interface Page
+    {
+        
+    }
+    
+    public abstract partial class Page<T> : VisualElement<T>, Page where T : Xamarin.Forms.Page, new()
     {
 		public IDictionary<Key, ToolbarItem> ToolbarItems { get; } = new Dictionary<Key, ToolbarItem>();
     }
@@ -32,5 +38,17 @@ namespace Laconic
     public class ContentPage : Page<xf.ContentPage>, IContentHost
     {
         public View? Content { get; set; }
+    }
+
+    public partial class FlyoutPage : Page<xf.FlyoutPage>
+    {
+        public ContentPage Flyout { init; get; }
+        public Page Detail { init; get; }
+
+        public Func<xf.BackButtonPressedEventArgs, Signal> BackButtonPressed {
+            init => SetEvent(nameof(BackButtonPressed), value,
+                (ctl, handler) => ctl.BackButtonPressed += handler,
+                (ctl, handler) => ctl.BackButtonPressed -= handler);
+        }
     }
 }

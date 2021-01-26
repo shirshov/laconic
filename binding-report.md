@@ -94,8 +94,6 @@ CompositeTransform
 
 FlyoutItem
 
-FlyoutPage
-
 GeometryGroup
 
 GridItemsLayout

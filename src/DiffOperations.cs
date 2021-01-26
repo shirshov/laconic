@@ -6,6 +6,8 @@ namespace Laconic
 {
     interface DiffOperation {}
 
+    record UpdateFlyoutPage(DiffOperation[] FlyoutOperations, DiffOperation[] DetailOperations) : DiffOperation;
+    
     record AddGestureRecognizer(IGestureRecognizer Blueprint, params DiffOperation[] Operations) : DiffOperation;
     record RemoveGestureRecognizer(int Index) : DiffOperation;
     record UpdateGestureRecognizer(int Index, params DiffOperation[] Operations) : DiffOperation;

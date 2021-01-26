@@ -169,6 +169,28 @@ namespace Laconic
                          var page = (xf.ContentPage) element;
                          Apply(page.ToolbarItems[tb.Index], tb.Operations, dispatch);
                     },
+                    UpdateFlyoutPage fp => () => {
+                        var nativePage = (xf.FlyoutPage) element;
+                        
+                        if (nativePage.Flyout == null) {
+                            var flyout = new xf.ContentPage();
+                            Apply(flyout, fp.FlyoutOperations, dispatch);
+                            nativePage.Flyout = flyout;
+                        }
+                        else {
+                            Apply((nativePage.Flyout as xf.NavigationPage).CurrentPage, fp.FlyoutOperations, dispatch);
+                        }
+                        
+                        if (nativePage.Detail == null) {
+                            var content = new xf.ContentPage();
+                            Apply(content, fp.DetailOperations, dispatch);
+                            // TODO: creation of xf.NavigationPage is temporary, until bindings for NavigationPage is ready
+                            nativePage.Detail = new xf.NavigationPage(content);
+                        }
+                        else {
+                            Apply((nativePage.Detail as xf.NavigationPage).CurrentPage, fp.DetailOperations, dispatch);
+                        }
+                    },
                     _ => throw new InvalidOperationException("Diff operation not supported: " + op)
                 };
                 patchingAction();
@@ -201,6 +223,7 @@ namespace Laconic
             EditorAutoSizeOption _ => (xf.EditorAutoSizeOption) value,
             LayoutAlignment _ => (xf.LayoutAlignment) value,
             Stretch _ => (xf.Stretch)value,
+            FlyoutLayoutBehavior _ => (xf.FlyoutLayoutBehavior)value,
             VisualMarker vm => vm switch {
                 VisualMarker.Default => xf.VisualMarker.Default,
                 VisualMarker.Material => xf.VisualMarker.Material,

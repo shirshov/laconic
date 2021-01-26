@@ -329,6 +329,29 @@ namespace Laconic
         }
     }
 
+    public partial class FlyoutPage
+    {
+        public FlyoutLayoutBehavior FlyoutLayoutBehavior
+        {
+            internal get => GetValue<FlyoutLayoutBehavior>(xf.FlyoutPage.FlyoutLayoutBehaviorProperty);
+            init => SetValue(xf.FlyoutPage.FlyoutLayoutBehaviorProperty, value);
+        }
+        public Boolean IsGestureEnabled
+        {
+            internal get => GetValue<Boolean>(xf.FlyoutPage.IsGestureEnabledProperty);
+            init => SetValue(xf.FlyoutPage.IsGestureEnabledProperty, value);
+        }
+        public Boolean IsPresented
+        {
+            internal get => GetValue<Boolean>(xf.FlyoutPage.IsPresentedProperty);
+            init => SetValue(xf.FlyoutPage.IsPresentedProperty, value);
+        }
+        public Func<Signal> IsPresentedChanged
+        {
+            init => SetEvent(nameof(IsPresentedChanged), value, (ctl, handler) => ctl.IsPresentedChanged += handler, (ctl, handler) => ctl.IsPresentedChanged -= handler);
+        }
+    }
+
     public partial class FontImageSource
     {
         public Color Color

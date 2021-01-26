@@ -78,7 +78,9 @@ namespace Laconic.CodeGen
             [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FlexLayout)] = NotUsed,
             [typeof(FlyoutItem)] = NotImplemented,
-            [typeof(FlyoutPage)] = NotImplemented,
+            [typeof(FlyoutPage)] = All
+                .WithoutBaseDeclaration()
+                .ExceptManuallyWrittenEvents(nameof(FlyoutPage.BackButtonPressed)),
             [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),
             [typeof(FormattedString)] = WrittenManually,
             [typeof(Frame)] = All.WithoutBaseDeclaration(),

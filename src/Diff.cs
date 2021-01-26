@@ -174,6 +174,12 @@ namespace Laconic
                 ));
             }
 
+            if (newElement is FlyoutPage fp) {
+                var flyoutDiff = Calculate((existingElement as FlyoutPage)?.Flyout, fp.Flyout, expandWithContext).ToArray();
+                var detailDiff = Calculate((existingElement as FlyoutPage)?.Detail as Element, (Element)fp.Detail, expandWithContext).ToArray();
+                operations.Add(new UpdateFlyoutPage(flyoutDiff, detailDiff));
+            }
+
             foreach (var elList in newElement.ElementLists.Inner) {
                 ElementListInfo? existingInfo = null;
                 existingElement?.ElementLists?.Inner?.TryGetValue(elList.Key, out existingInfo);

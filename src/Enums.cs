@@ -46,6 +46,16 @@ namespace Laconic
         Bold = 0x1,
         Italic = 0x2
     }
+    
+	public enum FlyoutLayoutBehavior
+
+	{
+		Default = 0,
+		SplitOnLandscape = 1,
+		Split = 2,
+		Popover = 3,
+		SplitOnPortrait = 4
+	}
 
     public enum ReturnType
     {
