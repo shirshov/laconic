@@ -243,6 +243,35 @@ namespace Laconic.Tests
             binder.Send(new Signal(null));
             page.ToolbarItems.Count.ShouldBe(1);
         }
+
+        [Fact]
+        public void child_element_has_context()
+        {
+            var child = Element.WithContext(ctx => {
+                var (text, setState) = ctx.UseLocalState("");
+                return new ContentView {
+                    Content = new Button {
+                        Text = text,
+                        Clicked = () => setState("clicked")
+                    }
+                };
+            });
+            
+            var binder = Binder.CreateForTest("", (s, _) => s);
+            
+            var page = binder.CreateElement(_ => new ContentPage {
+                Content = child
+            });
+
+            var contentView = page.Content as xf.ContentView;
+            var btn = contentView.Content as xf.Button;
+            
+            btn.Text.ShouldBe("");
+            
+            btn.SendClicked();
+            
+            btn.Text.ShouldBe("clicked");
+        }
         
         [Fact(Skip = "Not implemented yet")]
         public void nested_contexts()

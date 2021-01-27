@@ -175,9 +175,18 @@ namespace Laconic
             }
 
             if (newElement is FlyoutPage fp) {
-                var flyoutDiff = Calculate((existingElement as FlyoutPage)?.Flyout, fp.Flyout, expandWithContext).ToArray();
-                var detailDiff = Calculate((existingElement as FlyoutPage)?.Detail as Element, (Element)fp.Detail, expandWithContext).ToArray();
-                operations.Add(new UpdateFlyoutPage(flyoutDiff, detailDiff));
+                var existingFp = existingElement as FlyoutPage;
+                var flyoutDiff = Calculate(existingFp?.Flyout, fp.Flyout, expandWithContext).ToArray();
+                FlyoutPageFlyoutOperation flyoutOp = existingFp?.Flyout == null
+                    ? new SetFlyoutPageFlyout(fp.Flyout, flyoutDiff)
+                    : new UpdateFlyoutPageFlyout(flyoutDiff);
+                
+                var detailDiff = Calculate(existingFp?.Detail, fp.Detail, expandWithContext).ToArray();
+                FlyoutPageDetailOperation detailOp = existingFp?.Detail == null 
+                    ? new SetFlyoutPageDetail(fp.Detail, detailDiff)
+                    : new UpdateFlyoutPageDetail(detailDiff);
+                
+                operations.Add(new UpdateFlyoutPage(flyoutOp, detailOp));
             }
 
             foreach (var elList in newElement.ElementLists.Inner) {
@@ -189,33 +198,30 @@ namespace Laconic
                     operations.Add(new UpdateChildElementList(newInfo.ListGetter, ops));
             }
 
-            switch (newElement) {
-                case IContentHost newViewAsContainer: {
-                    var oldContent = (existingElement as IContentHost)?.Content;
-                    var newContent = newViewAsContainer.Content;
-                    DiffOperation? op = (oldContent, newContent) switch {
-                        (null, null) => null,
-                        (null, var n) => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
-                        (_, null) => new RemoveContent(),
-                        var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
-                        var (o, n) => new UpdateContent(Calculate((Element)o, (Element)n, expandWithContext).ToArray())
-                    };
-                    if (op != null)
-                        operations.Add(op);
-                    break;
-                }
-                case ILayout l: {
-                    var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children, expandWithContext);
-                    if (diff.Length > 0)
-                        operations.Add(new UpdateChildViews(diff.ToArray()));
-                    break;
-                }
-                case IItemSourceView c: {
-                    var diff = ViewListDiff.Calculate((existingElement as IItemSourceView)?.Items, c.Items, expandWithContext);
-                    if (diff.Any())
-                        operations.Add(new UpdateItems(diff));
-                    break;
-                }
+            if (newElement is IContentHost newViewAsContainer) {
+                var oldContent = (existingElement as IContentHost)?.Content;
+                var newContent = newViewAsContainer.Content;
+                DiffOperation? op = (oldContent, newContent) switch {
+                    (null, null) => null,
+                    (null, var n) => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
+                    (_, null) => new RemoveContent(),
+                    var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
+                    var (o, n) => new UpdateContent(Calculate((Element)o, (Element)n, expandWithContext).ToArray())
+                };
+                if (op != null)
+                    operations.Add(op);
+            }
+            
+            if (newElement is ILayout l) {
+                var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children, expandWithContext);
+                if (diff.Length > 0)
+                    operations.Add(new UpdateChildViews(diff.ToArray()));
+            }
+            
+            if(newElement is IItemSourceView c) {
+                var diff = ViewListDiff.Calculate((existingElement as IItemSourceView)?.Items, c.Items, expandWithContext);
+                if (diff.Any())
+                    operations.Add(new UpdateItems(diff));
             }
 
             if (newElement is Grid g) {

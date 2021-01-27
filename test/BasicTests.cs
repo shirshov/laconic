@@ -9,11 +9,15 @@ namespace Laconic.Tests
         [Fact]
         public void visual_element_equality()
         {
+            ((Label) null == null).ShouldBeTrue();
+            
             new Label { Text = "a" }.Equals(new Label { Text = "a" }).ShouldBeTrue();
             new Label { Text = "a" }.Equals(new Label { Text = "b" }).ShouldBeFalse();
 
             (new Label {Text = "a"} == new Label {Text = "a"}).ShouldBeTrue();
             (new Label {Text = "a"} == new Label {Text = "b"}).ShouldBeFalse();
+            
+            (new Label() == null).ShouldBeFalse();
         }
 
         [Fact]

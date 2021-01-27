@@ -9,7 +9,7 @@ namespace Laconic
     {
         object ToNative();
     }
-    
+
     public abstract class Element : IEquatable<Element>
     {
         public Dictionary<xf.BindableProperty, object?> ProvidedValues { get; } = new();
@@ -18,7 +18,7 @@ namespace Laconic
         public Dictionary<string, EventInfo> Events { get; } = new();
 
         // TODO: this should be hidden from the app developer
-        protected T GetValue<T>(xf.BindableProperty property) => (T)ProvidedValues[property]!;
+        protected T GetValue<T>(xf.BindableProperty property) => (T) ProvidedValues[property]!;
 
         protected void SetValue(xf.BindableProperty property, object? value) =>
             ProvidedValues[property] = value;
@@ -36,7 +36,7 @@ namespace Laconic
         }
 
         protected internal abstract xf.BindableObject CreateView();
-        
+
         public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)
             where T : xf.VisualElement, new() => new(maker);
 
@@ -46,7 +46,7 @@ namespace Laconic
         {
             if (ReferenceEquals(null, other))
                 return false;
-            
+
             if (other.GetType() != GetType())
                 return false;
 
@@ -61,24 +61,35 @@ namespace Laconic
                     return false;
                 if (val == null & item.Value == null)
                     return true;
-                if (! val!.Equals(item.Value))
+                if (!val!.Equals(item.Value))
                     return false;
             }
+
             return true;
         }
-        
+
         public override int GetHashCode()
         {
-            unchecked
-            {
+            unchecked {
                 return (ProvidedValues.GetHashCode() * 397) ^ Events.GetHashCode();
             }
         }
-        
-        public static bool operator ==(Element? lhs, Element? rhs) => lhs?.Equals(rhs) ?? false;
-        public static bool operator !=(Element? lhs, Element? rhs) => !lhs?.Equals(rhs) ?? false;
+
+        public static bool operator ==(Element? lhs, Element? rhs) => (lhs, rhs) switch {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            _ => lhs.Equals(rhs)
+        };
+
+        public static bool operator !=(Element? lhs, Element? rhs) => (lhs, rhs) switch {
+            (null, null) => false,
+            (null, _) => true,
+            (_, null) => true,
+            _ => !lhs.Equals(rhs)
+        };
     }
-    
+
     class PostProcessInfo : IEquatable<PostProcessInfo>
     {
         public static readonly xf.BindableProperty PostProcessedProperty =

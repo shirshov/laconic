@@ -82,6 +82,8 @@ namespace Laconic
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
                         var childView = (xf.View?) CreateView((Element) sc.ContentView);
+                        if (sc.ContentView is IContextElement ce)
+                            withContext.Add((ce.ContextId, childView));
                         withContext.AddRange(Apply(childView!, sc.Operations, dispatch));
                         SetRealViewContent(childView);
                     },
@@ -171,24 +173,32 @@ namespace Laconic
                     },
                     UpdateFlyoutPage fp => () => {
                         var nativePage = (xf.FlyoutPage) element;
-                        
-                        if (nativePage.Flyout == null) {
-                            var flyout = new xf.ContentPage();
-                            Apply(flyout, fp.FlyoutOperations, dispatch);
-                            nativePage.Flyout = flyout;
+
+                        switch (fp.FlyoutOperation) {
+                            case SetFlyoutPageFlyout setFlyout:
+                                var flyout = new xf.ContentPage();
+                                if (setFlyout.Page is IContextElement ctxEl)
+                                    withContext.Add((ctxEl.ContextId, flyout));
+                                withContext.AddRange(Apply(flyout, setFlyout.Operations, dispatch));
+                                nativePage.Flyout = flyout;
+                                break;
+                            case UpdateFlyoutPageFlyout updateFlyout:
+                                withContext.AddRange(Apply(nativePage.Flyout, updateFlyout.Operations, dispatch));
+                                break;
                         }
-                        else {
-                            Apply((nativePage.Flyout as xf.NavigationPage).CurrentPage, fp.FlyoutOperations, dispatch);
-                        }
-                        
-                        if (nativePage.Detail == null) {
-                            var content = new xf.ContentPage();
-                            Apply(content, fp.DetailOperations, dispatch);
-                            // TODO: creation of xf.NavigationPage is temporary, until bindings for NavigationPage is ready
-                            nativePage.Detail = new xf.NavigationPage(content);
-                        }
-                        else {
-                            Apply((nativePage.Detail as xf.NavigationPage).CurrentPage, fp.DetailOperations, dispatch);
+
+                        switch (fp.DetailOperation) {
+                            case SetFlyoutPageDetail setDetail:
+                                var content = new xf.ContentPage();
+                                if (setDetail.DetailPage is IContextElement ctxEl)
+                                    withContext.Add((ctxEl.ContextId, content));
+                                withContext.AddRange(Apply(content, setDetail.Operations, dispatch));
+                                // TODO: creation of xf.NavigationPage is temporary, until bindings for NavigationPage is ready
+                                nativePage.Detail = new xf.NavigationPage(content);
+                                break;
+                            case UpdateFlyoutPageDetail updateDetail: 
+                                withContext.AddRange(Apply((nativePage.Detail as xf.NavigationPage).CurrentPage, updateDetail.Operations, dispatch));
+                                break;
                         }
                     },
                     _ => throw new InvalidOperationException("Diff operation not supported: " + op)
