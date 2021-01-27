@@ -1,10 +1,8 @@
-using System;
-
 namespace Laconic.Demo
 {
-    public class CounterPage : Xamarin.Forms.ContentPage
+    public static class Counter
     {
-        static StackLayout Counter(int state) => new StackLayout
+        public static StackLayout Content(int state) => new StackLayout
         {
             Padding = 50,
             ["lbl"] = new Label
@@ -29,22 +27,5 @@ namespace Laconic.Demo
                 Padding = (30, 0)
             }
         };
-
-        static int Reducer(int state, Signal signal) => signal.Payload switch
-        {
-            "inc" => state + 1,
-            "dec" => throw new NotImplementedException(), // Left as an exercise for the reader
-            _ => state
-        };
-
-        readonly Binder<int> _binder;
-
-        public CounterPage()
-        {
-            _binder = Binder.Create(0, Reducer);
-            Content = _binder.CreateElement(Counter);
-
-            BackgroundColor = Xamarin.Forms.Color.Bisque;
-        }
     }
 }

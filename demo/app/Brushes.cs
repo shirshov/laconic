@@ -1,8 +1,8 @@
 namespace Laconic.Demo
 {
-    public class BrushesPage : Xamarin.Forms.ContentPage
+    public static class Brushes
     {
-        static StackLayout MainContent(int state) => new StackLayout {
+        public static StackLayout Content() => new StackLayout {
             Padding = 50,
             ["solid"] = new Frame {
                 Background = Brush.DarkBlue,
@@ -43,11 +43,5 @@ namespace Laconic.Demo
                 }
             }
         };
-        
-        public BrushesPage()
-        {
-            var binder = Binder.Create(0, (s, g) => s);
-            Content = binder.CreateElement(MainContent);
-        }
     }
 }

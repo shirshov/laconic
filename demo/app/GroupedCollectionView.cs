@@ -5,17 +5,8 @@ using ChanceNET;
 
 namespace Laconic.Demo
 {
-    public class GroupedCollectionView : Xamarin.Forms.ContentPage
+    public static class GroupedCollectionView
     {
-        Binder<ImmutableList<Person>> _binder;
-
-        // TODO: implement adding people
-        static ImmutableList<Person> Reducer(ImmutableList<Person> state, Signal signal) => signal switch
-        {
-            ("add", Person val) => state.Add(val),
-            _ => state
-        };
-
         static View SectionHeaderRow(string text) => new Grid
         {
             Padding = (15, 0),
@@ -64,22 +55,17 @@ namespace Laconic.Demo
             }
         }
 
-        protected override void OnAppearing()
+        public static Person[] Initial()
         {
-            base.OnAppearing();
-
             var chance = new Chance();
-            var list = Enumerable.Range(1, 200).Select(_ => chance.Person());
-
-            _binder = Binder.Create(ImmutableList.CreateRange(list), Reducer);
-
-            Content = _binder.CreateElement(state => new StackLayout
-            {
-                ["list"] = new CollectionView
-                {
-                    Items = GroupedItems(state).ToItemsList(x => x.ReuseKey, x => x.Key, x => x.View)
-                }
-            });
+            return Enumerable.Range(1, 200).Select(_ => chance.Person()).ToArray();
         }
+        
+        public static StackLayout Content(IEnumerable<Person> state) => new StackLayout {
+           ["list"] = new CollectionView
+           {
+               Items = GroupedItems(state).ToItemsList(x => x.ReuseKey, x => x.Key, x => x.View)
+           }
+       };
     }
 }

@@ -1,26 +1,27 @@
 namespace Laconic.Demo
 {
-    public class SwipeViewPage : Xamarin.Forms.ContentPage
+    public static class SwipeViewPage
     {
-        public SwipeViewPage()
-        {
-            var binder = Binder.Create("", (s, g) => g.Payload.ToString());
-            Content = binder.CreateElement(s => new StackLayout {
+        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
+            var (text, setText) = ctx.UseLocalState("");
+            return new StackLayout {
                 [0] = new SwipeView {
                     HeightRequest = 50,
                     VerticalOptions = LayoutOptions.CenterAndExpand,
                     LeftItems = {
                         ["fav"] = new SwipeItem {
                             Text = "Favourite",
-                            IconImageSource = new FontImageSource { Size = 15, FontFamily = "IconFont", Glyph = "\uf02e" },
+                            IconImageSource =
+                                new FontImageSource {Size = 15, FontFamily = "IconFont", Glyph = "\uf02e"},
                             BackgroundColor = Color.LightGreen,
-                            Invoked = _ => new Signal("Favourite")
+                            Invoked = _ => setText("Favourite")
                         },
                         ["del"] = new SwipeItem {
                             Text = "Delete",
-                            IconImageSource = new FontImageSource { Size = 15, FontFamily = "IconFont", Glyph = "\uf2ed" },
+                            IconImageSource =
+                                new FontImageSource {Size = 15, FontFamily = "IconFont", Glyph = "\uf2ed"},
                             BackgroundColor = Color.LightPink,
-                            Invoked = _ => new Signal("Delete")
+                            Invoked = _ => setText("Delete")
                         }
                     },
                     Content = new Grid {
@@ -33,11 +34,12 @@ namespace Laconic.Demo
                         }
                     }
                 },
-                ["lbl"] = s == "" ? null : new Label {
-                    Text = $"Invoked: {s}",
+                ["lbl"] = text == "" ? null : new Label {
+                    Text = $"Invoked: {text}",
                     HorizontalOptions = LayoutOptions.Center,
+                    Margin = (0, 50)
                 }
-            });
-        }
+            };
+        });
     }
 }

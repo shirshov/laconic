@@ -1,8 +1,8 @@
 namespace Laconic.Demo
 {
-    public class FormattedStringPage : Xamarin.Forms.ContentPage
+    public class FormattedStringPage
     {
-        static Label Note(int _) => new Label {
+        public static Label Content() => new Label {
             Margin = (30, 30),
             VerticalOptions = LayoutOptions.Center,
             FormattedText = new FormattedString {
@@ -17,12 +17,5 @@ namespace Laconic.Demo
                 "moor" // plain text is allowed
             }
         };
-
-        public FormattedStringPage()
-        {
-            var binder = Binder.Create(0, (s, g) => s);
-
-            Content = binder.CreateElement(Note);
-        }
     }
 }
