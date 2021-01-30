@@ -4,14 +4,18 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>Binding for Xamarin.Forms.Maps for use with Laconic</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Laconic.csproj" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.1905" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.1905" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Laconic.csproj" />
+  </ItemGroup>
 </Project>

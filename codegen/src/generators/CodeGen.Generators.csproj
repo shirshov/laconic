@@ -6,6 +6,4 @@
     <PackageId>Laconic.CodeGen.Generators</PackageId>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  <PropertyGroup>
-  </PropertyGroup>
 </Project>
