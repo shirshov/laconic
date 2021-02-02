@@ -4,6 +4,7 @@ namespace Laconic.Demo
     {
         public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
             var (text, setText) = ctx.UseLocalState("");
+            
             return new StackLayout {
                 [0] = new SwipeView {
                     HeightRequest = 50,
@@ -11,15 +12,13 @@ namespace Laconic.Demo
                     LeftItems = {
                         ["fav"] = new SwipeItem {
                             Text = "Favourite",
-                            IconImageSource =
-                                new FontImageSource {Size = 15, FontFamily = "IconFont", Glyph = "\uf02e"},
+                            IconImageSource = new FontImageSource {Size = 15, FontFamily = "IconFont", Glyph = "\uf02e"},
                             BackgroundColor = Color.LightGreen,
                             Invoked = _ => setText("Favourite")
                         },
                         ["del"] = new SwipeItem {
                             Text = "Delete",
-                            IconImageSource =
-                                new FontImageSource {Size = 15, FontFamily = "IconFont", Glyph = "\uf2ed"},
+                            IconImageSource = new FontImageSource {Size = 15, FontFamily = "IconFont", Glyph = "\uf2ed"},
                             BackgroundColor = Color.LightPink,
                             Invoked = _ => setText("Delete")
                         }

@@ -46,7 +46,7 @@ namespace Laconic.Tests
             diff = Diff.Calculate(label, label, ExpandWithContext);
             diff.ShouldBeEmpty();
             
-            context.SetValue(LocalContext.LOCAL_STATE_KEY, "modified");
+            context.SetValue("laconic.localstate", "modified");
 
             diff = Diff.Calculate(label, label, ExpandWithContext);
             

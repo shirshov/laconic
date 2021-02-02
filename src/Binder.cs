@@ -137,7 +137,6 @@ namespace Laconic
                 context = contexts[existingElement.ContextId].Context;
             else 
                 context = new LocalContext(Send);
-            
             newElement.ContextId = context.Id;
             var newBlueprint = newElement.Make(context);
             contextRequests.Add((newElement, context, newBlueprint));
@@ -172,19 +171,19 @@ namespace Laconic
             var contextRequests = new ContextRequestList();
             
             if (signal is ILocalContextSignal sig) {
-                var kvp = _elementContexts.First(p => p.Value.Context.Id == sig.Id);
-                var (contextElement, info) = (kvp.Key, kvp.Value);
+                var (contextElement, info) = _elementContexts.First(p => p.Value.Context.Id == sig.ContextId);
                 
-                info.Context.SetValue(LocalContext.LOCAL_STATE_KEY, sig.Payload);
-
                 var newBlueprint = info.BlueprintMaker(info.Context);
                 var diff = Diff.Calculate(info.RenderedBlueprint, newBlueprint, 
                     (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
 
                 _synchronizationContext.Send(_ => {
-                    var isViewAlive = info.View.TryGetTarget(out var view); 
-                    if (!isViewAlive)
-                        throw new InvalidOperationException("View with local context was disposed.");
+                    var isViewAlive = info.View.TryGetTarget(out var view);
+                    if (!isViewAlive) {
+                        info.Context.Clear();
+                        _elementContexts.Remove(contextElement);
+                        return;
+                    }
 
                     _suppressEvents = true;
                     var newElementsWithContext = Patch.Apply(view, diff, Send);

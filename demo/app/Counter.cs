@@ -2,8 +2,7 @@ namespace Laconic.Demo
 {
     public static class Counter
     {
-        public static StackLayout Content(int state) => new StackLayout
-        {
+        public static StackLayout Content(int state) => new() {
             Padding = 50,
             ["lbl"] = new Label
             {
@@ -21,8 +20,8 @@ namespace Laconic.Demo
                 FontSize = 20,
                 BackgroundColor = Color.Coral,
                 BorderColor = Color.Chocolate,
-                BorderWidth = 3,
-                CornerRadius = 10,
+                BorderWidth = 2,
+                CornerRadius = 20,
                 HorizontalOptions = LayoutOptions.Center,
                 Padding = (30, 0)
             }

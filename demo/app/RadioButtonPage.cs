@@ -60,6 +60,7 @@ namespace Laconic.Demo
 
         public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
             var (state, setState) = ctx.UseLocalState(new State("", ""));
+            
             return new StackLayout {
                 Padding = 20,
                 [0] =

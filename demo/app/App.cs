@@ -22,7 +22,7 @@ namespace Laconic.Demo
         static State MainReducer(State state, Signal signal) => signal switch {
             ("IsPresentedChanged", _) => state with {IsFlyoutPresented = !state.IsFlyoutPresented},
             ("ShowItem", int index) => state with {CurrentItem = index, IsFlyoutPresented = false},
-            ("inc", _)  => state with { Counter = state.Counter + 1},
+            ("inc", _)  => state with {Counter = state.Counter + 1},
             GridSignal g => state with {Grid = DynamicGrid.Reducer(state.Grid, g)},
             Calculator.CalculatorSignal g => state with { Calculator = Calculator.MainReducer(state.Calculator, g)},
             _ => state
@@ -32,7 +32,7 @@ namespace Laconic.Demo
             Text = title,
             TextColor = Color.White,
             FontAttributes = isSelected ? FontAttributes.Bold : FontAttributes.None,
-            HeightRequest = 50,
+            HeightRequest = 40,
             GestureRecognizers = {
                 ["tap"] = new TapGestureRecognizer { Tapped = () => new("ShowItem", index) }
             }
@@ -71,8 +71,7 @@ namespace Laconic.Demo
                    ("Calculator (Grid)", s => Calculator.Content(s.Calculator)),
                    ("Collection View", s => GroupedCollectionView.Content(s.Persons)),
                    ("Entry and Editor",  _ => (View)EntryAndEditor.Content()),
-            // TODO:
-            // AddSample<DancingBars>("Dancing Bars (Performance)");
+                   ("Dancing Bars (Performance)", _ => (View)DancingBars.Content()),
                    ("AbsoluteLayout", _ => AbsoluteLayoutPage.Content()),
                    ("FormattedString", _ => FormattedStringPage.Content()),
                    ("Shapes", _ => Shapes.Content()),
@@ -80,7 +79,8 @@ namespace Laconic.Demo
                    ("Brushes", _ => Brushes.Content()),
                    ("SwipeView", _ => (View)SwipeViewPage.Content()),
                    ("RadioButton", _ => (View)RadioButtonPage.Content()),
-                   ("WebView", _ => WebViewPage.Content())
+                   ("WebView", _ => WebViewPage.Content()),
+                   ("Timer", _ => (View)Timer.Content())
                 },
                 0, // Counter
                 (2, 2), // Grid
@@ -97,6 +97,7 @@ namespace Laconic.Demo
                 Detail = MakeDemoPage(state)
             });
         }
+
     }
 }
 

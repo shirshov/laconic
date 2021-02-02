@@ -5,7 +5,7 @@ using System.Linq;
 namespace Laconic.Demo
 {
     // TODO:implement sliders for changing number of rows and columns
-    class DancingBars : Xamarin.Forms.ContentPage
+    class DancingBars
     {
         class BarInfo
         {
@@ -18,8 +18,6 @@ namespace Laconic.Demo
                 Height = height;
             }
         }
-
-        Binder<State> _binder;
 
         class State
         {
@@ -91,34 +89,16 @@ namespace Laconic.Demo
 
         const int NumberOfBarsChangingAtOnce = 50;
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            var randomIndex = new Random(23451234);
-            var randomHue = new Random(09812346);
-            var randomHeight = new Random(2453808);
-
-            var initialState = CreateInitialState(100, 10, randomHue.NextDouble, randomHeight.NextDouble);
-
-            _binder = Binder.Create(initialState,
-                (s, g) =>
-                {
-                    var newState = g.Payload switch
-                    {
-                        "rand" => RandomizeState(s, randomIndex.Next, randomHue.NextDouble, randomHeight.NextDouble),
-                        _ => throw new NotImplementedException($"Support for signal not implemented: {g}")
-                    };
-                    return newState;
-                });
-
-            Content = _binder.CreateElement(state => new CollectionView {Items = CreateRows(state.Bars)});
-
-            Xamarin.Forms.Device.StartTimer(TimeSpan.FromMilliseconds(30), () =>
-            {
-                _binder.Send(new Signal("rand"));
-                return true;
-            });
-        }
+        // These two are instantiated as static to avoid unnecessary allocations
+        static Random _random = new Random(23451234);
+        static State _initialState = CreateInitialState(100, 10, _random.NextDouble, _random.NextDouble);
+        
+        public static VisualElement<Xamarin.Forms.CollectionView> Content() => Element.WithContext(ctx => {
+            ctx.UseTimer(TimeSpan.FromMilliseconds(30));
+            var (state, setState) = ctx.UseLocalState(_initialState);
+            var newState = RandomizeState(state, _random.Next, _random.NextDouble, _random.NextDouble);
+            setState(newState);
+            return new CollectionView {Items = CreateRows(state.Bars)};
+        });
     }
 }
