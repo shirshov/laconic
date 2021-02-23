@@ -29,7 +29,7 @@ namespace Laconic
             }
         }
     
-        internal static List<(Guid ContextId, xf.BindableObject Element)> Apply(xf.BindableObject element, 
+        internal static List<(string ContextKey, xf.BindableObject Element)> Apply(xf.BindableObject element, 
             IEnumerable<DiffOperation> operations,
             Action<Signal> dispatch)
         {
@@ -58,10 +58,11 @@ namespace Laconic
                 }
             }
 
-            var withContext = new List<(Guid, xf.BindableObject)>();
+            var newWithContext = new List<(string, xf.BindableObject)>();
             
             foreach (var op in operations) {
                 Action patchingAction = op switch {
+                    ChangeContextKey cck => () => { newWithContext.Add((cck.NewKey, element)); },
                     SetChildElementToNull co => () => element.SetValue(co.ChildElementProperty, null),
                     SetChildElement co => () => {
                         var newChildObject = co.CreateElement();
@@ -81,14 +82,13 @@ namespace Laconic
                     ResetProperty p => () => element.ClearValue(p.Property),
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
-                        var childView = (xf.View?) CreateView((Element) sc.ContentView);
-                        if (sc.ContentView is IContextElement ce)
-                            withContext.Add((ce.ContextId, childView));
-                        withContext.AddRange(Apply(childView!, sc.Operations, dispatch));
+                        var el = (Element) sc.ContentView;
+                        var childView = (xf.View?) CreateView(el);
+                        newWithContext.AddRange(Apply(childView!, sc.Operations, dispatch));
                         SetRealViewContent(childView);
                     },
-                    UpdateContent uc => () => withContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
-                    UpdateChildViews uc => () => withContext.AddRange(ViewListPatch.Apply(
+                    UpdateContent uc => () => newWithContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
+                    UpdateChildViews uc => () => newWithContext.AddRange(ViewListPatch.Apply(
                         ((xf.Layout<xf.View>) element).Children, uc.Operations, dispatch)),
                     UpdateChildElementList uc => () => ViewListPatch
                         .ApplyToChildElements(uc.GetList(element), uc.Operations, dispatch),
@@ -139,8 +139,7 @@ namespace Laconic
                     },
                     UpdateItems ui => () => {
                         var itemsView = (xf.ItemsView) element;
-                        ViewListPatch.PatchItemsSource(itemsView, ui, dispatch,
-                            (x, y) => ((Element) x!, (Element) y), itemsView.ItemsSource);
+                        ViewListPatch.PatchItemsSource(itemsView, ui, dispatch, itemsView.ItemsSource);
                     },
                     AddGestureRecognizer agr => () => {
                         var view = (xf.View) element;
@@ -178,26 +177,26 @@ namespace Laconic
                             case SetFlyoutPageFlyout setFlyout:
                                 var flyout = new xf.ContentPage();
                                 if (setFlyout.Page is IContextElement ctxEl)
-                                    withContext.Add((ctxEl.ContextId, flyout));
-                                withContext.AddRange(Apply(flyout, setFlyout.Operations, dispatch));
+                                    newWithContext.Add((ctxEl.ContextKey, flyout));
+                                newWithContext.AddRange(Apply(flyout, setFlyout.Operations, dispatch));
                                 nativePage.Flyout = flyout;
                                 break;
                             case UpdateFlyoutPageFlyout updateFlyout:
-                                withContext.AddRange(Apply(nativePage.Flyout, updateFlyout.Operations, dispatch));
+                                newWithContext.AddRange(Apply(nativePage.Flyout, updateFlyout.Operations, dispatch));
                                 break;
                         }
 
                         switch (fp.DetailOperation) {
                             case SetFlyoutPageDetail setDetail:
                                 var content = new xf.ContentPage();
-                                if (setDetail.DetailPage is IContextElement ctxEl)
-                                    withContext.Add((ctxEl.ContextId, content));
-                                withContext.AddRange(Apply(content, setDetail.Operations, dispatch));
+                                if (setDetail.DetailPage.ContextKey != null)
+                                    newWithContext.Add((setDetail.DetailPage.ContextKey, content));
+                                newWithContext.AddRange(Apply(content, setDetail.Operations, dispatch));
                                 // TODO: creation of xf.NavigationPage is temporary, until bindings for NavigationPage is ready
                                 nativePage.Detail = new xf.NavigationPage(content);
                                 break;
                             case UpdateFlyoutPageDetail updateDetail: 
-                                withContext.AddRange(Apply((nativePage.Detail as xf.NavigationPage).CurrentPage, updateDetail.Operations, dispatch));
+                                newWithContext.AddRange(Apply((nativePage.Detail as xf.NavigationPage).CurrentPage, updateDetail.Operations, dispatch));
                                 break;
                         }
                     },
@@ -206,7 +205,7 @@ namespace Laconic
                 patchingAction();
             }
 
-            return withContext;
+            return newWithContext;
         }
 
         internal static xf.BindableObject CreateView(Element definition) => definition.CreateView();

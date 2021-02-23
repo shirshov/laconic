@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using ChanceNET;
 
 namespace Laconic.Demo
 {
-    public static class GroupedCollectionView
+    static class GroupedCollectionView
     {
         static View SectionHeaderRow(string text) => new Grid
         {

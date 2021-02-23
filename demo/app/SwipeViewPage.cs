@@ -1,6 +1,6 @@
 namespace Laconic.Demo
 {
-    public static class SwipeViewPage
+    static class SwipeViewPage
     {
         public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
             var (text, setText) = ctx.UseLocalState("");

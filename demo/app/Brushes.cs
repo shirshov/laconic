@@ -1,6 +1,6 @@
 namespace Laconic.Demo
 {
-    public static class Brushes
+    static class Brushes
     {
         public static StackLayout Content() => new StackLayout {
             Padding = 50,

@@ -5,7 +5,7 @@ using System.Linq;
 namespace Laconic.Demo
 {
     // TODO:implement sliders for changing number of rows and columns
-    class DancingBars
+    static class DancingBars
     {
         class BarInfo
         {
@@ -93,7 +93,7 @@ namespace Laconic.Demo
         static Random _random = new Random(23451234);
         static State _initialState = CreateInitialState(100, 10, _random.NextDouble, _random.NextDouble);
         
-        public static VisualElement<Xamarin.Forms.CollectionView> Content() => Element.WithContext(ctx => {
+        public static VisualElement<Xamarin.Forms.CollectionView> Content() => Element.WithContext("bars", ctx => {
             ctx.UseTimer(TimeSpan.FromMilliseconds(30));
             var (state, setState) = ctx.UseLocalState(_initialState);
             var newState = RandomizeState(state, _random.Next, _random.NextDouble, _random.NextDouble);

@@ -1,8 +1,8 @@
 namespace Laconic.Demo
 {
-    public static class EntryAndEditor
+    static class EntryAndEditor
     {
-        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
+        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext("entry", ctx => {
             var (text, setState) = ctx.UseLocalState("");
             return new StackLayout {
                 BackgroundColor = Color.Bisque,

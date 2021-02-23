@@ -7,8 +7,6 @@ namespace Laconic.Tests
 {
     public class PatchTests
     {
-        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
-        
         [Fact]
         public void set_content_view()
         {
@@ -63,11 +61,11 @@ namespace Laconic.Tests
         {
             var blueprint = new StackLayout {["lbl"] = new Label()};
             var real = new xf.StackLayout();
-            Patch.Apply(real, Diff.Calculate(null, blueprint, NoopExpander), _ => { });
+            Patch.Apply(real, Diff.Calculate(null, blueprint), _ => { });
             real.Children.Count.ShouldBe(1);
             real.Children[0].ShouldBeOfType<xf.Label>();
 
-            var diff = Diff.Calculate(blueprint, new StackLayout(), NoopExpander);
+            var diff = Diff.Calculate(blueprint, new StackLayout());
             Patch.Apply(real, diff, _ => { });
 
             real.Children.Count.ShouldBe(0);
@@ -78,11 +76,11 @@ namespace Laconic.Tests
         {
             var blueprint = new StackLayout {["lbl"] = new Label()};
             var real = new xf.StackLayout();
-            Patch.Apply(real, Diff.Calculate(null, blueprint, NoopExpander), _ => { });
+            Patch.Apply(real, Diff.Calculate(null, blueprint), _ => { });
             real.Children.Count.ShouldBe(1);
             real.Children[0].ShouldBeOfType<xf.Label>();
 
-            var diff = Diff.Calculate(blueprint, new StackLayout {["lbl"] = null}, NoopExpander);
+            var diff = Diff.Calculate(blueprint, new StackLayout {["lbl"] = null});
             Patch.Apply(real, diff, _ => { });
 
             real.Children.Count.ShouldBe(0);
@@ -95,7 +93,7 @@ namespace Laconic.Tests
             Patch.Apply(real,
                 Diff.Calculate(
                     new StackLayout {["one"] = new Label()},
-                    new StackLayout {["one"] = new Button()}, NoopExpander),
+                    new StackLayout {["one"] = new Button()}),
                 _ => { });
             real.Children[0].ShouldBeOfType<xf.Button>();
         }
@@ -148,7 +146,7 @@ namespace Laconic.Tests
                             NumberOfTapsRequired = 2, Tapped = () => new Signal("foo")
                         }
                     }
-                }, NoopExpander), 
+                }), 
                 _ => { }
             );
 
@@ -165,7 +163,7 @@ namespace Laconic.Tests
                     [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")}
                 }
             };
-            Patch.Apply(sl, Diff.Calculate(null, blueprint, NoopExpander), _ => { });
+            Patch.Apply(sl, Diff.Calculate(null, blueprint), _ => { });
 
             var recognizer = sl.GestureRecognizers.First();
 
@@ -177,7 +175,7 @@ namespace Laconic.Tests
                                 NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")
                             }
                         }
-                    }, NoopExpander), 
+                    }), 
                 _ => { });
 
             sl.GestureRecognizers.Count.ShouldBe(1);
@@ -191,7 +189,7 @@ namespace Laconic.Tests
             Patch.Apply(page,
                 Diff.Calculate(null,
                     new ContentPage {ToolbarItems = { [0] = new ToolbarItem()}
-                }, NoopExpander), 
+                }), 
                 _ => { }
             );
 
@@ -205,10 +203,10 @@ namespace Laconic.Tests
             var blueprint = new StackLayout {["10"] = new Label(), ["20"] = new Button()};
 
             var real = new xf.StackLayout();
-            Patch.Apply(real, Diff.Calculate(null, blueprint, NoopExpander), _ => { });
+            Patch.Apply(real, Diff.Calculate(null, blueprint), _ => { });
 
             var diff = Diff.Calculate(blueprint,
-                new StackLayout {["10"] = new Label(), ["15"] = new Entry(), ["20"] = new Button()}, NoopExpander);
+                new StackLayout {["10"] = new Label(), ["15"] = new Entry(), ["20"] = new Button()});
 
             Patch.Apply(real, diff, _ => { });
 
@@ -294,6 +292,33 @@ namespace Laconic.Tests
             var view = binder.CreateElement(s => blueprint);
             
             blueprint.IsProcessed.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void change_of_LocalContext()
+        {
+            var stringStateView = Element.WithContext("string", ctx => {
+                var (state, _) = ctx.UseLocalState("string");
+                return new Label {Text = state};
+            });
+            
+            var intStateView = Element.WithContext("int", ctx => {
+                var (state, _) = ctx.UseLocalState(1);
+                return new Label {Text = state.ToString()};
+            });
+
+            var alternatives = new[] {stringStateView, intStateView};
+            
+            var binder = Binder.CreateForTest(0, (s, g) => (int)g.Payload);
+
+            var realView = binder.CreateElement(s => new ContentView { Content  = alternatives[s] });
+
+            var lbl = (xf.Label) realView.Content;
+            lbl.Text.ShouldBe("string");
+
+            binder.Send(new(1));
+            
+            lbl.Text.ShouldBe("1");
         }
     }
 }

@@ -39,7 +39,12 @@ namespace Laconic
 
         public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)
             where T : xf.VisualElement, new() => new(maker);
+        
+        public static ContextElement<T> WithContext<T>(string contextKey, Func<LocalContext, VisualElement<T>> maker)
+            where T : xf.VisualElement, new() => new(maker, contextKey);
 
+        internal string? ContextKey;
+        
         public override bool Equals(object other) => other is Element el && Equals(el);
 
         public bool Equals(Element? other)

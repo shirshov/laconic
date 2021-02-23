@@ -42,8 +42,8 @@ namespace Laconic
 
     public partial class FlyoutPage : Page<xf.FlyoutPage>
     {
-        public Element? Flyout { init; get; }
-        public Element? Detail { init; get; }
+        public Element? Flyout { set; get; }
+        public Element? Detail { set; get; }
 
         public Func<xf.BackButtonPressedEventArgs, Signal> BackButtonPressed {
             init => SetEvent(nameof(BackButtonPressed), value,

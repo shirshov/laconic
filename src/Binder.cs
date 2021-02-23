@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using ContextRequestList = System.Collections.Generic.List<(Laconic.IContextElement ContextElement, Laconic.LocalContext Context, Laconic.Element Rendered)>; 
                 
 [assembly: InternalsVisibleTo("LaconicTests")]
 [assembly: InternalsVisibleTo("MapTests")]
@@ -21,54 +20,21 @@ namespace Laconic
 
         internal MiddlewareContext(TState state, Signal signal) => (State, Signal) = (state, signal);
 
-        public MiddlewareContext<TState> WithState(TState state) => new MiddlewareContext<TState>(state, Signal);
+        public MiddlewareContext<TState> WithState(TState state) => new(state, Signal);
     }
 
     public class Binder<TState>
     {
-        class TrackedElement
-        {
-            public readonly WeakReference<xf.VisualElement> View;
-            public readonly Element RenderedBlueprint;
-            public readonly Func<TState, Element> BlueprintMaker;
-
-            public TrackedElement(WeakReference<xf.VisualElement> view, Element renderedBlueprint, Func<TState, Element> blueprintMaker)
-            {
-                View = view;
-                RenderedBlueprint = renderedBlueprint;
-                BlueprintMaker = blueprintMaker;
-            }
-
-            public TrackedElement With(Element newBlueprint) => new TrackedElement(View, newBlueprint, BlueprintMaker);
-        }
-
-        class LocalContextInfo
-        {
-            public readonly WeakReference<xf.BindableObject> View;
-            public readonly Element RenderedBlueprint;
-            public readonly Func<LocalContext, Element> BlueprintMaker;
-            public readonly LocalContext Context;
-            
-            public LocalContextInfo(WeakReference<xf.BindableObject> view, Element renderedBlueprint, 
-                Func<LocalContext, Element> blueprintMaker, LocalContext context)
-            {
-                View = view;
-                RenderedBlueprint = renderedBlueprint;
-                BlueprintMaker = blueprintMaker;
-                Context = context;
-            }
-
-            public LocalContextInfo With(Element newBlueprint) 
-                => new LocalContextInfo(View, newBlueprint, BlueprintMaker, Context);
-        }
-    
+        record TrackedElement(WeakReference<xf.VisualElement> View, Element RenderedBlueprint, Func<TState, Element> BlueprintMaker);
+        record LocalContextInfo(LocalContext Context, Func<LocalContext, Element> BlueprintMaker, Element RenderedBlueprint, WeakReference<xf.BindableObject>? View);
+        
         readonly Func<TState, Signal, TState> _mainReducer;
 
         Func<MiddlewareContext<TState>, Func<MiddlewareContext<TState>, MiddlewareContext<TState>>, MiddlewareContext<TState>> _middlewarePipeline;
 
-        readonly List<TrackedElement> _trackedElements = new List<TrackedElement>();
+        readonly List<TrackedElement> _trackedElements = new();
 
-        readonly  Dictionary<Guid, LocalContextInfo> _elementContexts = new Dictionary<Guid, LocalContextInfo>();
+        Dictionary<string, LocalContextInfo> _elementContexts = new();
         readonly Channel<Signal> _channel;
         readonly SynchronizationContext _synchronizationContext;
 
@@ -95,18 +61,35 @@ namespace Laconic
             var blueprint = (Element)blueprintMaker(State);
             var view = new T();
 
-            var contextRequests = new ContextRequestList();
-            
-            var diff = Diff.Calculate(null, blueprint, (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
+            var expansionInfo =
+                _elementContexts.Values.Select(x =>
+                    new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
+            var (expandedRootElement, activeContexts) = ContextExpander.Expand(blueprint, expansionInfo, Send);
+            // TODO: Diffs should run on the background thread
+            var diff = Diff.Calculate(null, expandedRootElement);
 
-            var newElementsWithContext = Patch.Apply(view, diff, Send);
-            
-            if (blueprint is IContextElement withContext)
-                newElementsWithContext.Add((withContext.ContextId, view));
-            
-            UpdateElementContexts(contextRequests, newElementsWithContext);
-            
+            var newElementsWithContext = Patch.Apply(view, diff, Send).AsEnumerable();
             _trackedElements.Add(new TrackedElement(new WeakReference<xf.VisualElement>(view), blueprint, blueprintMaker));
+            
+            // TODO: contexts should be per root element?
+            var updatedContexts = new Dictionary<string, LocalContextInfo>();
+            
+            foreach (var info in activeContexts) {
+                var realView = newElementsWithContext.FirstOrDefault(x => x.ContextKey == info.Context.Key).Element;
+                if (realView == null) {
+                    _elementContexts[info.Context.Key].View.TryGetTarget(out realView);
+                }
+                updatedContexts.Add(
+                    info.Context.Key,
+                    new LocalContextInfo(
+                        info.Context,
+                        info.BlueprintMaker,
+                        info.Blueprint,
+                        new WeakReference<xf.BindableObject>(realView)
+                    )
+                );
+            }
+            _elementContexts = updatedContexts;
             
             return view;
         }
@@ -127,70 +110,29 @@ namespace Laconic
                 _channel.Writer.WriteAsync(signal);
         }
 
-        (Element?, Element) ExpandWithContext(IContextElement? existingElement, 
-            IContextElement newElement,
-            IReadOnlyDictionary<Guid, LocalContextInfo> contexts,
-            ContextRequestList contextRequests)
-        {
-            LocalContext context;
-            if (existingElement != null && contexts.ContainsKey(existingElement.ContextId))
-                context = contexts[existingElement.ContextId].Context;
-            else 
-                context = new LocalContext(Send);
-            newElement.ContextId = context.Id;
-            var newBlueprint = newElement.Make(context);
-            contextRequests.Add((newElement, context, newBlueprint));
-
-            Element? existingExpanded = null;
-            if (existingElement != null && contexts.ContainsKey(existingElement.ContextId))
-                existingExpanded = contexts[existingElement.ContextId].RenderedBlueprint;
-            
-            return (existingExpanded, newBlueprint);
-        }
-
-        void UpdateElementContexts(ContextRequestList contextRequests, 
-            IEnumerable<(Guid ContextId, xf.BindableObject Element)> newElementsWithContext)
-        {
-            var infos = from req in contextRequests
-                join real in newElementsWithContext on req.Context.Id equals real.ContextId
-                select new {
-                    req.ContextElement, 
-                    ContextInfo = new LocalContextInfo(
-                        new WeakReference<xf.BindableObject>(real.Element), 
-                        req.Rendered, 
-                        req.ContextElement.Make,
-                        req.Context)
-                };
-            
-            foreach (var info in infos)
-                _elementContexts[info.ContextElement.ContextId] = info.ContextInfo;
-        }
-        
         internal void ProcessSignal(Signal signal)
         {
-            var contextRequests = new ContextRequestList();
-            
             if (signal is ILocalContextSignal sig) {
-                var (contextElement, info) = _elementContexts.First(p => p.Value.Context.Id == sig.ContextId);
+                var (_, info) = _elementContexts.First(p => p.Value.Context.Key == sig.ContextKey);
                 
                 var newBlueprint = info.BlueprintMaker(info.Context);
-                var diff = Diff.Calculate(info.RenderedBlueprint, newBlueprint, 
-                    (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
+                var expansionInfo = _elementContexts.Values.Select(x => new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
+                var (expanded, _) = ContextExpander.Expand(newBlueprint, expansionInfo, Send);
+                var diff = Diff.Calculate(info.RenderedBlueprint, expanded);
 
                 _synchronizationContext.Send(_ => {
                     var isViewAlive = info.View.TryGetTarget(out var view);
                     if (!isViewAlive) {
                         info.Context.Clear();
-                        _elementContexts.Remove(contextElement);
+                        _elementContexts.Remove(sig.ContextKey);
                         return;
                     }
 
                     _suppressEvents = true;
-                    var newElementsWithContext = Patch.Apply(view, diff, Send);
+                    Patch.Apply(view, diff, Send);
                     _suppressEvents = false;
                     
-                    UpdateElementContexts(contextRequests, newElementsWithContext);
-                    _elementContexts[contextElement] = info.With(newBlueprint); 
+                    _elementContexts[info.Context.Key] = info with {RenderedBlueprint = newBlueprint}; 
                 }, null);
             } else {
                 ExceptionDispatchInfo? reducerException = null;
@@ -217,20 +159,40 @@ namespace Laconic
                     
                     foreach (var el in copy) {
                         if (!el.View.TryGetTarget(out var aliveView)) continue;
-                        
-                        var newBlueprint = el.BlueprintMaker(context!.State);
-                        
+
+                        var expansionInfos = _elementContexts.Values.Select(x =>
+                            new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
+                        var (expandedRootElement, activeContexts) = ContextExpander.Expand(
+                            el.BlueprintMaker(context!.State), expansionInfos, Send);
                         // TODO: Diffs should run on the background thread
-                        var diff = Diff.Calculate(el.RenderedBlueprint, newBlueprint,
-                            (e, n) => ExpandWithContext(e, n, _elementContexts, contextRequests));
+                        var diff = Diff.Calculate(el.RenderedBlueprint, expandedRootElement);
 
                         _suppressEvents = true;
                         var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
                         _suppressEvents = false;
 
-                        UpdateElementContexts(contextRequests, newElementsWithContext);
-
-                        _trackedElements.Add(el.With(newBlueprint));
+                        _trackedElements.Add(el with {RenderedBlueprint = expandedRootElement});
+                        
+                        var updatedContexts = new Dictionary<string, LocalContextInfo>();
+                        foreach (var info in activeContexts) {
+                            var realView = newElementsWithContext.FirstOrDefault(x => x.ContextKey == info.Context.Key).Element;
+                            if (realView == null) {
+                                _elementContexts[info.Context.Key].View.TryGetTarget(out realView);
+                            }
+                            updatedContexts.Add(
+                                info.Context.Key,
+                                new LocalContextInfo(
+                                    info.Context,
+                                    info.BlueprintMaker,
+                                    info.Blueprint,
+                                    new WeakReference<xf.BindableObject>(realView)
+                                )
+                            );
+                        }
+                        foreach (var removed in _elementContexts.Keys.Where(x => updatedContexts.Any(y => y.Key == x)))
+                            _elementContexts[removed].Context.Clear();
+                        
+                        _elementContexts = updatedContexts;
                     }
                     State = context!.State;
                 }, null);

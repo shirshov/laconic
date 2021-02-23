@@ -2,7 +2,7 @@ using System;
 
 namespace Laconic.Demo
 {
-    class Timer
+    static class Timer
     {
         static StackLayout View(string display, string buttonTitle, Func<Signal> buttonAction) => new() {
             Spacing = 30,
@@ -24,7 +24,7 @@ namespace Laconic.Demo
             }
         };
 
-        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
+        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext("timer", ctx => {
             var (state, setState) = ctx.UseLocalState(0);
             var timer = ctx.UseTimer(TimeSpan.FromMilliseconds(300), start: false);
 

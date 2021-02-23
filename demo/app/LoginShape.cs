@@ -2,7 +2,7 @@ using Laconic.Shapes;
 
 namespace Laconic.Demo
 {
-    public static class LoginShape
+    static class LoginShape
     {
         public static Grid Content() => new Grid {
             BackgroundColor = "#222222",

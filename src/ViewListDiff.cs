@@ -5,7 +5,7 @@ namespace Laconic
 {
     static class ViewListDiff
     {
-        public static ListOperation[] Calculate(IDictionary<Key, View?>? existingItems, IDictionary<Key, View?> newItems, ExpandWithContext expandWithContext)
+        public static ListOperation[] Calculate(IDictionary<Key, View?>? existingItems, IDictionary<Key, View?> newItems)
         {
             string GetReuseKey(Key key)
             {
@@ -18,12 +18,8 @@ namespace Laconic
             var res = new List<ListOperation>();
             if (existingItems == null || existingItems.Count == 0) {
                 foreach (var item in newItems.Where(p => p.Value != null)) {
-                    var childOps = Diff.Calculate(null, (Element)item.Value!, expandWithContext)
+                    var childOps = Diff.Calculate(null, (Element)item.Value!)
                         .Concat(CalculatePositioningInParentDiff(item.Key, existingItems, newItems));
-                    if (item.Value is IContextElement withContext)
-                        res.Add(new AddChildWithContext(item.Key, GetReuseKey(item.Key), res.Count, item.Value, 
-                            withContext.ContextId, childOps.ToArray()));
-                    else    
                         res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, (Element)item.Value!, childOps.ToArray()));
                 }
             }
@@ -39,7 +35,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add)
                     {
                         var newItem = newItems[action.DestinationItem];
-                        var childOps = Diff.Calculate(null, (Element)newItem!, expandWithContext)
+                        var childOps = Diff.Calculate(null, (Element)newItem!)
                             .Concat(CalculatePositioningInParentDiff(action.DestinationItem, existingItems, newItems));
                         res.Add(
                                 new AddChild(action.DestinationItem, 
@@ -59,7 +55,7 @@ namespace Laconic
                         var newView = newItems[action.SourceItem];
                         if (existingView == null) {
                             var items = Diff
-                                .Calculate(null, (Element)newView!, expandWithContext)
+                                .Calculate(null, (Element)newView!)
                                 .Concat(CalculatePositioningInParentDiff(action.DestinationItem, 
                                     existingItems,
                                     newItems));
@@ -71,12 +67,12 @@ namespace Laconic
                         else if (existingView.GetType() != newView!.GetType())
                         {
                             res.Add(new ReplaceChild(index, (Element)newView, 
-                                Diff.Calculate(null, (Element)newView, expandWithContext)
+                                Diff.Calculate(null, (Element)newView)
                                 .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems))
                                 .ToArray()));
                         }
                         else {
-                            var patch = Diff.Calculate((Element)existingView, (Element)newView, expandWithContext)
+                            var patch = Diff.Calculate((Element)existingView, (Element)newView)
                                 .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems))
                                 .ToArray();
                             if (patch.Any())

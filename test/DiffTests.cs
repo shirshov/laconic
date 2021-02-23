@@ -7,12 +7,10 @@ namespace Laconic.Tests
 {
     public class DiffTests
     {
-        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
-        
         [Fact]
         public void should_update_property()
         {
-            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label {Text = "bar"}, NoopExpander);
+            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label {Text = "bar"});
             operations.Count().ShouldBe(1);
             var op = (SetProperty)operations.First();
             op.Property.ShouldBe(xf.Label.TextProperty);
@@ -22,7 +20,7 @@ namespace Laconic.Tests
         [Fact]
         public void should_reset_property()
         {
-            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label(), NoopExpander);
+            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label());
             operations.First()
                 .ShouldBeOfType<ResetProperty>()
                 .Property.ShouldBe(xf.Label.TextProperty);
@@ -31,7 +29,7 @@ namespace Laconic.Tests
         [Fact]
         public void handle_settings_prop_value_to_null()
         {
-            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label { Text = null}, NoopExpander);
+            var operations = Diff.Calculate(new Label {Text = "foo"}, new Label { Text = null});
             operations.First()
                 .ShouldBeOfType<SetProperty>()
                 .Property.ShouldBe(xf.Label.TextProperty);
@@ -40,7 +38,7 @@ namespace Laconic.Tests
         [Fact]
         public void handle_existing_prop_value_being_null()
         {
-            var operations = Diff.Calculate(new Label { Text = null}, new Label {Text = "foo"}, NoopExpander);
+            var operations = Diff.Calculate(new Label { Text = null}, new Label {Text = "foo"});
             operations.First()
                 .ShouldBeOfType<SetProperty>()
                 .Property.ShouldBe(xf.Label.TextProperty);
@@ -49,14 +47,14 @@ namespace Laconic.Tests
         [Fact]
         public void handle_both_prop_values_being_null()
         {
-            var operations = Diff.Calculate(new Label { Text = null}, new Label {Text = null}, NoopExpander);
+            var operations = Diff.Calculate(new Label { Text = null}, new Label {Text = null});
             operations.ShouldBeEmpty();
         }
 
         [Fact]
         public void ignore_unchanged_vales()
         {
-            var operations = Diff.Calculate(new Label {Text = "a"}, new Label {Text = "a"}, NoopExpander);
+            var operations = Diff.Calculate(new Label {Text = "a"}, new Label {Text = "a"});
             operations.Count().ShouldBe(0);
         }
 
@@ -65,8 +63,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView(),
-                new ContentView {Content = new Label {Text = "New"}},
-                NoopExpander
+                new ContentView {Content = new Label {Text = "New"}}
             );
 
             diff.First()
@@ -79,7 +76,7 @@ namespace Laconic.Tests
         [Fact]
         public void set_content_of_ContentPage()
         {
-            var diff = Diff.Calculate(null, new ContentPage {Content = new Label()}, NoopExpander).ToArray();
+            var diff = Diff.Calculate(null, new ContentPage {Content = new Label()}).ToArray();
             diff[0].ShouldBeOfType<SetContent>().ContentView.ShouldBeOfType<Label>();
         }
 
@@ -88,8 +85,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView {Content = new Label()},
-                new ContentView {Content = new Button()}, 
-                NoopExpander
+                new ContentView {Content = new Button()} 
             );
 
             diff.First()
@@ -103,8 +99,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView {Content = new Label()},
-                new ContentView(),
-                NoopExpander
+                new ContentView()
             );
 
             diff.First().ShouldBeOfType<RemoveContent>();
@@ -113,7 +108,7 @@ namespace Laconic.Tests
         [Fact]
         public void ingore_null_content()
         {
-            var diff = Diff.Calculate(null, new ContentView(), NoopExpander);
+            var diff = Diff.Calculate(null, new ContentView());
 
             diff.Count().ShouldBe(0);
         }
@@ -121,7 +116,7 @@ namespace Laconic.Tests
         [Fact]
         public void ignore_null_for_child_views()
         {
-            var diff = Diff.Calculate(null, new StackLayout {["ignored"] = null}, NoopExpander);
+            var diff = Diff.Calculate(null, new StackLayout {["ignored"] = null});
             diff.Count().ShouldBe(0);
         }
         
@@ -130,8 +125,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 null,
-                new ContentPage {Title = "Root Page"},
-                NoopExpander
+                new ContentPage {Title = "Root Page"}
             );
             diff.First().ShouldBeOfType<SetProperty>().Value.ShouldBe("Root Page");
         }
@@ -141,8 +135,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView {Content = new Label {Text = "Foo"}},
-                new ContentView {Content = new Label {Text = "Bar"}},
-                NoopExpander
+                new ContentView {Content = new Label {Text = "Bar"}}
             );
             var upd = diff.First().ShouldBeOfType<UpdateContent>();
             var setProp = upd.Operations.First().ShouldBeOfType<SetProperty>();
@@ -153,14 +146,14 @@ namespace Laconic.Tests
         [Fact]
         public void ignore_child_initially_set_to_null()
         {
-            var diff = Diff.Calculate(null, new StackLayout {["null"] = null}, NoopExpander);
+            var diff = Diff.Calculate(null, new StackLayout {["null"] = null});
             diff.Count().ShouldBe(0);
         }
 
         [Fact]
         public void remove_child_set_to_null()
         {
-            var diff = Diff.Calculate(new StackLayout {["1"] = new Label()}, new StackLayout {["1"] = null}, NoopExpander);
+            var diff = Diff.Calculate(new StackLayout {["1"] = new Label()}, new StackLayout {["1"] = null});
 
             diff.Count().ShouldBe(1);
             diff.First().ShouldBeOfType<UpdateChildViews>()
@@ -171,13 +164,13 @@ namespace Laconic.Tests
         [Fact]
         public void replace_null_view_with_instance()
         {
-            var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = new Label()}, NoopExpander);
+            var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = new Label()});
         }
 
         [Fact]
         public void noop_if_null_child_replaces_null_child()
         {
-            var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = null}, NoopExpander);
+            var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = null});
 
             diff.Count().ShouldBe(0);
         }
@@ -187,8 +180,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 null,
-                new StackLayout {[1] = new Label(), [2] = new Label()},
-                NoopExpander
+                new StackLayout {[1] = new Label(), [2] = new Label()}
             ).ToArray();
 
             var updateChildren = diff[0].ShouldBeOfType<UpdateChildViews>();
@@ -207,8 +199,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new StackLayout {["first"] = new Label()},
-                new StackLayout {["first"] = new Label(), ["second"] = new Button()},
-                NoopExpander
+                new StackLayout {["first"] = new Label(), ["second"] = new Button()}
             ).ToArray();
 
             diff[0].ShouldBeOfType<UpdateChildViews>()
@@ -221,7 +212,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new Button(),
-                new Button {Clicked = () => new Signal<string>("")}, NoopExpander).ToArray();
+                new Button {Clicked = () => new Signal<string>("")}).ToArray();
 
             diff[0].ShouldBeOfType<WireEvent>();
         }
@@ -231,8 +222,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new Button {Clicked = () => new Signal<string>("")},
-                new Button(),
-                NoopExpander
+                new Button()
             ).ToArray();
 
             diff[0].ShouldBeOfType<UnwireEvent>();
@@ -261,8 +251,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new Grid { ColumnDefinitions = "1, 2" },
-                new Grid { ColumnDefinitions = "1, 2" },
-                NoopExpander
+                new Grid { ColumnDefinitions = "1, 2" }
             );
             
             diff.ShouldBeEmpty();
@@ -273,8 +262,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new Grid { RowDefinitions = "1, 2" },
-                new Grid { RowDefinitions = "1, 2" },
-                NoopExpander
+                new Grid { RowDefinitions = "1, 2" }
             );
             
             diff.ShouldBeEmpty();
@@ -290,7 +278,7 @@ namespace Laconic.Tests
                     ["label", column: 1] = new Label(),
                     ["box", row: 1] = new BoxView(),
                     ["button", row: 1, columnSpan: 2] = new Button()
-                }, NoopExpander).ToArray();
+                }).ToArray();
 
             var ops = diff[0].ShouldBeOfType<UpdateChildViews>().Operations;
 
@@ -305,8 +293,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new Grid {[1] = new BoxView()},
-                new Grid {[1] = new BoxView(), [2] = new Label()},
-                NoopExpander
+                new Grid {[1] = new BoxView(), [2] = new Label()}
             ).ToArray();
 
             var ops = diff[0].ShouldBeOfType<UpdateChildViews>().Operations;
@@ -323,7 +310,7 @@ namespace Laconic.Tests
                     ["label", column: 1] = new Label(),
                     ["box", row: 1] = new BoxView(),
                     ["button", row: 1, columnSpan: 2] = new Button()
-                }, NoopExpander).ToArray();
+                }).ToArray();
 
             var updateGrid = diff[0].ShouldBeOfType<UpdateChildViews>().Operations;
 
@@ -350,8 +337,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView(),
-                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer() }},
-                NoopExpander
+                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer() }}
             );
             
             diff.First().ShouldBeOfType<AddGestureRecognizer>();
@@ -362,8 +348,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer() }},
-                new ContentView(),
-                NoopExpander
+                new ContentView()
             );
             
             diff.First().ShouldBeOfType<RemoveGestureRecognizer>();
@@ -384,8 +369,7 @@ namespace Laconic.Tests
                         [0] = new TapGestureRecognizer(),
                         [1] = new TapGestureRecognizer { NumberOfTapsRequired = 2 },
                     }
-                },
-                NoopExpander
+                }
             );
 
             var upd = diff.First().ShouldBeOfType<UpdateGestureRecognizer>();
@@ -398,8 +382,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentPage(),
-                new ContentPage { ToolbarItems = { [0] = new ToolbarItem() }},
-                NoopExpander
+                new ContentPage { ToolbarItems = { [0] = new ToolbarItem() }}
             );
             
             diff.First().ShouldBeOfType<AddToolbarItem>();
@@ -410,8 +393,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentPage {ToolbarItems = {[0] = new ToolbarItem()}},
-                new ContentPage(),
-                NoopExpander
+                new ContentPage()
             );
             
             diff.First().ShouldBeOfType<RemoveToolbarItem>().Index.ShouldBe(0);
@@ -432,8 +414,7 @@ namespace Laconic.Tests
                         [0] = new ToolbarItem(),
                         [1] = new ToolbarItem { IconImageSource = "bar"},
                     }
-                },
-                NoopExpander
+                }
             );
 
             var upd = diff.First().ShouldBeOfType<UpdateToolbarItem>();
@@ -451,8 +432,7 @@ namespace Laconic.Tests
         {
             var diff = Diff.Calculate(
                 new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer { NumberOfTapsRequired = 2} } },
-                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer { NumberOfTapsRequired = 2} } },
-                NoopExpander
+                new ContentView { GestureRecognizers = { [0] = new TapGestureRecognizer { NumberOfTapsRequired = 2} } }
             );
 
             diff.Count().ShouldBe(0);

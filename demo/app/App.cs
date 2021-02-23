@@ -97,9 +97,11 @@ namespace Laconic.Demo
                 Detail = MakeDemoPage(state)
             });
         }
-
     }
 }
+
+
+
 
 // Records won't work without this 
 namespace System.Runtime.CompilerServices

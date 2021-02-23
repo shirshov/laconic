@@ -3,11 +3,11 @@ using Laconic.Shapes;
 
 namespace Laconic.Demo
 {
-    public static class RadioButtonPage
+    static class RadioButtonPage
     {
         record State(string Color, string Calendar);
 
-        static RadioButton CalendarButton(string text, string iconGlyph, bool isChecked, Func<Signal> setState) => new RadioButton {
+        static RadioButton CalendarButton(string text, string iconGlyph, bool isChecked, Func<Signal> setState) => new() {
             CheckedChanged = e => setState(),
             Content = new Frame {
                 BorderColor = isChecked ? "FF3300" : "F3F2F1",
@@ -58,7 +58,7 @@ namespace Laconic.Demo
             }
         };
 
-        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext(ctx => {
+        public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext("radio", ctx => {
             var (state, setState) = ctx.UseLocalState(new State("", ""));
             
             return new StackLayout {

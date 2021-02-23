@@ -6,12 +6,9 @@ using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInf
 
 namespace Laconic
 {
-    delegate (Element?, Element) ExpandWithContext(IContextElement? existingElement, IContextElement newElement);
-    
     static class Diff
     {
-        static IEnumerable<DiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues, 
-            ExpandWithContext expandWithContext)
+        static IEnumerable<DiffOperation> CalcPropertyDiff(PropDict existingValues, PropDict newValues) 
         {
             foreach (var newProp in newValues) {
                 if (existingValues.TryGetValue(newProp.Key, out var existingPropValue)) {
@@ -23,7 +20,7 @@ namespace Laconic
                             yield return new SetProperty(newProp.Key, newProp.Value!);
                     }
                     else if (newProp.Value is Element child) {
-                        var childDiff = Calculate(existingPropValue as Element, child, expandWithContext).ToArray();
+                        var childDiff = Calculate(existingPropValue as Element, child).ToArray();
                         if (childDiff.Length > 0)
                             yield return new UpdateChildElement(newProp.Key, childDiff);
                     }
@@ -41,7 +38,7 @@ namespace Laconic
                             yield return new SetChildElementToNull(newProp.Key);
                             break;
                         case Element child:
-                            var ops = Calculate(null, child, expandWithContext).ToArray();
+                            var ops = Calculate(null, child).ToArray();
                             yield return new SetChildElement(newProp.Key, child.CreateView, ops);
                             break;
                         default: 
@@ -73,12 +70,11 @@ namespace Laconic
 
         static IEnumerable<DiffOperation> CalcGestureRecognizerDiff(
             Dictionary<Key, IGestureRecognizer> existingRecognizers,
-            Dictionary<Key, IGestureRecognizer> newRecognizers,
-            ExpandWithContext expandWithContext)
+            Dictionary<Key, IGestureRecognizer> newRecognizers)
         {
             if (existingRecognizers.Count == 0) {
                 foreach (var rec in newRecognizers.Values) {
-                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec, expandWithContext).ToArray());
+                    yield return new AddGestureRecognizer(rec, Calculate(null, (Element) rec).ToArray());
                 }
             }
             else {
@@ -91,7 +87,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add) {
                         index++;
                         var newRecog = newRecognizers[action.DestinationItem];
-                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog, expandWithContext).ToArray());
+                        yield return new AddGestureRecognizer(newRecog, Calculate(null, (Element) newRecog).ToArray());
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
                         yield return new RemoveGestureRecognizer(index);
@@ -99,7 +95,7 @@ namespace Laconic
                     else {
                         var existingRecog = existingRecognizers[action.DestinationItem];
                         var newRecog = newRecognizers[action.DestinationItem];
-                        var ops = Calculate((Element) existingRecog, (Element) newRecog, expandWithContext).ToArray();
+                        var ops = Calculate((Element) existingRecog, (Element) newRecog).ToArray();
                         if (ops.Length > 0)
                             yield return new UpdateGestureRecognizer(index, ops);
                         index++;
@@ -109,12 +105,11 @@ namespace Laconic
         }
 
         static IEnumerable<DiffOperation> CalcToolbarItemsDiff(IDictionary<Key, ToolbarItem> existingItems, 
-            IDictionary<Key, ToolbarItem> newItems,
-            ExpandWithContext expandWithContext)
+            IDictionary<Key, ToolbarItem> newItems)
         {
             if (existingItems.Count == 0) {
                 foreach (var tb in newItems.Values) {
-                    yield return new AddToolbarItem(tb, Calculate(null, tb, expandWithContext).ToArray());
+                    yield return new AddToolbarItem(tb, Calculate(null, tb).ToArray());
                 }
             }
             else {
@@ -127,7 +122,7 @@ namespace Laconic
                     if (action.ActionType == ListDiffActionType.Add) {
                         index++;
                         var newItem = newItems[action.DestinationItem];
-                        yield return new AddToolbarItem(newItem, Calculate(null, newItem, expandWithContext).ToArray());
+                        yield return new AddToolbarItem(newItem, Calculate(null, newItem).ToArray());
                     }
                     else if (action.ActionType == ListDiffActionType.Remove) {
                         yield return new RemoveToolbarItem(index);
@@ -135,7 +130,7 @@ namespace Laconic
                     else {
                         var existingItem = existingItems[action.DestinationItem];
                         var newItem = newItems[action.DestinationItem];
-                        var ops = Calculate(existingItem, newItem, expandWithContext).ToArray();
+                        var ops = Calculate(existingItem, newItem).ToArray();
                         if (ops.Length > 0)
                             yield return new UpdateToolbarItem(index, ops);
                         index++;
@@ -144,44 +139,39 @@ namespace Laconic
             }
         }
         
-        public static IEnumerable<DiffOperation> Calculate(Element? existingElement, Element newElement, 
-             ExpandWithContext expandWithContext)
+        public static IEnumerable<DiffOperation> Calculate(Element? existingElement, Element newElement)
         {
             var operations = new List<DiffOperation>();
             if (newElement == null)
                 return operations;
 
-            if (newElement is IContextElement contextElement) {
-                var (existingExpanded, newExpanded) = expandWithContext((IContextElement)existingElement!, contextElement);
-                return Calculate(existingExpanded, newExpanded, expandWithContext);
-            }
+            if (existingElement?.ContextKey != newElement.ContextKey)
+                operations.Add(new ChangeContextKey(newElement.ContextKey));
             
             operations.AddRange(CalcPropertyDiff(existingElement?.ProvidedValues ?? new PropDict(),
-                newElement.ProvidedValues, expandWithContext));
+                newElement.ProvidedValues));
             operations.AddRange(CalcEventDiff(existingElement?.Events ?? new EventDict(), newElement.Events));
-            
+
             if (newElement is View v)
                 operations.AddRange(CalcGestureRecognizerDiff(
                     (existingElement as View)?.GestureRecognizers ?? new Dictionary<Key, IGestureRecognizer>(),
-                    v.GestureRecognizers,
-                    expandWithContext));
+                    v.GestureRecognizers));
 
             if (newElement is ContentPage p) {
                 operations.AddRange(CalcToolbarItemsDiff(
                     (existingElement as ContentPage)?.ToolbarItems ?? new Dictionary<Key, ToolbarItem>(),
-                    p.ToolbarItems,
-                    expandWithContext
+                    p.ToolbarItems
                 ));
             }
 
             if (newElement is FlyoutPage fp) {
                 var existingFp = existingElement as FlyoutPage;
-                var flyoutDiff = Calculate(existingFp?.Flyout, fp.Flyout, expandWithContext).ToArray();
+                var flyoutDiff = Calculate(existingFp?.Flyout, fp.Flyout).ToArray();
                 FlyoutPageFlyoutOperation flyoutOp = existingFp?.Flyout == null
                     ? new SetFlyoutPageFlyout(fp.Flyout, flyoutDiff)
                     : new UpdateFlyoutPageFlyout(flyoutDiff);
                 
-                var detailDiff = Calculate(existingFp?.Detail, fp.Detail, expandWithContext).ToArray();
+                var detailDiff = Calculate(existingFp?.Detail, fp.Detail).ToArray();
                 FlyoutPageDetailOperation detailOp = existingFp?.Detail == null 
                     ? new SetFlyoutPageDetail(fp.Detail, detailDiff)
                     : new UpdateFlyoutPageDetail(detailDiff);
@@ -193,7 +183,7 @@ namespace Laconic
                 ElementListInfo? existingInfo = null;
                 existingElement?.ElementLists?.Inner?.TryGetValue(elList.Key, out existingInfo);
                 var newInfo = elList.Value;
-                var ops = ElementListDiff.Calculate(existingInfo?.List, newInfo.List, expandWithContext);
+                var ops = ElementListDiff.Calculate(existingInfo?.List, newInfo.List);
                 if (ops.Any())
                     operations.Add(new UpdateChildElementList(newInfo.ListGetter, ops));
             }
@@ -203,23 +193,23 @@ namespace Laconic
                 var newContent = newViewAsContainer.Content;
                 DiffOperation? op = (oldContent, newContent) switch {
                     (null, null) => null,
-                    (null, var n) => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
+                    (null, var n) => new SetContent(n, Calculate(null, (Element)n).ToArray()),
                     (_, null) => new RemoveContent(),
-                    var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, (Element)n, expandWithContext).ToArray()),
-                    var (o, n) => new UpdateContent(Calculate((Element)o, (Element)n, expandWithContext).ToArray())
+                    var (o, n) when o.GetType() != n.GetType() => new SetContent(n, Calculate(null, (Element)n).ToArray()),
+                    var (o, n) => new UpdateContent(Calculate((Element)o, (Element)n).ToArray())
                 };
                 if (op != null)
                     operations.Add(op);
             }
             
             if (newElement is ILayout l) {
-                var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children, expandWithContext);
+                var diff = ViewListDiff.Calculate((existingElement as ILayout)?.Children, l.Children);
                 if (diff.Length > 0)
                     operations.Add(new UpdateChildViews(diff.ToArray()));
             }
             
             if(newElement is IItemSourceView c) {
-                var diff = ViewListDiff.Calculate((existingElement as IItemSourceView)?.Items, c.Items, expandWithContext);
+                var diff = ViewListDiff.Calculate((existingElement as IItemSourceView)?.Items, c.Items);
                 if (diff.Any())
                     operations.Add(new UpdateItems(diff));
             }

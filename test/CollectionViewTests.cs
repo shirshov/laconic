@@ -7,8 +7,6 @@ namespace Laconic.Tests
 {
     public class CollectionViewTests
     {
-        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
-        
         [Fact]
         public void should_create_ItemsSource()
         {
@@ -18,7 +16,7 @@ namespace Laconic.Tests
                     new CollectionView
                     {
                         Items = {["key1"] = new Label {Text = "One"}, ["key2"] = new Label {Text = "Two"},}
-                    }, NoopExpander), _ => { });
+                    }), _ => { });
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
             source[0].Blueprint.ShouldBeOfType<Label>().Text.ShouldBe("One");
@@ -30,14 +28,14 @@ namespace Laconic.Tests
         {
             var colView = new xf.CollectionView();
             var blueprint = new CollectionView {Items = {["key1"] = new Label {Text = "One"},}};
-            Patch.Apply(colView, Diff.Calculate(null, blueprint, NoopExpander), _ => { });
+            Patch.Apply(colView, Diff.Calculate(null, blueprint), _ => { });
 
             Patch.Apply(colView,
                 Diff.Calculate(blueprint,
                     new CollectionView
                     {
                         Items = {["key1"] = new Label {Text = "One"}, ["key2"] = new Label {Text = "Two"},}
-                    }, NoopExpander), _ => { });
+                    }), _ => { });
 
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
@@ -53,14 +51,14 @@ namespace Laconic.Tests
             {
                 Items = {["key1"] = new Label {Text = "One"}, ["key2"] = new Label {Text = "Two"}}
             };
-            Patch.Apply(colView, Diff.Calculate(null, original, NoopExpander), _ => { });
+            Patch.Apply(colView, Diff.Calculate(null, original), _ => { });
 
             Patch.Apply(colView,
                 Diff.Calculate(original,
                     new CollectionView
                     {
                         Items = {["key1"] = new Label {Text = "One"}, ["key2"] = new Label {Text = "Two updated"},}
-                    }, NoopExpander), _ => { });
+                    }), _ => { });
 
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 
@@ -74,7 +72,7 @@ namespace Laconic.Tests
             var colView = new xf.CollectionView();
             Patch.Apply(colView,
                 Diff.Calculate(null,
-                    new CollectionView {Items = {["label", "key1"] = new Label(), ["button", "key2"] = new Button()}}, NoopExpander),
+                    new CollectionView {Items = {["label", "key1"] = new Label(), ["button", "key2"] = new Button()}}),
                 _ => { });
             var source = (IList<BindingContextItem>) colView.ItemsSource;
 

@@ -9,9 +9,9 @@ namespace Laconic
 {
     static class ViewListPatch
     {
-        internal static List<(Guid, xf.BindableObject)> Apply(IList<xf.View> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
+        internal static List<(string, xf.BindableObject)> Apply(IList<xf.View> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
         {
-            var withContext = new List<(Guid, xf.BindableObject)>();
+            var withContext = new List<(string, xf.BindableObject)>();
             
             foreach (var op in operations) {
                 Action patchAction = op switch {
@@ -19,19 +19,17 @@ namespace Laconic
                     UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () => {
                         var real = (xf.View) Patch.CreateView(rc.NewView);
+                        // TODO: add to withContext here and below
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
                         var real = Patch.CreateView(acv.Blueprint);
-                        Patch.Apply(real, acv.Operations, dispatch);
+                        var v = Patch.Apply(real, acv.Operations, dispatch);
+                        withContext.AddRange(v);
                         list.Insert(acv.Index, (xf.View) real);
-                    },
-                    AddChildWithContext wc => () =>  {
-                        var real = Patch.CreateView((Element) wc.Blueprint);
-                        Patch.Apply(real, wc.Operations, dispatch);
-                        list.Insert(wc.Index, (xf.View) real);
-                        withContext.Add((wc.ContextId, real));
+                        if (acv.Blueprint.ContextKey != null)
+                            withContext.Add((acv.Blueprint.ContextKey, real));
                     },
                     _ => () => throw new InvalidOperationException($"Unknown Diff operation: {op.GetType()}")
                 };
@@ -66,7 +64,7 @@ namespace Laconic
         internal static void PatchItemsSource(xf.ItemsView itemsView, 
             UpdateItems update, 
             Action<Signal> dispatch, 
-            ExpandWithContext expandWithContext, IEnumerable? itemsSource)
+            IEnumerable? itemsSource)
         {
             if (itemsSource == null) {
                 var source = new ObservableCollection<BindingContextItem>();
@@ -74,7 +72,7 @@ namespace Laconic
                 foreach (var op in update.Operations.OfType<AddChild>())
                     source.Add(new BindingContextItem(op.ReuseKey, op.Key, (View)op.Blueprint));
 
-                itemsView.ItemTemplate = new ItemsViewTemplateSelector(dispatch, expandWithContext);
+                itemsView.ItemTemplate = new ItemsViewTemplateSelector(dispatch);
                 itemsView.ItemsSource = source;
             }
             else {
@@ -118,13 +116,11 @@ namespace Laconic
             = new Dictionary<xf.VisualElement, (Key, View)>();
 
         readonly Action<Signal> _dispatch;
-        readonly ExpandWithContext _expandWithContext;
         readonly Dictionary<string, xf.DataTemplate> _templates = new Dictionary<string, xf.DataTemplate>();
 
-        internal ItemsViewTemplateSelector(Action<Signal> dispatch, ExpandWithContext expandWithContext)
+        internal ItemsViewTemplateSelector(Action<Signal> dispatch)
         {
             _dispatch = dispatch;
-            _expandWithContext = expandWithContext;
         }
 
         protected override xf.DataTemplate OnSelectTemplate(object item, xf.BindableObject container)
@@ -137,7 +133,7 @@ namespace Laconic
             if (!_templates.ContainsKey(contextItem.ReuseKey)) {
                 var template = new xf.DataTemplate(() => {
                     var newRealView = (xf.View) Patch.CreateView((Element) contextItem.Blueprint);
-                    var diff = Diff.Calculate(null, (Element)contextItem.Blueprint, _expandWithContext);
+                    var diff = Diff.Calculate(null, (Element)contextItem.Blueprint);
                     Patch.Apply(newRealView, diff, _dispatch);
                     newRealView.BindingContextChanged += OnBindingContextChanged;
                     _renderedBlueprints[newRealView] = (contextItem.Key, contextItem.Blueprint);
@@ -157,7 +153,7 @@ namespace Laconic
                 var contextItem = (BindingContextItem) realView.BindingContext;
                 _renderedBlueprints.TryGetValue(realView, out var value);
 
-                Patch.Apply(realView, Diff.Calculate((Element)value.Blueprint, (Element)contextItem.Blueprint, _expandWithContext), _dispatch);
+                Patch.Apply(realView, Diff.Calculate((Element)value.Blueprint, (Element)contextItem.Blueprint), _dispatch);
                 _renderedBlueprints[realView] = (contextItem.Key, contextItem.Blueprint);
             }
         }
@@ -166,7 +162,7 @@ namespace Laconic
         {
             foreach (var (view, rendered) in _renderedBlueprints.Select(x => (x.Key, x.Value)).ToArray()) {
                 if (rendered.Key == key) {
-                    var diff = Diff.Calculate((Element)rendered.Blueprint, (Element)newBlueprint, _expandWithContext);
+                    var diff = Diff.Calculate((Element)rendered.Blueprint, (Element)newBlueprint);
                     Patch.Apply(view, diff, _dispatch);
                     _renderedBlueprints[view] = (key, newBlueprint);
                 }

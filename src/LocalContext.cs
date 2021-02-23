@@ -7,29 +7,29 @@ namespace Laconic
 {
     interface ILocalContextSignal
     {
-        Guid ContextId { get; }
+        string ContextKey { get; }
     }
     
     class SetLocalStateSignal : Signal, ILocalContextSignal
     {
-        readonly Guid _contextId;
+        readonly string _contextKey;
 
-        internal SetLocalStateSignal(Guid contextId) : base(null) => _contextId = contextId;
+        internal SetLocalStateSignal(string contextKey) : base(null) => _contextKey = contextKey;
 
-        Guid ILocalContextSignal.ContextId => _contextId;
+        string ILocalContextSignal.ContextKey => _contextKey;
     }
     
     public class LocalContext
     {
         readonly Action<Signal> _dispatch;
 
-        internal readonly Guid Id;
+        internal readonly string Key;
         readonly Dictionary<string, object> _values = new();
 
-        internal LocalContext(Action<Signal> dispatch)
+        internal LocalContext(Action<Signal>? dispatch, string? key)
         {
             _dispatch = dispatch;
-            Id = Guid.NewGuid();
+            Key = key ?? Guid.NewGuid().ToString();
         }
 
         public T GetValue<T>(string key) => (T)_values[key];
@@ -58,18 +58,22 @@ namespace Laconic
     interface IContextElement
     {
         Element Make(LocalContext context);
-        Guid ContextId { get; set; }
+        string ContextKey { get; set; }
     }
     
     public class ContextElement<T> : VisualElement<T>, IContextElement, View where T: xf.VisualElement, new()
     {
         readonly Func<LocalContext, Element> _maker;
 
-        public ContextElement(Func<LocalContext, Element> maker) => _maker = maker;
+        public ContextElement(Func<LocalContext, Element> maker, string? key = null)
+        {
+            _maker = maker;
+            ((IContextElement)this).ContextKey = key;  
+        }
 
         Element IContextElement.Make(LocalContext context) => _maker(context);
         
-        Guid IContextElement.ContextId { get; set; }
+        string IContextElement.ContextKey { get; set; }
     }
 
     public static partial class LocalContextExtensions
@@ -81,83 +85,82 @@ namespace Laconic
             if (context.TryGetValue<TState>(storageKey, out var existingState)) {
                 return (existingState, state => {
                     context.SetValue(storageKey, state);
-                    return new SetLocalStateSignal(context.Id);
+                    return new SetLocalStateSignal(context.Key);
                 });
             }
 
             context.SetValue(storageKey, initial);
             return (initial, state => {
                 context.SetValue(storageKey, state);
-                return new SetLocalStateSignal(context.Id);
+                return new SetLocalStateSignal(context.Key);
             });
         }
     }
 
     public class TimerSignal : Signal, ILocalContextSignal
-        {
-            public TimerSignal(Guid contextId) : base(null) => ContextId = contextId;
+    {
+        public TimerSignal(string contextId) : base(null) => ContextKey = contextId;
 
-            public Guid ContextId { get; }
-        } 
+        public string ContextKey { get; }
+    } 
         
-        public class Timer : IDisposable
+    public class Timer : IDisposable
+    {
+        readonly TimeSpan _timer;
+        readonly string _contextKey;
+        readonly Action<Signal> _callback;
+        bool _isRunning;
+
+        internal Timer(TimeSpan timer, string contextKey, Action<Signal> callback, bool start)
         {
-            readonly TimeSpan _timer;
-            readonly Guid _contextId;
-            readonly Action<Signal> _callback;
-            bool _isRunning;
-
-            internal Timer(TimeSpan timer, Guid contextId, Action<Signal> callback, bool start)
-            {
-                _timer = timer;
-                _contextId = contextId;
-                _callback = callback;
-                if (start) {
-                    _isRunning = true;
-                    StartTimer();
-                }
+            _timer = timer;
+            _contextKey = contextKey;
+            _callback = callback;
+            if (start) {
+                _isRunning = true;
+                StartTimer();
             }
-
-            void StartTimer()
-            {
-                var signal = new TimerSignal(_contextId);
-                Xamarin.Forms.Device.StartTimer(_timer, () => {
-                    if (_isRunning)
-                        _callback(signal);
-                    return _isRunning;
-                });
-            }
-            
-            public TimerSignal? Start()
-            {
-                if (!_isRunning) {
-                    _isRunning = true;
-                    StartTimer();
-                    return new TimerSignal(_contextId);
-                }
-
-                return null;
-            }
-
-            public TimerSignal? Stop()
-            {
-                if (_isRunning) {
-                    _isRunning = false;
-                    return new TimerSignal(_contextId);
-                }
-
-                return null;
-            }
-
-            public bool IsRunning => _isRunning;
-            
-            public void Dispose()
-            {
-                 _isRunning = false;
-                 System.Diagnostics.Debug.WriteLine("LACONIC: disposing Timer");
-            }
-
         }
+
+        void StartTimer()
+        {
+            var signal = new TimerSignal(_contextKey);
+            Xamarin.Forms.Device.StartTimer(_timer, () => {
+                if (_isRunning)
+                    _callback(signal);
+                return _isRunning;
+            });
+        }
+        
+        public TimerSignal? Start()
+        {
+            if (!_isRunning) {
+                _isRunning = true;
+                StartTimer();
+                return new TimerSignal(_contextKey);
+            }
+
+            return null;
+        }
+
+        public TimerSignal? Stop()
+        {
+            if (_isRunning) {
+                _isRunning = false;
+                return new TimerSignal(_contextKey);
+            }
+
+            return null;
+        }
+
+        public bool IsRunning => _isRunning;
+        
+        public void Dispose()
+        {
+             _isRunning = false;
+             System.Diagnostics.Debug.WriteLine("LACONIC: disposing Timer");
+        }
+    }
 
     public static partial class LocalContextExtensions
     {
@@ -168,7 +171,7 @@ namespace Laconic
             if (context.TryGetValue<Timer>(storageKey, out _)) 
                 return context.GetValue<Timer>(storageKey);
             
-            var timer = new Timer(duration, context.Id, context.Send, start);
+            var timer = new Timer(duration, context.Key, context.Send, start);
             context.SetValue(storageKey, timer);
             return timer;
         }

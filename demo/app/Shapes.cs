@@ -2,7 +2,7 @@ using Laconic.Shapes;
 
 namespace Laconic.Demo
 {
-    public static class Shapes
+    static class Shapes
     {
         public static ScrollView Content() => new ScrollView {
             Padding = 20,

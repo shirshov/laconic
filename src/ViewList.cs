@@ -22,7 +22,7 @@ namespace Laconic
         public View? this[Key key]
         {
             get => _internalStorage[key];
-            set => _internalStorage.Add(key, value);
+            set => _internalStorage[key] = value;
         }
 
         public int Count => _internalStorage.Count;
@@ -49,7 +49,7 @@ namespace Laconic
         public bool ContainsKey(Key key) => _internalStorage.ContainsKey(key);
 
         void ICollection<KeyValuePair<Key, View?>>.CopyTo(KeyValuePair<Key, View?>[] array, int arrayIndex) =>
-            throw new NotSupportedException();
+            _internalStorage.ToArray();
 
         IEnumerator<KeyValuePair<Key, View?>> IEnumerable<KeyValuePair<Key, View?>>.GetEnumerator() =>
             _internalStorage.GetEnumerator();

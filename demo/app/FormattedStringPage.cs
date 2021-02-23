@@ -1,8 +1,8 @@
 namespace Laconic.Demo
 {
-    public class FormattedStringPage
+    static class FormattedStringPage
     {
-        public static Label Content() => new Label {
+        public static Label Content() => new() {
             Margin = (30, 30),
             VerticalOptions = LayoutOptions.Center,
             FormattedText = new FormattedString {

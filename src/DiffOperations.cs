@@ -37,11 +37,11 @@ namespace Laconic
     record RowDefinitionsChange(params xf.RowDefinition[] Definitions) : DiffOperation;
     record ColumnDefinitionsChange(params xf.ColumnDefinition[] Definitions) : DiffOperation;
     record SetAbsoluteLayoutPositioning(Bounds Bounds, AbsoluteLayoutFlags Flags) : DiffOperation;
+    record ChangeContextKey(string NewKey) : DiffOperation;
     
     interface ListOperation {}
 
     record AddChild(Key Key, string ReuseKey, int Index, Element Blueprint, DiffOperation[] Operations) : ListOperation;
-    record AddChildWithContext(Key Key, string ReuseKey, int Index, View Blueprint, Guid ContextId, DiffOperation[] Operations) : ListOperation;
     record RemoveChild(int Index) : ListOperation;
     record UpdateChild(Key Key, int Index, Element Blueprint, DiffOperation[] Operations) : ListOperation;
     record ReplaceChild(int Index, Element NewView, DiffOperation[] Operations) : ListOperation;

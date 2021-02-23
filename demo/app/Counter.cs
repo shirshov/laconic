@@ -1,6 +1,6 @@
 namespace Laconic.Demo
 {
-    public static class Counter
+    static class Counter
     {
         public static StackLayout Content(int state) => new() {
             Padding = 50,

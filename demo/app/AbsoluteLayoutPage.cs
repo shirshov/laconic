@@ -1,6 +1,6 @@
 namespace Laconic.Demo
 {
-    public static class AbsoluteLayoutPage
+    static class AbsoluteLayoutPage
     {
         public static AbsoluteLayout Content() => new AbsoluteLayout {
             ["b", (0.5, 0, 100, 25), AbsoluteLayoutFlags.PositionProportional] = new BoxView { Color = Color.Blue},

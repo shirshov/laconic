@@ -6,8 +6,6 @@ namespace Laconic.Tests
 {
     public class GridTests
     {
-        (Element?, Element) NoopExpander(IContextElement? x, IContextElement y) => ((Element?) x, (Element) y);
-        
         [Fact]
         public void should_set_RowDefinitions_from_string()
         {
@@ -35,7 +33,7 @@ namespace Laconic.Tests
         public void should_create_rows_in_real_view()
         {
             var grid = new xf.Grid();
-            Patch.Apply(grid, Diff.Calculate(null, new Grid {RowDefinitions = "*, 2*, Auto, 30"}, NoopExpander), _ => { });
+            Patch.Apply(grid, Diff.Calculate(null, new Grid {RowDefinitions = "*, 2*, Auto, 30"}), _ => { });
 
             grid.RowDefinitions.Count.ShouldBe(4);
             grid.RowDefinitions[0].Height.ShouldBe(xf.GridLength.Star);
@@ -48,7 +46,7 @@ namespace Laconic.Tests
         public void should_set_ColumnDefinitions_in_real_view()
         {
             var grid = new xf.Grid();
-            Patch.Apply(grid, Diff.Calculate(null, new Grid {ColumnDefinitions = "2*, Auto, 30"}, NoopExpander), _ => { });
+            Patch.Apply(grid, Diff.Calculate(null, new Grid {ColumnDefinitions = "2*, Auto, 30"}), _ => { });
 
             grid.ColumnDefinitions.Count.ShouldBe(3);
             grid.ColumnDefinitions[0].Width.ShouldBe(new xf.GridLength(2, xf.GridUnitType.Star));
@@ -60,7 +58,7 @@ namespace Laconic.Tests
         public void should_set_ColumnDefinitions_in_real_view2()
         {
             var grid = new xf.Grid();
-            Patch.Apply(grid, Diff.Calculate(null, new Grid {ColumnDefinitions = "Auto, *, Auto"}, NoopExpander), _ => { });
+            Patch.Apply(grid, Diff.Calculate(null, new Grid {ColumnDefinitions = "Auto, *, Auto"}), _ => { });
 
             grid.ColumnDefinitions.Count.ShouldBe(3);
             grid.ColumnDefinitions[0].Width.ShouldBe(xf.GridLength.Auto);
