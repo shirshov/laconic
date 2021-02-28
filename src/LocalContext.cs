@@ -24,12 +24,13 @@ namespace Laconic
         readonly Action<Signal> _dispatch;
 
         internal readonly string Key;
+        
         readonly Dictionary<string, object> _values = new();
 
-        internal LocalContext(Action<Signal>? dispatch, string? key)
+        internal LocalContext(Action<Signal> dispatch, string key)
         {
             _dispatch = dispatch;
-            Key = key ?? Guid.NewGuid().ToString();
+            Key = key;
         }
 
         public T GetValue<T>(string key) => (T)_values[key];

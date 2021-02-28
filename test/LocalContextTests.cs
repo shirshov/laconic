@@ -166,7 +166,7 @@ namespace Laconic.Tests
             xfStackLayout.Children[0].ShouldBe(button);
         }
 
-        [Fact(Skip="Failing after LocalContext refactoring")]
+        [Fact]
         public void elements_with_local_context_created_from_middleware()
         {
             xf.StackLayout sl = null;
@@ -180,10 +180,10 @@ namespace Laconic.Tests
             sl.Children.Count.ShouldBe(1);
         }
 
-        [Fact(Skip="TODO: Failing after LocalContext refactoring")]
+        [Fact]
         public void ToolBarItems_on_page()
         {
-            static VisualElement<Xamarin.Forms.ContentPage> TestPage(int state) => Element.WithContext(ctx => {
+            static VisualElement<Xamarin.Forms.ContentPage> TestPage(int state) => Element.WithContext(_ => {
                 return new ContentPage {
                     ToolbarItems = {["save"] = new ToolbarItem {Text = "Save", Clicked = () => new Signal(null)}},
                 };

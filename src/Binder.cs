@@ -29,12 +29,11 @@ namespace Laconic
         record LocalContextInfo(LocalContext Context, Func<LocalContext, Element> BlueprintMaker, Element RenderedBlueprint, WeakReference<xf.BindableObject>? View);
         
         readonly Func<TState, Signal, TState> _mainReducer;
-
         Func<MiddlewareContext<TState>, Func<MiddlewareContext<TState>, MiddlewareContext<TState>>, MiddlewareContext<TState>> _middlewarePipeline;
-
+        
         readonly List<TrackedElement> _trackedElements = new();
-
         Dictionary<string, LocalContextInfo> _elementContexts = new();
+        
         readonly Channel<Signal> _channel;
         readonly SynchronizationContext _synchronizationContext;
 
@@ -69,7 +68,7 @@ namespace Laconic
             var diff = Diff.Calculate(null, expandedRootElement);
 
             var newElementsWithContext = Patch.Apply(view, diff, Send).AsEnumerable();
-            _trackedElements.Add(new TrackedElement(new WeakReference<xf.VisualElement>(view), blueprint, blueprintMaker));
+            _trackedElements.Add(new TrackedElement(new WeakReference<xf.VisualElement>(view), expandedRootElement, blueprintMaker));
             
             // TODO: contexts should be per root element?
             var updatedContexts = new Dictionary<string, LocalContextInfo>();
