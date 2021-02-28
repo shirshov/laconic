@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageVersion>1.0.2</PackageVersion>
+    <PackageId>Laconic.AppTemplate</PackageId>
+    <Title>Laconic App Template</Title>
+    <Authors>Alex Shirshov</Authors>
+    <Description>Template for creating Xamarin.Forms + Laconic apps</Description>
+    <PackageTags>laconic;xamarin.forms</PackageTags>
+
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoWarn>$(NoWarn);NU5118;NU5119;NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="src\**\*" Exclude="src\**\bin\**;src\**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>

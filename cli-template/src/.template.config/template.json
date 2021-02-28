@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Alex Shirshov",
+    "name": "Laconic Mobile App",
+    "identity": "Laconic.AppTemplate",
+    "description": "Xamarin-based mobile app template using React + Redux like approach",
+    "shortName": "laconicapp",
+    "classifications": [
+        "Xamarin.Forms",
+        "Laconic"
+    ],
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "Laconic.Template",
+    "preferNameDirectory": true,
+    "guids": [
+        "{A4EE6D41-06D6-41B6-85C5-C53BFFBB4896}",
+        "{BD92F4FD-91AE-48EB-8721-6FCAA849717B}",
+        "{ECF3B85F-6039-4671-B95E-EAB7E3A70EB1}"
+    ],
+    "symbols": {
+        "organizationIdentifier": {
+            "type": "parameter",
+            "description": "Organization Identifier for bundle ID",
+            "defaultValue": "com.companyname",
+            "replaces": "com.companyname"
+        }
+    }
+}
