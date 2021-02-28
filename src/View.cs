@@ -10,19 +10,15 @@ namespace Laconic
     public abstract class View<T> : VisualElement<T>, View where T : xf.View, new()
     {
         public LayoutOptions HorizontalOptions {
-            get => GetValue<LayoutOptions>(xf.View.HorizontalOptionsProperty);
-            set => SetValue(xf.View.HorizontalOptionsProperty, value);
+            init => SetValue(xf.View.HorizontalOptionsProperty, value);
         }
 
         public LayoutOptions VerticalOptions {
-            get => GetValue<LayoutOptions>(xf.View.VerticalOptionsProperty);
-            set => SetValue(xf.View.VerticalOptionsProperty, value);
+            init => SetValue(xf.View.VerticalOptionsProperty, value);
         }
 
         public Thickness Margin {
-            get => GetValue<Thickness>(xf.View.MarginProperty);
-            set => SetValue(xf.View.MarginProperty, value);
+            init => SetValue(xf.View.MarginProperty, value);
         }
     }
-
 }

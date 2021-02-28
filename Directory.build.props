@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <PackageVersion>5.0.0.1931-pre1</PackageVersion>
+    <PackageVersion>5.0.0.2012-pre1</PackageVersion>
     <Authors>Alex Shirshov</Authors>
     <Summary>MVU library for Xamarin.Forms</Summary>
     <Description>Write your Model-View-Update code for Xamarin.Forms in React+Redux fashion</Description>

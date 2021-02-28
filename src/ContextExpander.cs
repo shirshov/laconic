@@ -21,10 +21,10 @@ namespace Laconic
         {
             var usedInfos = new List<ExpansionInfo>();
                 
-            if (element is IContentHost host) {
+            if (element is IContentHost {Content: { }} host) {
                 var content = host.Content;
                 var contentKey = content is IContextElement {ContextKey: { }} ce1 ? $"/Content[{ce1.ContextKey}]" : "/Content";
-                var (el, con) = Process(keyPath + contentKey, (Element)content, existingInfos, dispatch);
+                var (el, con) = Process(keyPath + contentKey, (Element)content!, existingInfos, dispatch);
                 host.Content = (View)el;
                 usedInfos.AddRange(con);
             }
@@ -41,13 +41,13 @@ namespace Laconic
             if (element is FlyoutPage fp) {
                 var flyout = fp.Flyout;
                 var contentKey =  flyout is IContextElement {ContextKey: { }} f ? $"/Flyout[{f.ContextKey}]" : "/Flyout";
-                var (el, con) = Process(keyPath + contentKey, (Element)flyout, existingInfos, dispatch);
+                var (el, con) = Process(keyPath + contentKey, flyout!, existingInfos, dispatch);
                 fp.Flyout = (ContentPage)el;
                 usedInfos.AddRange(con);
                 
                 var detail = fp.Detail;
                 contentKey = detail is IContextElement {ContextKey: { }} d ? $"/Detail[{d.ContextKey}]" : "/Detail";
-                (el, con) = Process(keyPath + contentKey, detail, existingInfos, dispatch);
+                (el, con) = Process(keyPath + contentKey, detail!, existingInfos, dispatch);
                 if (detail is IContextElement)
                     detail.ContextKey = keyPath + contentKey;
                 fp.Detail = (ContentPage)el;
