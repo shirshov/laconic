@@ -15,6 +15,7 @@ namespace Laconic
         protected Behavior()
         {
         }
+        
         protected Behavior(object? value) => SetValue(ValueProperty, value);
 
         protected internal override xf.BindableObject CreateView() => new BehaviorAdapter<T>(this);

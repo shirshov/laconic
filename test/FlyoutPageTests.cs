@@ -16,10 +16,22 @@ namespace Laconic.Tests
             });
 
             fp.Flyout.ShouldBeOfType<xf.ContentPage>().Title.ShouldBe("Flyout");
-            fp.Detail.ShouldBeOfType<xf.NavigationPage>()
-                .CurrentPage.Title.ShouldBe("Detail");
+            fp.Detail.ShouldBeOfType<xf.ContentPage>().Title.ShouldBe("Detail");
         }
 
+        [Fact]
+        public void Detail_in_NavigationPage()
+        {
+            var binder = Binder.CreateForTest("", (s, _) => s);
+            var fp = binder.CreateElement(_ => new FlyoutPage {
+                Flyout = new ContentPage { Title = "Flyout"},
+                Detail = new NavigationPage(new NavigationStack("root"), _ => new ContentPage { Title = "Detail" }),
+            });
+
+            fp.Flyout.ShouldBeOfType<xf.ContentPage>().Title.ShouldBe("Flyout");
+            fp.Detail.ShouldBeOfType<xf.NavigationPage>().CurrentPage.Title.ShouldBe("Detail");
+        }
+        
         [Fact]
         public void Detail_with_LocalContext()
         {
@@ -39,7 +51,7 @@ namespace Laconic.Tests
                 Detail = detail
             });
 
-            var contentPage = (fp.Detail as xf.NavigationPage).CurrentPage as xf.ContentPage;
+            var contentPage = (xf.ContentPage) fp.Detail;
             var btn = contentPage.Content as xf.Button;
             
             btn.Text.ShouldBe("");
@@ -48,6 +60,7 @@ namespace Laconic.Tests
             
             btn.Text.ShouldBe("clicked");
         }
+        
         [Fact(Skip = "Failing after LocalContext refactoring")]
         public void Flyout_with_LocalContext()
         {

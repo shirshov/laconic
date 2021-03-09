@@ -23,6 +23,12 @@ namespace Laconic
         public MiddlewareContext<TState> WithState(TState state) => new(state, Signal);
     }
 
+    // TODO: this is quick and dirty solution for NavigationPage, should be redesigned
+    interface IDoDispatch
+    {
+        void SetDispatcher(Action<Signal> dispatch);
+    }
+
     public class Binder<TState>
     {
         record TrackedElement(WeakReference<xf.VisualElement> View, Element RenderedBlueprint, Func<TState, Element> BlueprintMaker);
@@ -58,7 +64,8 @@ namespace Laconic
         public T CreateElement<T>(Func<TState, VisualElement<T>> blueprintMaker) where T : xf.VisualElement, new()
         {
             var blueprint = (Element)blueprintMaker(State);
-            var view = new T();
+            (blueprint as IDoDispatch)?.SetDispatcher(Send);
+            var view = (xf.VisualElement)blueprint.CreateView();
 
             var expansionInfo = _elementContexts.Values
                 .Select(x => new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
@@ -66,7 +73,10 @@ namespace Laconic
             // TODO: Diffs should run on the background thread
             var diff = Diff.Calculate(null, expandedRootElement);
 
+            _suppressEvents = true;
             var newElementsWithContext = Patch.Apply(view, diff, Send).AsEnumerable();
+            _suppressEvents = false;
+            
             _trackedElements.Add(new TrackedElement(new WeakReference<xf.VisualElement>(view), expandedRootElement, blueprintMaker));
             
             // TODO: contexts should be per root element?
@@ -89,7 +99,7 @@ namespace Laconic
             }
             _elementContexts = updatedContexts;
             
-            return view;
+            return (T)view;
         }
 
         bool _suppressEvents;
@@ -129,7 +139,7 @@ namespace Laconic
                     _suppressEvents = true;
                     Patch.Apply(view, diff, Send);
                     _suppressEvents = false;
-
+                    
                     info.RenderedBlueprint.UpdateFrom(expanded);
                 }, null);
             } else {
@@ -168,7 +178,7 @@ namespace Laconic
                         _suppressEvents = true;
                         var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
                         _suppressEvents = false;
-
+                        
                         _trackedElements.Add(trackedRoot with {RenderedBlueprint = expandedRootElement});
                         
                         var updatedContexts = new Dictionary<string, LocalContextInfo>();

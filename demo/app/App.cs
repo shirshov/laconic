@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ChanceNET;
 using Xamarin.Forms.Internals;
 using xf = Xamarin.Forms;
@@ -51,7 +51,10 @@ namespace Laconic.Demo
             }
         };
 
-        static ContentPage MakeDemoPage(State state) => new() {Title = state.Items[state.CurrentItem].Title, Content = state.Items[state.CurrentItem].Maker(state)};
+        static ContentPage MakeDemoPage(State state) => new() {
+            Title = state.Items[state.CurrentItem].Title,
+            Content = state.Items[state.CurrentItem].Maker(state)
+        };
 
         public App()
         {
@@ -78,7 +81,7 @@ namespace Laconic.Demo
                 },
                 0, // Counter
                 (2, 2), // Grid
-                new Calculator.Initial(), 
+                new Calculator.Initial(),
                 GroupedCollectionView.Initial()
             );
 
@@ -88,7 +91,7 @@ namespace Laconic.Demo
                 Flyout = Flyout(state),
                 IsPresented = state.IsFlyoutPresented,
                 IsPresentedChanged = () => new ("IsPresentedChanged"),
-                Detail = MakeDemoPage(state)
+                Detail = new NavigationPage(new NavigationStack("root"), _ => MakeDemoPage(state))
             });
         }
     }

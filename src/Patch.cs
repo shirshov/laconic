@@ -90,8 +90,7 @@ namespace Laconic
                     UpdateContent uc => () => newWithContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
                     UpdateChildViews uc => () => newWithContext.AddRange(ViewListPatch.Apply(
                         ((xf.Layout<xf.View>) element).Children, uc.Operations, dispatch)),
-                    UpdateChildElementList uc => () => ViewListPatch
-                        .ApplyToChildElements(uc.GetList(element), uc.Operations, dispatch),
+                    UpdateChildElementList uc => () => newWithContext.AddRange(ViewListPatch.ApplyToChildElements(uc.GetList(element), uc.Operations, dispatch)),
                     RowDefinitionsChange rdc => () => {
                         var grid = (xf.Grid) element;
                         grid.RowDefinitions.Clear();
@@ -188,15 +187,14 @@ namespace Laconic
 
                         switch (fp.DetailOperation) {
                             case SetFlyoutPageDetail setDetail:
-                                var content = new xf.ContentPage();
+                                var content = setDetail.DetailPage.CreateView();
                                 if (setDetail.DetailPage.ContextKey != null)
                                     newWithContext.Add((setDetail.DetailPage.ContextKey, content));
                                 newWithContext.AddRange(Apply(content, setDetail.Operations, dispatch));
-                                // TODO: creation of xf.NavigationPage is temporary, until bindings for NavigationPage is ready
-                                nativePage.Detail = new xf.NavigationPage(content);
+                                nativePage.Detail = (xf.Page)content;
                                 break;
                             case UpdateFlyoutPageDetail updateDetail: 
-                                newWithContext.AddRange(Apply((nativePage.Detail as xf.NavigationPage).CurrentPage, updateDetail.Operations, dispatch));
+                                newWithContext.AddRange(Apply(nativePage.Detail, updateDetail.Operations, dispatch));
                                 break;
                         }
                     },

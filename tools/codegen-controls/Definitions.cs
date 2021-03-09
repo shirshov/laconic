@@ -141,7 +141,25 @@ namespace Laconic.CodeGen
             [typeof(MultiPage<>)] = NotUsed,
             [typeof(MultiTrigger)] = NotUsed,
             [typeof(NavigableElement)] = NotUsed,
-            [typeof(NavigationPage)] = NotImplemented,
+            [typeof(NavigationPage)] = All
+                .WithoutBaseDeclaration()
+                 // Attached properties:
+                .ExceptNotUsed(
+                    NavigationPage.BackButtonTitleProperty,
+                    NavigationPage.HasNavigationBarProperty,
+                    NavigationPage.HasBackButtonProperty,
+                    NavigationPage.TitleIconImageSourceProperty,
+                    NavigationPage.IconColorProperty,
+                    NavigationPage.TitleViewProperty)
+                .ExceptManuallyWrittenEvents(
+                    nameof(NavigationPage.InsertPageBeforeRequested),
+                    nameof(NavigationPage.Popped),
+                    nameof(NavigationPage.PoppedToRoot),
+                    nameof(NavigationPage.PopRequested),
+                    nameof(NavigationPage.PopToRootRequested),
+                    nameof(NavigationPage.Pushed),
+                    nameof(NavigationPage.PushRequested),
+                    nameof(NavigationPage.RemovePageRequested)),
             [typeof(OpenGLView)] = NotImplemented,
             [typeof(OrientationStateTrigger)] = NotUsed,
             [typeof(Page)] = All.TakeGenericParameter().WithoutBaseDeclaration(),

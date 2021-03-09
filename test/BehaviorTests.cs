@@ -17,14 +17,14 @@ namespace Laconic.Tests
 
             protected internal override void OnValuesUpdated(object value) => _label.Text = (string)value;
 
-            internal override void OnAttachedTo(xf.Label bindable)
+            public override void OnAttachedTo(xf.Label bindable)
             {
                 _label = bindable;
                 IsAttached = true;
                 bindable.Text = _text;
             }
 
-            internal override void OnDetachingFrom(xf.Label bindable) => IsAttached = false;
+            public override void OnDetachingFrom(xf.Label bindable) => IsAttached = false;
         }
 
         [Fact]

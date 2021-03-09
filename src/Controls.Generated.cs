@@ -705,6 +705,25 @@ namespace Laconic
         }
     }
 
+    public partial class NavigationPage
+    {
+        public Color BarBackgroundColor
+        {
+            internal get => GetValue<Color>(xf.NavigationPage.BarBackgroundColorProperty);
+            init => SetValue(xf.NavigationPage.BarBackgroundColorProperty, value);
+        }
+        public Brush BarBackground
+        {
+            internal get => GetValue<Brush>(xf.NavigationPage.BarBackgroundProperty);
+            init => SetValue(xf.NavigationPage.BarBackgroundProperty, value);
+        }
+        public Color BarTextColor
+        {
+            internal get => GetValue<Color>(xf.NavigationPage.BarTextColorProperty);
+            init => SetValue(xf.NavigationPage.BarTextColorProperty, value);
+        }
+    }
+
     public partial class Page<T>
     {
         public ImageSource BackgroundImageSource

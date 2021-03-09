@@ -41,11 +41,15 @@ namespace Laconic
     
     public class ElementListCollection : IDictionary<string, ElementList>
     {
-        internal readonly Dictionary<string, ElementListInfo>  Inner = new Dictionary<string, ElementListInfo>();
+        internal readonly Dictionary<string, ElementListInfo>  Inner = new();
 
-        public void Add<TListOwner>(string listName, Func<TListOwner, IList> listGetter)
-            where TListOwner : xf.BindableObject =>
-            Inner.Add(listName, new ElementListInfo(new ElementList(), el => listGetter((TListOwner)el)));
+        public ElementList Add<TListOwner>(string listName, Func<TListOwner, IList> listGetter)
+            where TListOwner : xf.BindableObject
+        {
+            var ret = new ElementList();
+            Inner.Add(listName, new ElementListInfo(ret, el => listGetter((TListOwner) el)));
+            return ret;
+        }
 
         public ElementList this[string key] {
             get => Inner[key].List;

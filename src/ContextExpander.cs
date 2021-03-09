@@ -38,6 +38,15 @@ namespace Laconic
                 }
             }
 
+            if (element is NavigationPage np) {
+                foreach (var (key, page) in np.ElementLists["Pages"].Select(x => (x.Key, x.Value)).ToArray()) {
+                    var (el, con) = Process(
+                        keyPath + "NavigationPage/" + ((page as IContextElement)?.ContextKey ?? key),
+                        page, existingInfos, dispatch);
+                    np.ElementLists["Pages"][key] = el;
+                    usedInfos.AddRange(con);
+                }
+            }
             if (element is FlyoutPage fp) {
                 var flyout = fp.Flyout;
                 var contentKey =  flyout is IContextElement {ContextKey: { }} f ? $"/Flyout[{f.ContextKey}]" : "/Flyout";
@@ -50,7 +59,7 @@ namespace Laconic
                 (el, con) = Process(keyPath + contentKey, detail!, existingInfos, dispatch);
                 if (detail is IContextElement)
                     detail.ContextKey = keyPath + contentKey;
-                fp.Detail = (ContentPage)el;
+                fp.Detail = el;
                 usedInfos.AddRange(con);
             }
             

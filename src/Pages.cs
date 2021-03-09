@@ -39,6 +39,14 @@ namespace Laconic
     {
         public View? Content { get; set; }
 
+        public string BackButtonTitle {
+            init => ProvidedValues[xf.NavigationPage.BackButtonTitleProperty] = value;
+        }
+
+        public View TitleView {
+            init => ProvidedValues[xf.NavigationPage.TitleViewProperty] = value;
+        }
+        
         public override string ToString() => "ContentPage{" + Content + "}";
     }
 

@@ -39,26 +39,30 @@ namespace Laconic
         }
 
         // TODO: this method should be somewhere else
-        internal static void ApplyToChildElements (IList list, ListOperation[] operations, Action<Signal> dispatch)
+        internal static List<(string, xf.BindableObject)> ApplyToChildElements (IList list, ListOperation[] operations, Action<Signal> dispatch)
         {
+            var withContext = new List<(string, xf.BindableObject)>();
+            
             foreach (var op in operations) {
                 Action patchAction = op switch {
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
-                    UpdateChild uc => () => Patch.Apply((xf.BindableObject)list[uc.Index], uc.Operations, dispatch),
+                    UpdateChild uc => () => withContext.AddRange(Patch.Apply((xf.BindableObject)list[uc.Index], uc.Operations, dispatch)),
                     ReplaceChild rc => () => {
                         var real = (xf.View) Patch.CreateView(rc.NewView);
-                        Patch.Apply(real, rc.Operations, dispatch);
+                        withContext.AddRange(Patch.Apply(real, rc.Operations, dispatch));
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
                         var real = Patch.CreateView(acv.Blueprint);
-                        Patch.Apply(real, acv.Operations, dispatch);
+                        withContext.AddRange(Patch.Apply(real, acv.Operations, dispatch));
                         list.Insert(acv.Index, real);
                     },
                     _ => () => throw new InvalidOperationException($"Unknown Diff operation: {op.GetType()}")
                 };
                 patchAction();
             }
+
+            return withContext;
         }
         
         internal static void PatchItemsSource(xf.ItemsView itemsView, 

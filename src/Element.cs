@@ -20,8 +20,7 @@ namespace Laconic
         // TODO: this should be hidden from the app developer
         protected T GetValue<T>(xf.BindableProperty property) => (T) ProvidedValues[property]!;
 
-        protected void SetValue(xf.BindableProperty property, object? value) =>
-            ProvidedValues[property] = value;
+        protected void SetValue(xf.BindableProperty property, object? value) => ProvidedValues[property] = value;
 
         protected internal readonly ElementListCollection ElementLists = new();
 
@@ -94,20 +93,20 @@ namespace Laconic
             _ => !lhs.Equals(rhs)
         };
 
-        virtual internal void UpdateFrom(Element element)
+        internal void UpdateFrom(Element element)
         {
             ProvidedValues.Clear();
             foreach (var p in element.ProvidedValues)
                 ProvidedValues.Add(p.Key, p.Value);
-
+        
             Events.Clear();
             foreach (var e in element.Events)
                 Events.Add(e.Key, e.Value);
-
+        
             if (this is ILayout l) {
                 l.Children = ((ILayout)element).Children;
             }
-
+        
             if (this is IContentHost ch) {
                 ch.Content = ((IContentHost) element).Content;
             }
