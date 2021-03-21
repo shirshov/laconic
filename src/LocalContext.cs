@@ -111,6 +111,7 @@ namespace Laconic
         readonly string _contextKey;
         readonly Action<Signal> _callback;
         bool _isRunning;
+        DateTimeOffset _startTime;
 
         internal Timer(TimeSpan timer, string contextKey, Action<Signal> callback, bool start)
         {
@@ -122,7 +123,7 @@ namespace Laconic
                 StartTimer();
             }
         }
-
+        
         void StartTimer()
         {
             var signal = new TimerSignal(_contextKey);
@@ -137,6 +138,7 @@ namespace Laconic
         {
             if (!_isRunning) {
                 _isRunning = true;
+                _startTime = DateTimeOffset.Now;
                 StartTimer();
                 return new TimerSignal(_contextKey);
             }
@@ -148,6 +150,7 @@ namespace Laconic
         {
             if (_isRunning) {
                 _isRunning = false;
+                _startTime = DateTimeOffset.MinValue;
                 return new TimerSignal(_contextKey);
             }
 
@@ -155,12 +158,9 @@ namespace Laconic
         }
 
         public bool IsRunning => _isRunning;
+        public TimeSpan Elapsed => _isRunning ? DateTimeOffset.Now  - _startTime : TimeSpan.Zero;
         
-        public void Dispose()
-        {
-             _isRunning = false;
-             System.Diagnostics.Debug.WriteLine("LACONIC: disposing Timer");
-        }
+        public void Dispose() => _isRunning = false;
     }
 
     public static partial class LocalContextExtensions

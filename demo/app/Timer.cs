@@ -4,11 +4,15 @@ namespace Laconic.Demo
 {
     static class Timer
     {
-        static StackLayout View(string display, string buttonTitle, Func<Signal> buttonAction) => new() {
+        static StackLayout View(TimeSpan elapsed, string buttonTitle, Func<Signal> buttonAction) => new() {
             Spacing = 30,
             Padding = 30,
             ["display"] = new Label {
-                Text = display, FontSize = 20, HorizontalOptions = LayoutOptions.Center
+                Text = elapsed.TotalSeconds.ToString("0.0"), 
+                FontFamily = "DINBold",
+                FontSize = 50, 
+                FontAttributes = FontAttributes.Bold,
+                HorizontalOptions = LayoutOptions.Center
             },
             ["button"] = new Button {
                 Text = buttonTitle,
@@ -25,11 +29,9 @@ namespace Laconic.Demo
         };
 
         public static VisualElement<Xamarin.Forms.StackLayout> Content() => Element.WithContext("timer", ctx => {
-            var (state, setState) = ctx.UseLocalState(0);
-            var timer = ctx.UseTimer(TimeSpan.FromMilliseconds(300), start: false);
+            var timer = ctx.UseTimer(TimeSpan.FromMilliseconds(100), start: false);
 
-            setState(state + 1);
-            return View(state.ToString(),
+            return View(timer.Elapsed,
                 timer.IsRunning ? "Stop" : "Start",
                 timer.IsRunning ? () => timer.Stop() : () => timer.Start()
             );

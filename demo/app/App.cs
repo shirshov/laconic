@@ -38,7 +38,7 @@ namespace Laconic.Demo
             }
         };
 
-        static ContentPage Flyout(State state) => new ContentPage {
+        static ContentPage Flyout(State state) => new(){
             BackgroundColor = Color.Chocolate,
             IconImageSource = new FontImageSource {
                 Glyph ="\uf0c9",
@@ -84,7 +84,7 @@ namespace Laconic.Demo
                 },
                 0, // Counter
                 (2, 2), // Grid
-                new Calculator.Initial(), // Calculator
+                new Calculator.Initial(), 
                 GroupedCollectionView.Initial()
             );
 
