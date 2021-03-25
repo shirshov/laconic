@@ -119,6 +119,7 @@ namespace Laconic
             _contextKey = contextKey;
             _callback = callback;
             if (start) {
+                _startTime = DateTimeOffset.Now;
                 _isRunning = true;
                 StartTimer();
             }
