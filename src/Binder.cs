@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using xf = Xamarin.Forms;
@@ -187,7 +187,8 @@ namespace Laconic
                                 )
                             );
                         }
-                        foreach (var removed in _elementContexts.Keys.Where(x => updatedContexts.ContainsKey(x)))
+
+                        foreach (var removed in _elementContexts.Keys.Where(x => !updatedContexts.ContainsKey(x)))
                             _elementContexts[removed].Context.Clear();
                         
                         _elementContexts = updatedContexts;
