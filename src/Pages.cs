@@ -38,6 +38,8 @@ namespace Laconic
     public class ContentPage : Page<xf.ContentPage>, IContentHost
     {
         public View? Content { get; set; }
+
+        public override string ToString() => "ContentPage{" + Content + "}";
     }
 
     public partial class FlyoutPage : Page<xf.FlyoutPage>

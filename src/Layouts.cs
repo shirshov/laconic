@@ -9,11 +9,11 @@ namespace Laconic
         public Thickness Padding
         {
             get => GetValue<Thickness>(xf.Layout.PaddingProperty);
-            set => SetValue(xf.Layout.PaddingProperty, value);
+            init => SetValue(xf.Layout.PaddingProperty, value);
         }
 
 		public bool IsClippedToBounds {
-			set => SetValue(xf.Layout.IsClippedToBoundsProperty, value);
+			init => SetValue(xf.Layout.IsClippedToBoundsProperty, value);
 		}
     }
 
@@ -39,18 +39,30 @@ namespace Laconic
 
     interface ILayout
     {
-        IDictionary<Key, View?> Children { get; }
+        ViewList Children { get; set; }
     }
 
     public partial class StackLayout : Layout<xf.StackLayout>, ILayout
     {
-        public ViewList Children { get; set; } = new ViewList();
+        public ViewList Children { get; set; } = new();
 
-        IDictionary<Key, View?> ILayout.Children => Children;
+        ViewList ILayout.Children {
+            get => Children;
+            set => Children = value;
+        }
 
         public View this[Key key]
         {
-            set => Children[key] = value;
+            init => Children[key] = value;
+        }
+
+        public override string ToString()
+        {
+            var res = "StackLayout{";
+            foreach (var c in Children)
+                res += $"[{c.Key}]={c.Value},";
+            res += "}";
+            return res;
         }
     }
 
@@ -150,9 +162,12 @@ namespace Laconic
 
     public partial class Grid : Layout<xf.Grid>, ILayout
     {
-        public GridViewList Children { get; set; } = new GridViewList();
+        public GridViewList Children { get; set; } = new();
         
-        IDictionary<Key, View?> ILayout.Children => Children;
+        ViewList ILayout.Children {
+            get => Children;
+            set => Children = (GridViewList)value;
+        }
 
         public View? this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
         {
@@ -164,8 +179,8 @@ namespace Laconic
             }
         }
 
-        public RowDefinitionCollection RowDefinitions { get; set; } = new RowDefinitionCollection();
-        public ColumnDefinitionCollection ColumnDefinitions { get; set; } = new ColumnDefinitionCollection();
+        public RowDefinitionCollection RowDefinitions { get; set; } = new();
+        public ColumnDefinitionCollection ColumnDefinitions { get; set; } = new();
     }
 
     public class RefreshingEventArgs : EventArgs
@@ -190,9 +205,12 @@ namespace Laconic
 
     public class AbsoluteLayout : Layout<xf.AbsoluteLayout>, ILayout
     {
-        public AbsoluteLayoutViewList Children { get; set; } = new AbsoluteLayoutViewList();
+        public AbsoluteLayoutViewList Children { get; set; } = new();
         
-        IDictionary<Key, View?> ILayout.Children => Children;
+        ViewList ILayout.Children {
+            get => Children;
+            set => Children = (AbsoluteLayoutViewList)value;
+        }
 
         public View? this[Key key, (double x, double y, double width, double height) bounds, AbsoluteLayoutFlags flags] {
             get => Children[key];
@@ -213,6 +231,6 @@ namespace Laconic
         internal void SetPositioning(Key key, Bounds bounds,
             AbsoluteLayoutFlags flags) => _positioning[key] = new AbsLayoutInfo(bounds, flags);
 
-        readonly Dictionary<Key, AbsLayoutInfo> _positioning = new Dictionary<Key, AbsLayoutInfo>();
+        readonly Dictionary<Key, AbsLayoutInfo> _positioning = new();
     }
 }

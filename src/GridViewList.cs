@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Laconic
 {
@@ -13,14 +14,16 @@ namespace Laconic
 
         public void Add(Key key, View? blueprint, int row = 0, int column = 0, int rowSpan = 1, int columnSpan = 1)
         {
-           base.Add(key, blueprint);
-           SetPositioning(key, row, column, rowSpan, columnSpan);
+            if (blueprint != null) {
+               base.Add(key, blueprint);
+               SetPositioning(key, row, column, rowSpan, columnSpan);
+            }
         }
         
         public static implicit operator GridViewList(Dictionary<(Key Key, int Row, int Column), View?> source)
         {
             var res = new GridViewList();
-            foreach (var item in source)
+            foreach (var item in source.Where(x => x.Value != null))
             {
                 res.Add(item.Key.Key, item.Value);
                 res.SetPositioning(item.Key.Key, item.Key.Row, item.Key.Column, 0, 0);
@@ -36,17 +39,21 @@ namespace Laconic
 
         public View? this[string reuseKey, Key key]
         {
-            init
+            set
             {
-                base[key] = value;
-                ReuseKeys[key] = reuseKey;
+                if (value != null) {
+                    base[key] = value;
+                    ReuseKeys[key] = reuseKey;
+                }
             }
         }
 
         public void Add(string reuseKey, Key key, View? view)
         {
-            Add(key, view);
-            ReuseKeys[key] = reuseKey;
+            if (view != null) {
+                Add(key, view);
+                ReuseKeys[key] = reuseKey;
+            }
         }
     }
 }

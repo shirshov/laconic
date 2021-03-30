@@ -93,6 +93,34 @@ namespace Laconic
             (_, null) => true,
             _ => !lhs.Equals(rhs)
         };
+
+        virtual internal void UpdateFrom(Element element)
+        {
+            ProvidedValues.Clear();
+            foreach (var p in element.ProvidedValues)
+                ProvidedValues.Add(p.Key, p.Value);
+
+            Events.Clear();
+            foreach (var e in element.Events)
+                Events.Add(e.Key, e.Value);
+
+            if (this is ILayout l) {
+                l.Children = ((ILayout)element).Children;
+            }
+
+            if (this is IContentHost ch) {
+                ch.Content = ((IContentHost) element).Content;
+            }
+        }
+
+        public override string ToString()
+        {
+            var res = GetType().Name + "{";
+            foreach (var p in ProvidedValues)
+                res += p.Key.PropertyName + "=" + p.Value + ",";
+            res += "}";
+            return res;
+        }
     }
 
     class PostProcessInfo : IEquatable<PostProcessInfo>
@@ -164,5 +192,6 @@ namespace Laconic
                 Events.Remove(eventName);
             }
         }
+
     }
 }

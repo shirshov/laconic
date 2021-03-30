@@ -60,5 +60,36 @@ namespace Laconic.Tests
             binder.ProcessSignal(new TestSignal("new state"));
             label.Text.ShouldBe("new state");
         }
+        
+        [Fact]
+        public void handle_view_updated_by_local_context()
+        {
+            var one = Element.WithContext(ctx => {
+                var (text, setText) = ctx.UseLocalState("");
+                return  new StackLayout {
+                    [0] = new Button {Text = "Reveal", Clicked = () => setText("new element")},
+                    [1] = text == "" ? null : new Label {Text = text}
+                };
+            });
+            
+            var two = new StackLayout {[0] = new Label {Text = "Second View"}};
+
+            var binder = Binder.CreateForTest(1, (s, g) => (int)g.Payload);
+            
+            var page = binder.CreateElement(s => new ContentPage {Content = s == 1 ? one : two});
+            var sl = (xf.StackLayout) page.Content;
+            
+            sl.Children.Count.ShouldBe(1);
+            
+            var button = (xf.Button) sl.Children[0];
+            button.SendClicked();
+
+            sl.Children.Count.ShouldBe(2);
+            
+            binder.Send(new(2));
+            
+            sl.Children[0].ShouldBeOfType<xf.Label>().Text.ShouldBe("Second View");
+            sl.Children.Count.ShouldBe(1);
+        }
     }
 }

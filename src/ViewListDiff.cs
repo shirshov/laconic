@@ -26,8 +26,8 @@ namespace Laconic
             else
             {
                 var listDiff = new ListDiff<Key, Key>(
-                    existingItems.Where(x => x.Value != null).Select(x => x.Key),
-                    newItems.Where(p => p.Value != null).Select(p => p.Key).ToArray());
+                    existingItems.Keys,
+                    newItems.Keys);
 
                 var index = 0;
                 foreach (var action in listDiff.Actions)
@@ -53,18 +53,7 @@ namespace Laconic
                     {
                         var existingView = existingItems[action.SourceItem];
                         var newView = newItems[action.SourceItem];
-                        if (existingView == null) {
-                            var items = Diff
-                                .Calculate(null, (Element)newView!)
-                                .Concat(CalculatePositioningInParentDiff(action.DestinationItem, 
-                                    existingItems,
-                                    newItems));
-                                res.Add(new AddChild(action.SourceItem, 
-                                    GetReuseKey(action.DestinationItem), 
-                                    index, (Element)newView!, items.ToArray())
-                                );
-                        }
-                        else if (existingView.GetType() != newView!.GetType())
+                        if (existingView.GetType() != newView!.GetType())
                         {
                             res.Add(new ReplaceChild(index, (Element)newView, 
                                 Diff.Calculate(null, (Element)newView)

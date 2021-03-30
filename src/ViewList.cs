@@ -7,7 +7,7 @@ namespace Laconic
 {
     public class ViewList : IDictionary<Key, View?>
     {
-        readonly Dictionary<Key, View?> _internalStorage = new Dictionary<Key, View?>();
+        readonly Dictionary<Key, View?> _internalStorage = new();
 
         public ViewList()
         {
@@ -15,14 +15,16 @@ namespace Laconic
 
         ViewList(IEnumerable<(Key, View)> source)
         {
-            foreach (var (key, view) in source)
+            foreach (var (key, view) in source.Where((_, v) => v != null))
                 _internalStorage.Add(key, view);
         }
 
-        public View? this[Key key]
-        {
+        public View? this[Key key] {
             get => _internalStorage[key];
-            set => _internalStorage[key] = value;
+            set {
+                if (value != null) 
+                    _internalStorage[key] = value;
+            }
         }
 
         public int Count => _internalStorage.Count;
@@ -36,7 +38,11 @@ namespace Laconic
 
         bool ICollection<KeyValuePair<Key, View?>>.IsReadOnly => throw new NotSupportedException();
 
-        public void Add(Key key, View? value) => _internalStorage.Add(key, value);
+        public void Add(Key key, View? value)
+        {
+            if (value != null)
+                _internalStorage.Add(key, value);
+        }
 
         void ICollection<KeyValuePair<Key, View?>>.Add(KeyValuePair<Key, View?> item) =>
             throw new NotSupportedException();
@@ -63,16 +69,12 @@ namespace Laconic
 
         bool IDictionary<Key, View?>.TryGetValue(Key key, out View value) => throw new NotSupportedException();
 
-        public static implicit operator ViewList(Dictionary<Key, View> source) =>
-            new ViewList(source.Select(x => (x.Key, x.Value)));
+        public static implicit operator ViewList(Dictionary<Key, View> source) => new(source.Select(x => (x.Key, x.Value)));
 
-        public static implicit operator ViewList(Dictionary<string, View> source) =>
-            new ViewList(source.Select(x => ((Key) x.Key, x.Value)));
+        public static implicit operator ViewList(Dictionary<string, View> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
 
-        public static implicit operator ViewList(Dictionary<int, View> source) =>
-            new ViewList(source.Select(x => ((Key) x.Key, x.Value)));
+        public static implicit operator ViewList(Dictionary<int, View> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
 
-        public static implicit operator ViewList(Dictionary<long, View> source) =>
-            new ViewList(source.Select(x => ((Key) x.Key, x.Value)));
+        public static implicit operator ViewList(Dictionary<long, View> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
     }
 }

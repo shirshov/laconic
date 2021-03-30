@@ -42,7 +42,8 @@ namespace Laconic.Demo
             BackgroundColor = Color.Chocolate,
             IconImageSource = new FontImageSource {
                 Glyph ="\uf0c9",
-                FontFamily = "IconFont"
+                FontFamily = "IconFont",
+                Color =  Color.Chocolate
             },
             Title = "Laconic Demo",
             Content = new ScrollView {

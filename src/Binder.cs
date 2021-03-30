@@ -60,9 +60,8 @@ namespace Laconic
             var blueprint = (Element)blueprintMaker(State);
             var view = new T();
 
-            var expansionInfo =
-                _elementContexts.Values.Select(x =>
-                    new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
+            var expansionInfo = _elementContexts.Values
+                .Select(x => new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
             var (expandedRootElement, activeContexts) = ContextExpander.Expand(blueprint, expansionInfo, Send);
             // TODO: Diffs should run on the background thread
             var diff = Diff.Calculate(null, expandedRootElement);
@@ -115,8 +114,8 @@ namespace Laconic
                 var (_, info) = _elementContexts.First(p => p.Value.Context.Key == sig.ContextKey);
                 
                 var newBlueprint = info.BlueprintMaker(info.Context);
-                var expansionInfo = _elementContexts.Values.Select(x => new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
-                var (expanded, _) = ContextExpander.Expand(newBlueprint, expansionInfo, Send);
+                var expansionInfos = _elementContexts.Values.Select(x => new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
+                var (expanded, _) = ContextExpander.Expand(newBlueprint, expansionInfos, Send);
                 var diff = Diff.Calculate(info.RenderedBlueprint, expanded);
 
                 _synchronizationContext.Send(_ => {
@@ -130,8 +129,8 @@ namespace Laconic
                     _suppressEvents = true;
                     Patch.Apply(view, diff, Send);
                     _suppressEvents = false;
-                    
-                    _elementContexts[info.Context.Key] = info with {RenderedBlueprint = newBlueprint}; 
+
+                    info.RenderedBlueprint.UpdateFrom(expanded);
                 }, null);
             } else {
                 ExceptionDispatchInfo? reducerException = null;
@@ -156,21 +155,21 @@ namespace Laconic
                     var copy = _trackedElements.ToArray();
                     _trackedElements.Clear();
                     
-                    foreach (var el in copy) {
-                        if (!el.View.TryGetTarget(out var aliveView)) continue;
+                    foreach (var trackedRoot in copy) {
+                        if (!trackedRoot.View.TryGetTarget(out var aliveView)) continue;
 
                         var expansionInfos = _elementContexts.Values.Select(x =>
                             new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
                         var (expandedRootElement, activeContexts) = ContextExpander.Expand(
-                            el.BlueprintMaker(context!.State), expansionInfos, Send);
+                            trackedRoot.BlueprintMaker(context!.State), expansionInfos, Send);
                         // TODO: Diffs should run on the background thread
-                        var diff = Diff.Calculate(el.RenderedBlueprint, expandedRootElement);
+                        var diff = Diff.Calculate(trackedRoot.RenderedBlueprint, expandedRootElement);
 
                         _suppressEvents = true;
                         var newElementsWithContext = Patch.Apply(aliveView, diff, Send);
                         _suppressEvents = false;
 
-                        _trackedElements.Add(el with {RenderedBlueprint = expandedRootElement});
+                        _trackedElements.Add(trackedRoot with {RenderedBlueprint = expandedRootElement});
                         
                         var updatedContexts = new Dictionary<string, LocalContextInfo>();
                         foreach (var info in activeContexts) {
@@ -188,7 +187,7 @@ namespace Laconic
                                 )
                             );
                         }
-                        foreach (var removed in _elementContexts.Keys.Where(x => updatedContexts.Any(y => y.Key == x)))
+                        foreach (var removed in _elementContexts.Keys.Where(x => updatedContexts.ContainsKey(x)))
                             _elementContexts[removed].Context.Clear();
                         
                         _elementContexts = updatedContexts;
