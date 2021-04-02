@@ -32,7 +32,7 @@ namespace Laconic
         public static IEnumerable<GridPositionChange> CalculatePositioningInGrid(Key key, GridViewList? existingList,
             GridViewList newList)
         {
-            var existingPos = (Row: 0, Column: 0, RowSpan: 0, ColumnSpan: 0);
+            var existingPos = (Row: 0, Column: 0, RowSpan: 1, ColumnSpan: 1);
             if (existingList != null && existingList.ContainsKey(key))
                 existingPos = existingList.GetPositioning(key);
 

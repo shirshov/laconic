@@ -26,7 +26,7 @@ namespace Laconic
             foreach (var item in source.Where(x => x.Value != null))
             {
                 res.Add(item.Key.Key, item.Value);
-                res.SetPositioning(item.Key.Key, item.Key.Row, item.Key.Column, 0, 0);
+                res.SetPositioning(item.Key.Key, item.Key.Row, item.Key.Column, 1, 1);
             }
 
             return res;

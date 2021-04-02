@@ -169,7 +169,7 @@ namespace Laconic
             set => Children = (GridViewList)value;
         }
 
-        public View? this[Key key, int row = 0, int column = 0, int rowSpan = 0, int columnSpan = 0]
+        public View? this[Key key, int row = 0, int column = 0, int rowSpan = 1, int columnSpan = 1]
         {
             get => Children[key];
             set
