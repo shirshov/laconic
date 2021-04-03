@@ -57,7 +57,7 @@ namespace Laconic
                         {
                             res.Add(new ReplaceChild(index, (Element)newView, 
                                 Diff.Calculate(null, (Element)newView)
-                                .Concat(CalculatePositioningInParentDiff(action.SourceItem, existingItems, newItems))
+                                .Concat(CalculatePositioningInParentDiff(action.SourceItem, null, newItems))
                                 .ToArray()));
                         }
                         else {
