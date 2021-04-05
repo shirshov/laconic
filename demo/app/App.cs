@@ -11,8 +11,8 @@ namespace Laconic.Demo
     public class App : xf.Application
     {
         record State(
-            int CurrentItem, 
-            bool IsFlyoutPresented, 
+            int CurrentItem,
+            bool IsFlyoutPresented,
             (string Title, Func<State, View> Maker)[] Items,
             int Counter,
             (int Rows, int Columns) Grid,
@@ -22,45 +22,37 @@ namespace Laconic.Demo
         static State MainReducer(State state, Signal signal) => signal switch {
             ("IsPresentedChanged", _) => state with {IsFlyoutPresented = !state.IsFlyoutPresented},
             ("ShowItem", int index) => state with {CurrentItem = index, IsFlyoutPresented = false},
-            ("inc", _)  => state with {Counter = state.Counter + 1},
+            ("inc", _) => state with {Counter = state.Counter + 1},
             GridSignal g => state with {Grid = DynamicGrid.Reducer(state.Grid, g)},
-            Calculator.CalculatorSignal g => state with { Calculator = Calculator.MainReducer(state.Calculator, g)},
+            Calculator.CalculatorSignal g => state with {Calculator = Calculator.MainReducer(state.Calculator, g)},
             _ => state
         };
-        
+
         static Label MenuItem(string title, int index, bool isSelected) => new Label {
             Text = title,
             TextColor = Color.White,
             FontAttributes = isSelected ? FontAttributes.Bold : FontAttributes.None,
             HeightRequest = 40,
-            GestureRecognizers = {
-                ["tap"] = new TapGestureRecognizer { Tapped = () => new("ShowItem", index) }
-            }
+            GestureRecognizers = {["tap"] = new TapGestureRecognizer {Tapped = () => new("ShowItem", index)}}
         };
 
-        static ContentPage Flyout(State state) => new(){
+        static ContentPage Flyout(State state) => new() {
             BackgroundColor = Color.Chocolate,
-            IconImageSource = new FontImageSource {
-                Glyph ="\uf0c9",
-                FontFamily = "IconFont",
-                Color =  Color.Chocolate
-            },
+            IconImageSource = new FontImageSource {Glyph = "\uf0c9", FontFamily = "IconFont", Color = Color.Chocolate},
             Title = "Laconic Demo",
             Content = new ScrollView {
-                Content =new StackLayout {
-                Padding =  (10, 100, 10, 10),
-                Children = state.Items.ToViewList(
-                    x => x.Title, 
-                    x => MenuItem(x.Title,  state.Items.IndexOf(x), state.Items.IndexOf(x) == state.CurrentItem)
-                )}
+                Content = new StackLayout {
+                    Padding = (10, 100, 10, 10),
+                    Children = state.Items.ToViewList(
+                        x => x.Title,
+                        x => MenuItem(x.Title, state.Items.IndexOf(x), state.Items.IndexOf(x) == state.CurrentItem)
+                    )
+                }
             }
         };
 
-        static ContentPage MakeDemoPage(State state) => new() {
-            Title = state.Items[state.CurrentItem].Title,
-            Content = state.Items[state.CurrentItem].Maker(state)
-        };
-                
+        static ContentPage MakeDemoPage(State state) => new() {Title = state.Items[state.CurrentItem].Title, Content = state.Items[state.CurrentItem].Maker(state)};
+
         public App()
         {
             var initialState = new State(
@@ -81,7 +73,8 @@ namespace Laconic.Demo
                    ("SwipeView", _ => (View)SwipeViewPage.Content()),
                    ("RadioButton", _ => (View)RadioButtonPage.Content()),
                    ("WebView", _ => WebViewPage.Content()),
-                   ("Timer", _ => (View)Timer.Content())
+                   ("Timer", _ => (View)Timer.Content()),
+                   ("Behavior", _ => BehaviorPage.Content()),
                 },
                 0, // Counter
                 (2, 2), // Grid

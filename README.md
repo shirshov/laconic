@@ -198,11 +198,6 @@ var l3 = new BoxView { CornerRadius = (10, 20, 30, 40) }; // CornerRadius: top l
 var l1 = new Label { TextColor = (255, 123, 123) };
 var l2 = new Label { TextColor = "#222222" };
 ```
-
-## Code Generation
-
-When writing an app with Laconic you should make your state immutable. A sister project, 
-[Laconic.CodeGeneration](https://github.com/shirshov/laconic/tree/master/codegen), can help with that.
 ___
 
 [![Join the chat at https://gitter.im/laconiclib/community](https://badges.gitter.im/laconiclib/community.svg)](https://gitter.im/laconiclib/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)

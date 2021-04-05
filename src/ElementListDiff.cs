@@ -18,7 +18,6 @@ namespace Laconic
                 }
             }
             else {
-
                 var listDiff = new ListDiff<Key, Key>(
                     existingItems.Where(x => x.Value != null).Select(x => x.Key),
                     newItems.Where(p => p.Value != null).Select(p => p.Key));
