@@ -17,7 +17,8 @@ namespace Laconic.Demo
             int Counter,
             (int Rows, int Columns) Grid,
             Calculator.State Calculator,
-            Person[] Persons);
+            Person[] Persons, 
+            Navigation.State Navigation);
 
         static State MainReducer(State state, Signal signal) => signal switch {
             ("IsPresentedChanged", _) => state with {IsFlyoutPresented = !state.IsFlyoutPresented},
@@ -25,7 +26,7 @@ namespace Laconic.Demo
             ("inc", _) => state with {Counter = state.Counter + 1},
             GridSignal g => state with {Grid = DynamicGrid.Reducer(state.Grid, g)},
             Calculator.CalculatorSignal g => state with {Calculator = Calculator.MainReducer(state.Calculator, g)},
-            _ => state
+            _ => state with { Navigation = Navigation.Reducer(state.Navigation, signal) }
         };
 
         static Label MenuItem(string title, int index, bool isSelected) => new Label {
@@ -62,27 +63,29 @@ namespace Laconic.Demo
                 0, 
                 false, 
                 new (string, Func<State, View>)[] {
-                   ("Counter", s => Counter.Content(s.Counter)),
-                   ("Dynamic Grid", s => DynamicGrid.Content(s.Grid)),
-                   ("Calculator (Grid)", s => Calculator.Content(s.Calculator)),
-                   ("Collection View", s => GroupedCollectionView.Content(s.Persons)),
-                   ("Entry and Editor",  _ => (View)EntryAndEditor.Content()),
-                   ("Dancing Bars (Performance)", _ => (View)DancingBars.Content()),
-                   ("AbsoluteLayout", _ => AbsoluteLayoutPage.Content()),
-                   ("FormattedString", _ => FormattedStringPage.Content()),
-                   ("Shapes", _ => Shapes.Content()),
-                   ("Shapes - Login Page", _ => LoginShape.Content()),
-                   ("Brushes", _ => Brushes.Content()),
-                   ("SwipeView", _ => (View)SwipeViewPage.Content()),
-                   ("RadioButton", _ => (View)RadioButtonPage.Content()),
-                   ("WebView", _ => WebViewPage.Content()),
-                   ("Timer", _ => (View)Timer.Content()),
-                   ("Behavior", _ => BehaviorPage.Content()),
+                    ("Counter", s => Counter.Content(s.Counter)),
+                    ("Dynamic Grid", s => DynamicGrid.Content(s.Grid)),
+                    ("Calculator (Grid)", s => Calculator.Content(s.Calculator)),
+                    ("Collection View", s => GroupedCollectionView.Content(s.Persons)),
+                    ("Entry and Editor",  _ => (View)EntryAndEditor.Content()),
+                    ("Dancing Bars (Performance)", _ => (View)DancingBars.Content()),
+                    ("AbsoluteLayout", _ => AbsoluteLayoutPage.Content()),
+                    ("FormattedString", _ => FormattedStringPage.Content()),
+                    ("Shapes", _ => Shapes.Content()),
+                    ("Shapes - Login Page", _ => LoginShape.Content()),
+                    ("Brushes", _ => Brushes.Content()),
+                    ("SwipeView", _ => (View)SwipeViewPage.Content()),
+                    ("RadioButton", _ => (View)RadioButtonPage.Content()),
+                    ("WebView", _ => WebViewPage.Content()),
+                    ("Timer", _ => (View)Timer.Content()),
+                    ("Behavior", _ => BehaviorPage.Content()),
+                    ("Navigation", _ => null) // Handled below
                 },
                 0, // Counter
                 (2, 2), // Grid
                 new Calculator.Initial(),
-                GroupedCollectionView.Initial()
+                GroupedCollectionView.InitialState(),
+                Navigation.InitialState()
             );
 
             var binder = Binder.Create(initialState, MainReducer);
@@ -90,8 +93,10 @@ namespace Laconic.Demo
             MainPage = binder.CreateElement(state => new FlyoutPage {
                 Flyout = Flyout(state),
                 IsPresented = state.IsFlyoutPresented,
-                IsPresentedChanged = () => new ("IsPresentedChanged"),
-                Detail = new NavigationPage(new NavigationStack("root"), _ => MakeDemoPage(state))
+                IsPresentedChanged = () => new("IsPresentedChanged"),
+                Detail = state.CurrentItem == state.Items.Length - 1
+                    ? Navigation.TabbedPage(state.Navigation)
+                    : new NavigationPage(new NavigationStack("root"), _ => MakeDemoPage(state))
             });
         }
     }

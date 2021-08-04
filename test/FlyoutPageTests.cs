@@ -60,6 +60,30 @@ namespace Laconic.Tests
             
             btn.Text.ShouldBe("clicked");
         }
+
+        [Fact]
+        public void Flyout_Detail_type_changes()
+        {
+            var b = Binder.CreateForTest(true, (s, _) => !s);
+
+            var stack = new NavigationStack("root");
+            var flyoutPage = b.CreateElement(isNavigationPage => new FlyoutPage {
+                Flyout = new ContentPage {Title = "FO"},
+                Detail = isNavigationPage
+                    ? new NavigationPage(stack, _ => new ContentPage())
+                    : new ContentPage()
+            });
+            
+            flyoutPage.Detail.ShouldBeOfType<xf.NavigationPage>();
+
+            b.Send(new(null));
+            
+            flyoutPage.Detail.ShouldBeOfType<xf.ContentPage>();
+            
+            b.Send(new(null));
+            
+            flyoutPage.Detail.ShouldBeOfType<xf.NavigationPage>();
+        }
         
         [Fact(Skip = "Failing after LocalContext refactoring")]
         public void Flyout_with_LocalContext()

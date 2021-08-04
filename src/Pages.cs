@@ -43,10 +43,15 @@ namespace Laconic
             init => ProvidedValues[xf.NavigationPage.BackButtonTitleProperty] = value;
         }
 
+        // TODO: 
+        // HasNavigationBarProperty
+        //HasBackButtonProperty
+        // TitleIconImageSourceProperty
+        // IconColorProperty
         public View TitleView {
             init => ProvidedValues[xf.NavigationPage.TitleViewProperty] = value;
         }
-        
+
         public override string ToString() => "ContentPage{" + Content + "}";
     }
 

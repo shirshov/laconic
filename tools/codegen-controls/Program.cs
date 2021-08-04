@@ -35,6 +35,7 @@ namespace Laconic.CodeGen
 
             AddDirectDescendants(typeof(BindableObject), flatList);
             AddDirectDescendants(typeof(Layout<View>), flatList);
+            AddDirectDescendants(typeof(MultiPage<Page>), flatList);
 
             var notIgnored = flatList
                 .Where(x => Definitions.Defs.ContainsKey(x.Type)

@@ -190,7 +190,7 @@ namespace Laconic
 
     public abstract class GradientBrush<T> : Brush<T> where T : xf.BindableObject, new()
     {
-        public GradientBrush() => ElementLists.Add<xf.GradientBrush>(nameof(GradientStops), brush => (IList)brush.GradientStops);
+        public GradientBrush() => ElementLists.Add<xf.GradientBrush>(nameof(GradientStops), brush => brush.GradientStops);
 
         public ElementList GradientStops {
             get => ElementLists[nameof(GradientStops)];

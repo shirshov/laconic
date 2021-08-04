@@ -231,6 +231,7 @@ namespace Laconic.CodeGen
                     nameof(SwipeView.SwipeEnded)),
             [typeof(Switch)] = All.ExceptManuallyWrittenEvents(nameof(Switch.Toggled)),
             [typeof(SwitchCell)] = NotUsed,
+            [typeof(TabbedPage)] = All.WithoutBaseDeclaration(),
             [typeof(Tab)] = NotImplemented,
             [typeof(TabBar)] = NotImplemented,
             [typeof(TableSectionBase)] = NotUsed,

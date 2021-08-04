@@ -18,13 +18,13 @@ namespace Laconic
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
                     UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
                     ReplaceChild rc => () => {
-                        var real = (xf.View) Patch.CreateView(rc.NewView);
+                        var real = (xf.View) Patch.CreateView(rc.NewView, dispatch);
                         // TODO: add to withContext here and below
                         Patch.Apply(real, rc.Operations, dispatch);
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
-                        var real = Patch.CreateView(acv.Blueprint);
+                        var real = Patch.CreateView(acv.Blueprint, dispatch);
                         var v = Patch.Apply(real, acv.Operations, dispatch);
                         withContext.AddRange(v);
                         list.Insert(acv.Index, (xf.View) real);
@@ -48,12 +48,12 @@ namespace Laconic
                     RemoveChild rc => () => list.RemoveAt(rc.Index),
                     UpdateChild uc => () => withContext.AddRange(Patch.Apply((xf.BindableObject)list[uc.Index], uc.Operations, dispatch)),
                     ReplaceChild rc => () => {
-                        var real = (xf.View) Patch.CreateView(rc.NewView);
+                        var real = (xf.View) Patch.CreateView(rc.NewView, dispatch);
                         withContext.AddRange(Patch.Apply(real, rc.Operations, dispatch));
                         list[rc.Index] = real;
                     },
                     AddChild acv => () => {
-                        var real = Patch.CreateView(acv.Blueprint);
+                        var real = Patch.CreateView(acv.Blueprint, dispatch);
                         withContext.AddRange(Patch.Apply(real, acv.Operations, dispatch));
                         list.Insert(acv.Index, real);
                     },
@@ -136,7 +136,7 @@ namespace Laconic
             var contextItem = (BindingContextItem) item;
             if (!_templates.ContainsKey(contextItem.ReuseKey)) {
                 var template = new xf.DataTemplate(() => {
-                    var newRealView = (xf.View) Patch.CreateView((Element) contextItem.Blueprint);
+                    var newRealView = (xf.View) Patch.CreateView((Element) contextItem.Blueprint, _dispatch);
                     var diff = Diff.Calculate(null, (Element)contextItem.Blueprint);
                     Patch.Apply(newRealView, diff, _dispatch);
                     newRealView.BindingContextChanged += OnBindingContextChanged;

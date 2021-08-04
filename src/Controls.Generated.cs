@@ -1227,6 +1227,35 @@ namespace Laconic
         }
     }
 
+    public partial class TabbedPage
+    {
+        public Color BarBackgroundColor
+        {
+            internal get => GetValue<Color>(xf.TabbedPage.BarBackgroundColorProperty);
+            init => SetValue(xf.TabbedPage.BarBackgroundColorProperty, value);
+        }
+        public Brush BarBackground
+        {
+            internal get => GetValue<Brush>(xf.TabbedPage.BarBackgroundProperty);
+            init => SetValue(xf.TabbedPage.BarBackgroundProperty, value);
+        }
+        public Color BarTextColor
+        {
+            internal get => GetValue<Color>(xf.TabbedPage.BarTextColorProperty);
+            init => SetValue(xf.TabbedPage.BarTextColorProperty, value);
+        }
+        public Color SelectedTabColor
+        {
+            internal get => GetValue<Color>(xf.TabbedPage.SelectedTabColorProperty);
+            init => SetValue(xf.TabbedPage.SelectedTabColorProperty, value);
+        }
+        public Color UnselectedTabColor
+        {
+            internal get => GetValue<Color>(xf.TabbedPage.UnselectedTabColorProperty);
+            init => SetValue(xf.TabbedPage.UnselectedTabColorProperty, value);
+        }
+    }
+
     public partial class TimePicker : View<xf.TimePicker>
     {
         public Double CharacterSpacing

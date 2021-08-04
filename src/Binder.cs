@@ -64,9 +64,7 @@ namespace Laconic
         public T CreateElement<T>(Func<TState, VisualElement<T>> blueprintMaker) where T : xf.VisualElement, new()
         {
             var blueprint = (Element)blueprintMaker(State);
-            (blueprint as IDoDispatch)?.SetDispatcher(Send);
-            var view = (xf.VisualElement)blueprint.CreateView();
-
+            var view = (xf.VisualElement)Patch.CreateView(blueprint, Send);
             var expansionInfo = _elementContexts.Values
                 .Select(x => new ExpansionInfo(x.Context, x.RenderedBlueprint, x.BlueprintMaker));
             var (expandedRootElement, activeContexts) = ContextExpander.Expand(blueprint, expansionInfo, Send);

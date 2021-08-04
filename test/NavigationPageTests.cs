@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Shouldly;
 using xf = Xamarin.Forms;
@@ -31,8 +32,8 @@ namespace Laconic.Tests
 
             var existingNavPage = new NavigationPage(stack, PageMaker);
             existingNavPage.ElementLists["Pages"].Count.ShouldBe(1);
-            
-            stack.Frames.Add(new("details", PresentationStyle.Normal));
+ 
+            stack.Frames.Add(new("details", -1));
             existingNavPage.ElementLists["Pages"].Count.ShouldBe(1);
 
             var added = new NavigationPage(stack, PageMaker);
@@ -103,6 +104,19 @@ namespace Laconic.Tests
                 Element.WithContext(_ => new ContentPage {Title = "Test"})));
             
             real.CurrentPage.Title.ShouldBe("Test");
+        }
+
+        [Fact]
+        public async Task when_NavigationPage_is_not_top_level()
+        {
+            var b = Binder.CreateForTest(new NavigationStack("root", "details"), (s, _) => s);
+
+            var flyoutPage = b.CreateElement(s => new FlyoutPage {
+                Flyout = new ContentPage {Title = "FO"},
+                Detail = new NavigationPage(s, _ => new ContentPage())
+            });
+            // Should not throw:
+            await (flyoutPage.Detail as xf.NavigationPage).PopAsync();
         }
     }
 }

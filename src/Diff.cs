@@ -170,11 +170,10 @@ namespace Laconic
                 FlyoutPageFlyoutOperation flyoutOp = existingFp?.Flyout == null
                     ? new SetFlyoutPageFlyout(fp.Flyout, flyoutDiff)
                     : new UpdateFlyoutPageFlyout(flyoutDiff);
-                
-                var detailDiff = Calculate(existingFp?.Detail, fp.Detail).ToArray();
-                FlyoutPageDetailOperation detailOp = existingFp?.Detail == null 
-                    ? new SetFlyoutPageDetail(fp.Detail, detailDiff)
-                    : new UpdateFlyoutPageDetail(detailDiff);
+
+                FlyoutPageDetailOperation detailOp = existingFp?.Detail == null || existingFp.Detail.GetType() != fp.Detail.GetType()
+                    ? new SetFlyoutPageDetail(fp.Detail, Calculate(null, fp.Detail).ToArray())
+                    : new UpdateFlyoutPageDetail(Calculate(existingFp.Detail, fp.Detail).ToArray());
                 
                 operations.Add(new UpdateFlyoutPage(flyoutOp, detailOp));
             }

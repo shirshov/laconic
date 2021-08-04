@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using xf = Xamarin.Forms;
 
 namespace Laconic
@@ -59,8 +60,10 @@ namespace Laconic
             }
 
             var newWithContext = new List<(string, xf.BindableObject)>();
-            
-            foreach (var op in operations) {
+
+            var postProcessOps = operations.Where(o => (o as SetProperty)?.Value is PostProcessInfo);
+            var otherOps = operations.Where(o => (o as SetProperty)?.Value is not PostProcessInfo);
+            foreach (var op in otherOps.Concat(postProcessOps)) {
                 Action patchingAction = op switch {
                     ChangeContextKey cck => () => { newWithContext.Add((cck.NewKey, element)); },
                     SetChildElementToNull co => () => element.SetValue(co.ChildElementProperty, null),
@@ -83,7 +86,7 @@ namespace Laconic
                     RemoveContent _ => () => SetRealViewContent(null),
                     SetContent sc => () => {
                         var el = (Element) sc.ContentView;
-                        var childView = (xf.View?) CreateView(el);
+                        var childView = (xf.View?) CreateView(el, dispatch);
                         newWithContext.AddRange(Apply(childView!, sc.Operations, dispatch));
                         SetRealViewContent(childView);
                     },
@@ -187,7 +190,7 @@ namespace Laconic
 
                         switch (fp.DetailOperation) {
                             case SetFlyoutPageDetail setDetail:
-                                var content = setDetail.DetailPage.CreateView();
+                                var content = CreateView(setDetail.DetailPage, dispatch);
                                 if (setDetail.DetailPage.ContextKey != null)
                                     newWithContext.Add((setDetail.DetailPage.ContextKey, content));
                                 newWithContext.AddRange(Apply(content, setDetail.Operations, dispatch));
@@ -206,7 +209,11 @@ namespace Laconic
             return newWithContext;
         }
 
-        internal static xf.BindableObject CreateView(Element definition) => definition.CreateView();
+        internal static xf.BindableObject CreateView(Element definition, Action<Signal> dispatch)
+        {
+            (definition as IDoDispatch)?.SetDispatcher(dispatch);
+            return definition.CreateView();
+        }
 
         internal static object ConvertToNative(object value) => value switch {
             AbsoluteLayoutFlags _ => (xf.AbsoluteLayoutFlags)value,

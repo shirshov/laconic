@@ -54,7 +54,7 @@ namespace Laconic.Demo
             }
         }
 
-        public static Person[] Initial()
+        public static Person[] InitialState()
         {
             var chance = new Chance();
             return Enumerable.Range(1, 200).Select(_ => chance.Person()).ToArray();

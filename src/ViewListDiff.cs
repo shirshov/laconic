@@ -20,15 +20,12 @@ namespace Laconic
                 foreach (var item in newItems.Where(p => p.Value != null)) {
                     var childOps = Diff.Calculate(null, (Element)item.Value!)
                         .Concat(CalculatePositioningInParentDiff(item.Key, existingItems, newItems));
-                        res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, (Element)item.Value!, childOps.ToArray()));
+                    res.Add(new AddChild(item.Key, GetReuseKey(item.Key), res.Count, (Element)item.Value!, childOps.ToArray()));
                 }
             }
             else
             {
-                var listDiff = new ListDiff<Key, Key>(
-                    existingItems.Keys,
-                    newItems.Keys);
-
+                var listDiff = new ListDiff<Key, Key>(existingItems.Keys, newItems.Keys); 
                 var index = 0;
                 foreach (var action in listDiff.Actions)
                 {
@@ -37,11 +34,8 @@ namespace Laconic
                         var newItem = newItems[action.DestinationItem];
                         var childOps = Diff.Calculate(null, (Element)newItem!)
                             .Concat(CalculatePositioningInParentDiff(action.DestinationItem, existingItems, newItems));
-                        res.Add(
-                                new AddChild(action.DestinationItem, 
-                                    GetReuseKey(action.DestinationItem), 
-                                    index, 
-                                    (Element)newItem!, childOps.ToArray())
+                        res.Add(new AddChild(action.DestinationItem, GetReuseKey(action.DestinationItem), index, 
+                            (Element)newItem, childOps.ToArray())
                         ); 
                         index++;
                     }
