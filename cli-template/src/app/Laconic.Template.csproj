@@ -14,7 +14,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Laconic" Version="5.0.0.2012-pre1" />
+    <PackageReference Include="Laconic" Version="5.0.0.2083-pre1" />
   </ItemGroup>
 </Project>
