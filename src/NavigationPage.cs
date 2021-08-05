@@ -8,27 +8,25 @@ using xf = Xamarin.Forms;
 
 namespace Laconic
 {
-    public enum ModalPresentationStyle { FullScreen, FormSheet }
-    
-    public record NavigationMetadata(object Data, int Modality);
+    record NavigationMetadata(object Data, bool IsModal);
     
     public class NavigationStack : IEnumerable<object>
     {
         internal readonly List<NavigationMetadata> Frames;
         
         public NavigationStack(params object[] frameData) => 
-            Frames = frameData.Select(f => new NavigationMetadata(f, -1)).ToList();
+            Frames = frameData.Select(f => new NavigationMetadata(f, false)).ToList();
 
 
         public NavigationStack Push(object data)
         {
-            Frames.Add(new(data, -1));
+            Frames.Add(new(data, false));
             return this;
         }
 
-        public NavigationStack PushModal(object data, ModalPresentationStyle presentationStyle = ModalPresentationStyle.FullScreen)
+        public NavigationStack PushModal(object data)
         {
-             Frames.Add(new(data, (int)presentationStyle));
+             Frames.Add(new(data, true));
              return this;
         }
 
@@ -134,12 +132,8 @@ namespace Laconic
             var newPage = (xf.Page)value;
             var meta = _stack.Frames[index];
             newPage.SetValue(NavigationPage.LaconicNavigationMetadataProperty, meta);
-            if (meta.Modality == (int)ModalPresentationStyle.FullScreen)
+            if (meta.IsModal)
                 _page.Navigation.PushModalAsync(newPage);
-            else if (meta.Modality == (int)ModalPresentationStyle.FormSheet) {
-                newPage.On<xf.PlatformConfiguration.iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FormSheet);
-                _page.Navigation.PushModalAsync(newPage);
-            }
             else
                 _page.Navigation.PushAsync(newPage);
         }

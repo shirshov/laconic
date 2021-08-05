@@ -44,7 +44,7 @@ namespace Laconic.Tests
             var existingNavPage = new NavigationPage(stack, PageMaker);
             existingNavPage.ElementLists["Pages"].Count.ShouldBe(1);
  
-            stack.Frames.Add(new("details", -1));
+            stack.Frames.Add(new("details", false));
             existingNavPage.ElementLists["Pages"].Count.ShouldBe(1);
 
             var added = new NavigationPage(stack, PageMaker);

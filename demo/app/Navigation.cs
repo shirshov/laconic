@@ -21,7 +21,7 @@ namespace Laconic.Demo
             return signal switch {
                 (SignalType.Push, _) => state with { Stack = stack.Push((PageType.Details, newCount)), RunningNumber = newCount },
                 (SignalType.PushModal, _) => state with {
-                    Stack = stack.PushModal(PageType.Modal, ModalPresentationStyle.FormSheet) },
+                    Stack = stack.PushModal(PageType.Modal) },
                 (SignalType.Pop, _) => state with { Stack = stack.Pop() },
                 (SignalType.PopToRoot, _) => InitialState(),
                 (SignalType.RemoveFromStack, object data) =>  state with { Stack = stack.Remove(data) },
