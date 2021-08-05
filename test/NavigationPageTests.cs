@@ -9,6 +9,17 @@ namespace Laconic.Tests
     public class NavigationPageTests
     {
         [Fact]
+        public void NavigationStack_Remove()
+        {
+            var stack = new NavigationStack("foo", ("bar", 1));
+            
+            stack = stack.Remove(("bar", 1));
+            
+            stack.Count.ShouldBe(1);
+            stack.First().ShouldBe("foo");
+        }
+        
+        [Fact]
         public void pages_Diff_calculated()
         {
             var navPage =  new NavigationPage(new NavigationStack("root"), _ => new ContentPage());

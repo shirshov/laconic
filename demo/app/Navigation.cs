@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
-using Xamarin.Forms.Internals;
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 
 namespace Laconic.Demo
 {
@@ -23,7 +24,7 @@ namespace Laconic.Demo
                     Stack = stack.PushModal(PageType.Modal, ModalPresentationStyle.FormSheet) },
                 (SignalType.Pop, _) => state with { Stack = stack.Pop() },
                 (SignalType.PopToRoot, _) => InitialState(),
-                (SignalType.RemoveFromStack, object data) =>  state with { Stack = stack.RemoveAt(stack.IndexOf(data)) },
+                (SignalType.RemoveFromStack, object data) =>  state with { Stack = stack.Remove(data) },
                 _ => state
             };
         }
@@ -153,10 +154,19 @@ namespace Laconic.Demo
             PageType.Modal => ModalPage(),
         };
 
+        class AndroidBottomTabs : Behavior<Xamarin.Forms.TabbedPage>
+        {
+            protected override void OnAttachedTo(Xamarin.Forms.TabbedPage bindable) => 
+                bindable.On<Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
+        }
+        
         public static TabbedPage TabbedPage(State state) => new() {
             BarBackgroundColor = Color.Gainsboro,
             BarTextColor = Color.Chocolate,
             SelectedTabColor = Color.Chocolate,
+            Behaviors = { 
+                ["bottom-tabs"] = new AndroidBottomTabs(),  
+            },
             ["home-tab"] = new NavigationPage(state.Stack, PageFactory) {
                 Title = "Home",
                 BarBackgroundColor = Color.White,

@@ -9,22 +9,21 @@ namespace Laconic.Tests
         class TestBehavior : Behavior<xf.Label>
         {
             public bool IsAttached;
-
-            string _text;
+            readonly string _text;
             xf.Label _label;
 
             public TestBehavior(string text) : base(text) => _text = text;
 
             protected internal override void OnValuesUpdated(object value) => _label.Text = (string)value;
 
-            public override void OnAttachedTo(xf.Label bindable)
+            protected internal override void OnAttachedTo(xf.Label bindable)
             {
                 _label = bindable;
                 IsAttached = true;
                 bindable.Text = _text;
             }
 
-            public override void OnDetachingFrom(xf.Label bindable) => IsAttached = false;
+            protected internal override void OnDetachingFrom(xf.Label bindable) => IsAttached = false;
         }
 
         [Fact]

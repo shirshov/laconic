@@ -6,9 +6,9 @@ namespace Laconic.Demo
 {
     class AnimateTextSize : Behavior<Xamarin.Forms.Label>
     {
-        public override void OnAttachedTo(xf.Label bindable) => bindable.PropertyChanged += OnPropertyChanged;
+        protected override void OnAttachedTo(xf.Label bindable) => bindable.PropertyChanged += OnPropertyChanged;
 
-        public override void OnDetachingFrom(xf.Label bindable) => bindable.PropertyChanged -= OnPropertyChanged;
+        protected override void OnDetachingFrom(xf.Label bindable) => bindable.PropertyChanged -= OnPropertyChanged;
 
         void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

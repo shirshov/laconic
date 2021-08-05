@@ -145,7 +145,7 @@ namespace Laconic
                     },
                     AddGestureRecognizer agr => () => {
                         var view = (xf.View) element;
-                        var realRec = agr.Blueprint.CreateReal();
+                        var realRec = ((Element)agr.Blueprint).CreateView();
                         Apply(realRec, agr.Operations, dispatch);
                         view.GestureRecognizers.Add((xf.IGestureRecognizer)realRec);
                     },

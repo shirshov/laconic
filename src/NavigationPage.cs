@@ -38,6 +38,13 @@ namespace Laconic
             return this;
         }
 
+        public NavigationStack Remove(object data)
+        {
+            var item = Frames.First(x => x.Data.Equals(data));
+            Frames.Remove(item);
+            return this;
+        }
+        
         public NavigationStack RemoveAt(int index)
         {
             Frames.RemoveAt(index);
@@ -78,8 +85,8 @@ namespace Laconic
             }
         }
 
-        public override void OnAttachedTo(xf.NavigationPage bindable) => bindable.Popped += HandleBackGesture;
-        public override void OnDetachingFrom(xf.NavigationPage bindable) => bindable.Popped -= HandleBackGesture;
+        protected internal override void OnAttachedTo(xf.NavigationPage bindable) => bindable.Popped += HandleBackGesture;
+        protected internal override void OnDetachingFrom(xf.NavigationPage bindable) => bindable.Popped -= HandleBackGesture;
     }
 
     public partial class NavigationPage : Page<xf.NavigationPage>, IDoDispatch

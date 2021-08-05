@@ -20,8 +20,11 @@ namespace Laconic
 
         protected internal override xf.BindableObject CreateView() => new BehaviorAdapter<T>(this);
 
-        public abstract void OnAttachedTo(T bindable);
-        public abstract void OnDetachingFrom(T bindable);
+        protected internal abstract void OnAttachedTo(T bindable);
+
+        protected internal virtual void OnDetachingFrom(T bindable)
+        {
+        }
         
         protected internal virtual void OnValuesUpdated(object value)
         {
@@ -31,6 +34,7 @@ namespace Laconic
     class BehaviorAdapter<T> : xf.Behavior<T> where T : xf.VisualElement
     {
         readonly Behavior<T> _internal;
+        
         public BehaviorAdapter(Behavior<T> behavior) => _internal = behavior;
 
         bool _isAttached;

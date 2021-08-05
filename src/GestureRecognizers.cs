@@ -5,8 +5,6 @@ namespace Laconic
 {
     public interface IGestureRecognizer
     {
-        Dictionary<string, EventInfo> Events { get; }
-        xf.BindableObject CreateReal();
     }
 
     public class TapGestureRecognizer : Element<xf.TapGestureRecognizer>, IGestureRecognizer
@@ -24,7 +22,5 @@ namespace Laconic
         }
 
         protected internal override xf.BindableObject CreateView() => new xf.TapGestureRecognizer();
-
-        xf.BindableObject IGestureRecognizer.CreateReal() => CreateView();
     }
 }
