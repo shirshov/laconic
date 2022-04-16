@@ -44,7 +44,7 @@ static class ViewListDiff
                 {
                     var existingView = existingItems[action.SourceItem];
                     var newView = newItems[action.SourceItem];
-                    if (existingView.GetType() != newView!.GetType())
+                    if (existingView!.GetType() != newView!.GetType())
                     {
                         res.Add(new ReplaceChild(index, (Element)newView, 
                             Diff.Calculate(null, (Element)newView)

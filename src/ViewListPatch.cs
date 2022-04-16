@@ -4,9 +4,9 @@ namespace Laconic;
 
 static class ViewListPatch
 {
-    internal static List<(string, xf.BindableObject)> Apply(IList<xf.View> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
+    internal static List<(string? ContextKey, xf.BindableObject View)> Apply(IList<xf.View> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
     {
-        var withContext = new List<(string, xf.BindableObject)>();
+        var withContext = new List<(string?, xf.BindableObject)>();
             
         foreach (var op in operations) {
             Action patchAction = op switch {
@@ -34,9 +34,9 @@ static class ViewListPatch
     }
 
     // TODO: this method should be somewhere else
-    internal static List<(string, xf.BindableObject)> ApplyToChildElements (IList list, ListOperation[] operations, Action<Signal> dispatch)
+    internal static List<(string? ContextKey, xf.BindableObject View)> ApplyToChildElements (IList list, ListOperation[] operations, Action<Signal> dispatch)
     {
-        var withContext = new List<(string, xf.BindableObject)>();
+        var withContext = new List<(string? ContextKey, xf.BindableObject View)>();
             
         foreach (var op in operations) {
             Action patchAction = op switch {

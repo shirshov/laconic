@@ -6,11 +6,11 @@ public class BehaviorTests
     {
         public bool IsAttached;
         readonly string _text;
-        xf.Label _label;
+        xf.Label? _label;
 
         public TestBehavior(string text) : base(text) => _text = text;
 
-        protected internal override void OnValuesUpdated(object value) => _label.Text = (string)value;
+        protected internal override void OnValuesUpdated(object value) => _label!.Text = (string)value;
 
         protected internal override void OnAttachedTo(xf.Label bindable)
         {

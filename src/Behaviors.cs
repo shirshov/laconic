@@ -49,7 +49,7 @@ class BehaviorAdapter<T> : xf.Behavior<T> where T : xf.VisualElement
         _isAttached = false;
     }
 
-    protected override void OnPropertyChanged(string propertyName = null)
+    protected override void OnPropertyChanged(string propertyName)
     {
         if (propertyName == Behavior.ValueProperty.PropertyName && _isAttached) {
             _internal.OnValuesUpdated(GetValue(Behavior.ValueProperty));

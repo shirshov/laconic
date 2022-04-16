@@ -2,16 +2,17 @@ namespace Laconic;
 
 public class ViewList : IDictionary<Key, View?>
 {
-    readonly Dictionary<Key, View?> _internalStorage = new();
+    readonly Dictionary<Key, View> _internalStorage = new();
 
     public ViewList()
     {
     }
 
-    ViewList(IEnumerable<(Key, View)> source)
+    ViewList(IEnumerable<(Key, View?)> source)
     {
-        foreach (var (key, view) in source.Where((_, v) => v != null))
-            _internalStorage.Add(key, view);
+        foreach (var (key, view) in source)
+            if (view != null)
+                _internalStorage.Add(key, view);
     }
 
     public View? this[Key key] {
@@ -64,11 +65,11 @@ public class ViewList : IDictionary<Key, View?>
 
     bool IDictionary<Key, View?>.TryGetValue(Key key, out View value) => throw new NotSupportedException();
 
-    public static implicit operator ViewList(Dictionary<Key, View> source) => new(source.Select(x => (x.Key, x.Value)));
+    public static implicit operator ViewList(Dictionary<Key, View?> source) => new(source.Select(x => (x.Key, x.Value)));
 
-    public static implicit operator ViewList(Dictionary<string, View> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
+    public static implicit operator ViewList(Dictionary<string, View?> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
 
-    public static implicit operator ViewList(Dictionary<int, View> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
+    public static implicit operator ViewList(Dictionary<int, View?> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
 
-    public static implicit operator ViewList(Dictionary<long, View> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
+    public static implicit operator ViewList(Dictionary<long, View?> source) => new(source.Select(x => ((Key) x.Key, x.Value)));
 }

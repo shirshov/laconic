@@ -5,7 +5,7 @@ public class BasicTests
     [Fact]
     public void visual_element_equality()
     {
-        ((Label) null == null).ShouldBeTrue();
+        ((Label?) null == null).ShouldBeTrue();
             
         new Label { Text = "a" }.Equals(new Label { Text = "a" }).ShouldBeTrue();
         new Label { Text = "a" }.Equals(new Label { Text = "b" }).ShouldBeFalse();

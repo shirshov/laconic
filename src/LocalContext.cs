@@ -54,7 +54,7 @@ public class LocalContext
 interface IContextElement
 {
     Element Make(LocalContext context);
-    string ContextKey { get; set; }
+    string? ContextKey { get; set; }
 }
     
 public class ContextElement<T> : VisualElement<T>, IContextElement, View where T: xf.VisualElement, new()
@@ -69,7 +69,7 @@ public class ContextElement<T> : VisualElement<T>, IContextElement, View where T
 
     Element IContextElement.Make(LocalContext context) => _maker(context);
         
-    string IContextElement.ContextKey { get; set; }
+    string? IContextElement.ContextKey { get; set; }
 }
 
 public static partial class LocalContextExtensions

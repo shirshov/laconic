@@ -168,7 +168,7 @@ static class Diff
                 ? new SetFlyoutPageFlyout(fp.Flyout, flyoutDiff)
                 : new UpdateFlyoutPageFlyout(flyoutDiff);
 
-            FlyoutPageDetailOperation detailOp = existingFp?.Detail == null || existingFp.Detail.GetType() != fp.Detail.GetType()
+            FlyoutPageDetailOperation detailOp = existingFp?.Detail == null || existingFp.Detail!.GetType() != fp.Detail!.GetType()
                 ? new SetFlyoutPageDetail(fp.Detail, Calculate(null, fp.Detail).ToArray())
                 : new UpdateFlyoutPageDetail(Calculate(existingFp.Detail, fp.Detail).ToArray());
                 

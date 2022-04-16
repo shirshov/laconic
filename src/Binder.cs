@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-                
+using Xamarin.Forms;
+
 [assembly: InternalsVisibleTo("LaconicTests")]
 [assembly: InternalsVisibleTo("MapTests")]
 
@@ -77,7 +78,7 @@ public class Binder<TState>
         var updatedContexts = new Dictionary<string, LocalContextInfo>();
             
         foreach (var info in activeContexts) {
-            var realView = newElementsWithContext.FirstOrDefault(x => x.ContextKey == info.Context.Key).Element;
+            BindableObject? realView = newElementsWithContext.FirstOrDefault(x => x.ContextKey == info.Context.Key).Element;
             if (realView == null) {
                 _elementContexts[info.Context.Key].View.TryGetTarget(out realView);
             }
@@ -123,7 +124,7 @@ public class Binder<TState>
             var diff = Diff.Calculate(info.RenderedBlueprint, expanded);
 
             _synchronizationContext.Send(_ => {
-                var isViewAlive = info.View.TryGetTarget(out var view);
+                var isViewAlive = info.View.TryGetTarget(out BindableObject? view);
                 if (!isViewAlive) {
                     info.Context.Clear();
                     _elementContexts.Remove(sig.ContextKey);

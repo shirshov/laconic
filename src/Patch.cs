@@ -25,7 +25,7 @@ static class Patch
         }
     }
     
-    internal static List<(string ContextKey, xf.BindableObject Element)> Apply(xf.BindableObject element, 
+    internal static List<(string? ContextKey, xf.BindableObject Element)> Apply(xf.BindableObject element, 
         IEnumerable<DiffOperation> operations,
         Action<Signal> dispatch)
     {
@@ -54,7 +54,7 @@ static class Patch
             }
         }
 
-        var newWithContext = new List<(string, xf.BindableObject)>();
+        var newWithContext = new List<(string? ContextKey, xf.BindableObject View)>();
 
         var postProcessOps = operations.Where(o => (o as SetProperty)?.Value is PostProcessInfo);
         var otherOps = operations.Where(o => (o as SetProperty)?.Value is not PostProcessInfo);
