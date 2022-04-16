@@ -64,7 +64,7 @@ static class ContextExpander
                 var context = new LocalContext(dispatch, keyPath);
                 var newEl = ce.Make(context);
                 newEl.ContextKey = keyPath;
-                usedInfos.Add(new(context, newEl, ce.Make));
+                usedInfos.Add(new ExpansionInfo(context, newEl, ce.Make));
                 element = newEl;
             }
             else {

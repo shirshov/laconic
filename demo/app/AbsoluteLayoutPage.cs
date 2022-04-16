@@ -2,7 +2,7 @@ namespace Laconic.Demo;
 
 static class AbsoluteLayoutPage
 {
-    public static AbsoluteLayout Content() => new AbsoluteLayout {
+    public static AbsoluteLayout Content() => new() {
         ["b", (0.5, 0, 100, 25), AbsoluteLayoutFlags.PositionProportional] = new BoxView { Color = Color.Blue},
         ["g", (0 ,0.5, 25, 100), AbsoluteLayoutFlags.PositionProportional] = new BoxView { Color = Color.Green},
         ["r", (1, 0.5,25,100), AbsoluteLayoutFlags.PositionProportional] = new BoxView { Color = Color.Red},

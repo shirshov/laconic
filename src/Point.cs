@@ -50,11 +50,11 @@ public readonly struct Point : IConvert
 
     public override int GetHashCode() => X.GetHashCode() ^ (Y.GetHashCode() * 397);
 
-    public static explicit operator Size(Point pt) => new Size(pt.X, pt.Y);
+    public static explicit operator Size(Point pt) => new(pt.X, pt.Y);
 
-    public static Point operator +(Point pt, Size sz) => new Point(pt.X + sz.Width, pt.Y + sz.Height);
+    public static Point operator +(Point pt, Size sz) => new(pt.X + sz.Width, pt.Y + sz.Height);
 
-    public static Point operator -(Point pt, Size sz) => new Point(pt.X - sz.Width, pt.Y - sz.Height);
+    public static Point operator -(Point pt, Size sz) => new(pt.X - sz.Width, pt.Y - sz.Height);
 
     public static bool operator ==(Point ptA, Point ptB)
     {
@@ -74,7 +74,7 @@ public readonly struct Point : IConvert
         return true;
     }
 
-    public static implicit operator Point((double X, double Y) value) => new Point(value.X, value.Y);
+    public static implicit operator Point((double X, double Y) value) => new(value.X, value.Y);
         
     public double Distance(Point other) => Math.Sqrt(Math.Pow(X - other.X, 2.0) + Math.Pow(Y - other.Y, 2.0));
 

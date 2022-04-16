@@ -51,14 +51,14 @@ public static class Navigation
         Title = "Root",
         BackButtonTitle = "",
         ToolbarItems = {
-            ["bell"] = new() {
+            ["bell"] = new ToolbarItem {
                 IconImageSource = FontIcon("\uf0f3")
             }
         },
         Content = new StackLayout {
             Padding = 20,
-            ["push-modeless"] = Button("Push", () => new(SignalType.Push)),
-            ["push-modal"] = Button("Push Modal", () => new(SignalType.PushModal)),
+            ["push-modeless"] = Button("Push", () => new Signal(SignalType.Push)),
+            ["push-modal"] = Button("Push Modal", () => new Signal(SignalType.PushModal)),
             ["explain"] = Legend("This tab hosts a NavigationPage")
         }
     };
@@ -68,10 +68,10 @@ public static class Navigation
         BackButtonTitle = "",
         Content = new StackLayout {
             Padding = 20,
-            ["push-modeless"] = Button("Push", () => new(SignalType.Push)),
-            ["push-modal"] = Button("Push Modal", () => new(SignalType.PushModal)),
-            ["pop"] = Button("Pop", () => new(SignalType.Pop)),
-            ["pop-to-root"] = Button("Pop To Root", () => new(SignalType.PopToRoot)),
+            ["push-modeless"] = Button("Push", () => new Signal(SignalType.Push)),
+            ["push-modal"] = Button("Push Modal", () => new Signal(SignalType.PushModal)),
+            ["pop"] = Button("Pop", () => new Signal(SignalType.Pop)),
+            ["pop-to-root"] = Button("Pop To Root", () => new Signal(SignalType.PopToRoot)),
         }
     };
 
@@ -86,7 +86,7 @@ public static class Navigation
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.Center,
             },
-            ["btn", row: 1] = Button("Close", () => new(SignalType.Pop))
+            ["btn", row: 1] = Button("Close", () => new Signal(SignalType.Pop))
         }
     };
 
@@ -114,7 +114,7 @@ public static class Navigation
                     },
                     ["remove-btn", column: 1] = new Button {
                         Text = "Remove", 
-                        Clicked = () => new(SignalType.RemoveFromStack, stackData),
+                        Clicked = () => new Signal(SignalType.RemoveFromStack, stackData),
                         TextColor = Color.Chocolate,
                         BorderColor = Color.Chocolate,
                         BorderWidth = 1,
@@ -128,7 +128,7 @@ public static class Navigation
         items.Add("add-button-row-reuse-key", "add-button-row-key",
             new ContentView {
                 Padding = 20,
-                Content = Button("Push", () => new(SignalType.Push))
+                Content = Button("Push", () => new Signal(SignalType.Push))
             });
 
         items.Add("legend-row-reuse-key, ", "legend-row-reuse-key",
@@ -138,7 +138,7 @@ public static class Navigation
             }
         );
             
-        return new() { 
+        return new ContentPage { 
             Title = "Edit",
             IconImageSource = FontIcon("\uf013"),
             Padding = (0, 50, 0, 0),

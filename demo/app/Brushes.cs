@@ -2,7 +2,7 @@ namespace Laconic.Demo;
 
 static class Brushes
 {
-    public static StackLayout Content() => new StackLayout {
+    public static StackLayout Content() => new() {
         Padding = 50,
         ["solid"] = new Frame {
             Background = Brush.DarkBlue,

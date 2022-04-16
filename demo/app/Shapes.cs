@@ -4,7 +4,7 @@ namespace Laconic.Demo;
 
 static class Shapes
 {
-    public static ScrollView Content() => new ScrollView {
+    public static ScrollView Content() => new() {
         Padding = 20,
         Content = new StackLayout {
             ["line"] = new Line {

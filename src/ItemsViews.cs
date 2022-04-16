@@ -31,7 +31,7 @@ public partial class CarouselView : ItemsView<xf.CarouselView>, IItemSourceView
             (ctl, handler) => ctl.PositionChanged -= handler);
     }
         
-    public ItemsViewList Items { get; set; } = new ItemsViewList();
+    public ItemsViewList Items { get; set; } = new();
 }
 
 public abstract class StructuredItemsView<T> : ItemsView<T> where T : xf.StructuredItemsView, new()
@@ -67,7 +67,7 @@ public abstract partial class SelectableItemsView<T> : StructuredItemsView<T>
 
 public class CollectionView : SelectableItemsView<xf.CollectionView>, IItemSourceView
 {
-    public ItemsViewList Items { get; set; } = new ItemsViewList();
+    public ItemsViewList Items { get; set; } = new();
 
     public Func<xf.ItemsViewScrolledEventArgs, Signal> Scrolled
     {

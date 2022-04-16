@@ -36,11 +36,11 @@ public struct Size
         _height = height;
     }
 
-    public static Size operator +(Size s1, Size s2) => new Size(s1._width + s2._width, s1._height + s2._height);
+    public static Size operator +(Size s1, Size s2) => new(s1._width + s2._width, s1._height + s2._height);
 
-    public static Size operator -(Size s1, Size s2) => new Size(s1._width - s2._width, s1._height - s2._height);
+    public static Size operator -(Size s1, Size s2) => new(s1._width - s2._width, s1._height - s2._height);
 
-    public static Size operator *(Size s1, double value) => new Size(s1._width * value, s1._height * value);
+    public static Size operator *(Size s1, double value) => new(s1._width * value, s1._height * value);
 
     public static bool operator ==(Size s1, Size s2)
     {
@@ -60,7 +60,7 @@ public struct Size
         return true;
     }
 
-    public static explicit operator Point(Size size) => new Point(size.Width, size.Height);
+    public static explicit operator Point(Size size) => new(size.Width, size.Height);
 
     bool Equals(Size other) => _width.Equals(other._width) && _height.Equals(other._height);
 

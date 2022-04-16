@@ -58,7 +58,7 @@ static class GroupedCollectionView
         return Enumerable.Range(1, 200).Select(_ => chance.Person()).ToArray();
     }
         
-    public static StackLayout Content(IEnumerable<Person> state) => new StackLayout {
+    public static StackLayout Content(IEnumerable<Person> state) => new() {
         ["list"] = new CollectionView
         {
             Items = GroupedItems(state).ToItemsList(x => x.ReuseKey, x => x.Key, x => x.View)

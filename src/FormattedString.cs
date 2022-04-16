@@ -7,7 +7,7 @@ public partial class Span : Element<xf.Span>
     
 public class FormattedString : IConvert, IEnumerable<Span>
 {
-    readonly List<Span> _spans = new List<Span>();
+    readonly List<Span> _spans = new();
         
     public void Add(string text) => _spans.Add(new Span{Text = text});
 

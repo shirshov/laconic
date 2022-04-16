@@ -16,8 +16,7 @@ static class DynamicGrid
         _ => throw new NotImplementedException()
     };
 
-    public static StackLayout Content((int Rows, int Columns) state) => new StackLayout
-    {
+    public static StackLayout Content((int Rows, int Columns) state) => new() {
         BackgroundColor = Color.Bisque,
         Padding = 50,
         ["rowsLabel"] = new Label {Text = "Rows:"},

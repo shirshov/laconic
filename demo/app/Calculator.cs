@@ -111,7 +111,7 @@ static class Calculator
     const string darkerButtonColor = "ddd";
     const string orangeButtonColor = "E8AD00";
 
-    public static Grid Content(State state) => new Grid {
+    public static Grid Content(State state) => new() {
         BackgroundColor = "404040",
         RowSpacing = 1,
         ColumnSpacing = 1,

@@ -12,13 +12,13 @@ public class NavigationStack : IEnumerable<object>
 
     public NavigationStack Push(object data)
     {
-        Frames.Add(new(data, false));
+        Frames.Add(new NavigationMetadata(data, false));
         return this;
     }
 
     public NavigationStack PushModal(object data)
     {
-        Frames.Add(new(data, true));
+        Frames.Add(new NavigationMetadata(data, true));
         return this;
     }
 

@@ -2,13 +2,13 @@ namespace Laconic;
 
 public readonly struct Thickness
 {
-    public static implicit operator Thickness(double uniformSize) => new Thickness(uniformSize);
+    public static implicit operator Thickness(double uniformSize) => new(uniformSize);
 
     public static implicit operator Thickness((double horizontalSize, double verticalSize) values)
-        => new Thickness(values.horizontalSize, values.verticalSize);
+        => new(values.horizontalSize, values.verticalSize);
 
     public static implicit operator Thickness((double left, double top, double right, double bottom) values)
-        => new Thickness(values.left, values.top, values.right, values.bottom);
+        => new(values.left, values.top, values.right, values.bottom);
 
     public double Left { get; }
     public double Top { get; }

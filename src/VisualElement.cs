@@ -5,7 +5,7 @@ public abstract partial class VisualElement<T> : Element<T> where T : xf.VisualE
     // TODO: why is it here, and not on Element<T>?
     protected internal override xf.BindableObject CreateView() => new T();
         
-    public Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; } = new Dictionary<Key, IGestureRecognizer>();
+    public Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; } = new();
 
     public VisualElement() => ElementLists.Add<xf.VisualElement>(nameof(Behaviors), element => (IList)element.Behaviors);
 

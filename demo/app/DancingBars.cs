@@ -51,8 +51,7 @@ static class DancingBars
         return state;
     }
 
-    static Grid Row(BarInfo[] bars) => new Grid
-    {
+    static Grid Row(BarInfo[] bars) => new() {
         HeightRequest = 120,
         Padding = 0,
         Margin = 20,
@@ -86,7 +85,7 @@ static class DancingBars
     const int NumberOfBarsChangingAtOnce = 50;
 
     // These two are instantiated as static to avoid unnecessary allocations
-    static Random _random = new Random(23451234);
+    static Random _random = new(23451234);
     static State _initialState = CreateInitialState(100, 10, _random.NextDouble, _random.NextDouble);
         
     public static VisualElement<Xamarin.Forms.CollectionView> Content() => Element.WithContext("bars", ctx => {

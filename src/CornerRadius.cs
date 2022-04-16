@@ -23,11 +23,11 @@ public readonly struct CornerRadius : IConvert
         BottomRight = bottomRight;
     }
 
-    public static implicit operator CornerRadius(double uniformRadius) => new CornerRadius(uniformRadius);
+    public static implicit operator CornerRadius(double uniformRadius) => new(uniformRadius);
 
     public static implicit operator CornerRadius(
         (double topLeft, double topRight, double bottomLeft, double bottomRight) values)
-        => new CornerRadius(values.topLeft, values.topRight, values.bottomLeft, values.bottomRight);
+        => new(values.topLeft, values.topRight, values.bottomLeft, values.bottomRight);
 
     bool Equals(CornerRadius other)
     {

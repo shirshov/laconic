@@ -152,23 +152,22 @@ public readonly struct Color : IConvert, IEquatable<Color>
     public static readonly Color Yellow = (255, 255, 0);
     public static readonly Color YellowGreen = (154, 205, 50);
 
-    public static Color Default => new Color(new Default());
-    public static Color Accent => new Color(new Accent());
+    public static Color Default => new(new Default());
+    public static Color Accent => new(new Accent());
 
-    public static implicit operator Color(string hexValue) => new Color(new Hex(hexValue));
+    public static implicit operator Color(string hexValue) => new(new Hex(hexValue));
 
     public static implicit operator Color((byte r, byte g, byte b) rgbValues)
-        => new Color(new Rgba(rgbValues.r, rgbValues.g, rgbValues.b));
+        => new(new Rgba(rgbValues.r, rgbValues.g, rgbValues.b));
 
     public static implicit operator Color((byte r, byte g, byte b, byte a) rgbValues)
-        => new Color(new Rgba(rgbValues.r, rgbValues.g, rgbValues.b, rgbValues.a));
+        => new(new Rgba(rgbValues.r, rgbValues.g, rgbValues.b, rgbValues.a));
 
     readonly ColorSource _value;
 
     Color(ColorSource value) => _value = value;
 
-    public static Color FromHsla(double h, double s, double l, double a = 1.0)
-        => new Color(new Hsla(h, s, l, a));
+    public static Color FromHsla(double h, double s, double l, double a = 1.0) => new(new Hsla(h, s, l, a));
 
     object IConvert.ToNative() => ToXamarinFormsColor();
         

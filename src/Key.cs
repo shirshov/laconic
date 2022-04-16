@@ -23,17 +23,17 @@ public class Key : IEquatable<Key>
 
     public static bool operator ==(Key lhs, string rhs) => lhs._value is string && lhs._value.Equals(rhs);
     public static bool operator !=(Key lhs, string rhs) => !(lhs._value is string && lhs._value.Equals(rhs));
-    public static implicit operator Key(string value) => new Key(value);
+    public static implicit operator Key(string value) => new(value);
 
     public static bool operator ==(Key lhs, int rhs) => lhs._value is int && lhs._value.Equals(rhs);
     public static bool operator !=(Key lhs, int rhs) => !(lhs._value is int && lhs._value.Equals(rhs));
-    public static implicit operator Key(int value) => new Key(value);
+    public static implicit operator Key(int value) => new(value);
 
     public static bool operator ==(Key lhs, long rhs) => lhs._value.Equals(rhs);
     public static bool operator !=(Key lhs, long rhs) => !lhs._value.Equals(rhs);
-    public static implicit operator Key(long value) => new Key(value);
+    public static implicit operator Key(long value) => new(value);
         
     public static bool operator ==(Key lhs, Guid rhs) => lhs._value.Equals(rhs);
     public static bool operator !=(Key lhs, Guid rhs) => !lhs._value.Equals(rhs);
-    public static implicit operator Key(Guid value) => new Key(value);
+    public static implicit operator Key(Guid value) => new(value);
 }

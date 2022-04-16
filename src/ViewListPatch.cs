@@ -111,11 +111,10 @@ class BindingContextItem
 
 class ItemsViewTemplateSelector : xf.DataTemplateSelector
 {
-    readonly Dictionary<xf.VisualElement, (Key Key, View Blueprint)> _renderedBlueprints
-        = new Dictionary<xf.VisualElement, (Key, View)>();
+    readonly Dictionary<xf.VisualElement, (Key Key, View Blueprint)> _renderedBlueprints = new();
 
     readonly Action<Signal> _dispatch;
-    readonly Dictionary<string, xf.DataTemplate> _templates = new Dictionary<string, xf.DataTemplate>();
+    readonly Dictionary<string, xf.DataTemplate> _templates = new();
 
     internal ItemsViewTemplateSelector(Action<Signal> dispatch)
     {

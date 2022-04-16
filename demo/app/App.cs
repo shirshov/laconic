@@ -27,12 +27,12 @@ namespace Laconic.Demo
             _ => state with { Navigation = Navigation.Reducer(state.Navigation, signal) }
         };
 
-        static Label MenuItem(string title, int index, bool isSelected) => new Label {
+        static Label MenuItem(string title, int index, bool isSelected) => new() {
             Text = title,
             TextColor = Color.White,
             FontAttributes = isSelected ? FontAttributes.Bold : FontAttributes.None,
             HeightRequest = 40,
-            GestureRecognizers = {["tap"] = new TapGestureRecognizer {Tapped = () => new("ShowItem", index)}}
+            GestureRecognizers = {["tap"] = new TapGestureRecognizer {Tapped = () => new Signal("ShowItem", index)}}
         };
 
         static ContentPage Flyout(State state) => new() {
@@ -91,7 +91,7 @@ namespace Laconic.Demo
             MainPage = binder.CreateElement(state => new FlyoutPage {
                 Flyout = Flyout(state),
                 IsPresented = state.IsFlyoutPresented,
-                IsPresentedChanged = () => new("IsPresentedChanged"),
+                IsPresentedChanged = () => new Signal("IsPresentedChanged"),
                 Detail = state.CurrentItem == state.Items.Length - 1
                     ? Navigation.TabbedPage(state.Navigation)
                     : new NavigationPage(new NavigationStack("root"), _ => MakeDemoPage(state))

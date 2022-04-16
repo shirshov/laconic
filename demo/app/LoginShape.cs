@@ -4,7 +4,7 @@ namespace Laconic.Demo;
 
 static class LoginShape
 {
-    public static Grid Content() => new Grid {
+    public static Grid Content() => new() {
         BackgroundColor = "#222222",
         ColumnDefinitions = "*,279,*",
         RowDefinitions = "*,350,*",
