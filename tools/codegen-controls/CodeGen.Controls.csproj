@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10</LangVersion>
     <RootNamespace>Laconic.CodeGen</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
   </ItemGroup>
 </Project>

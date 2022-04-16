@@ -1,57 +1,52 @@
-using System;
-using Xunit;
-using Shouldly;
+namespace Laconic.Tests;
 
-namespace Laconic.Tests
+public class BasicTests
 {
-    public class BasicTests
+    [Fact]
+    public void visual_element_equality()
     {
-        [Fact]
-        public void visual_element_equality()
-        {
-            ((Label) null == null).ShouldBeTrue();
+        ((Label) null == null).ShouldBeTrue();
             
-            new Label { Text = "a" }.Equals(new Label { Text = "a" }).ShouldBeTrue();
-            new Label { Text = "a" }.Equals(new Label { Text = "b" }).ShouldBeFalse();
+        new Label { Text = "a" }.Equals(new Label { Text = "a" }).ShouldBeTrue();
+        new Label { Text = "a" }.Equals(new Label { Text = "b" }).ShouldBeFalse();
 
-            (new Label {Text = "a"} == new Label {Text = "a"}).ShouldBeTrue();
-            (new Label {Text = "a"} == new Label {Text = "b"}).ShouldBeFalse();
+        (new Label {Text = "a"} == new Label {Text = "a"}).ShouldBeTrue();
+        (new Label {Text = "a"} == new Label {Text = "b"}).ShouldBeFalse();
             
-            (new Label() == null).ShouldBeFalse();
-        }
+        (new Label() == null).ShouldBeFalse();
+    }
 
-        [Fact]
-        public void key_casting_equality()
+    [Fact]
+    public void key_casting_equality()
+    {
+        (new Key(1) == 1).ShouldBeTrue();
+        (new Key(1L) == 1L).ShouldBeTrue();
+        (new Key("a") == "a").ShouldBeTrue();
+
+        (new Key(2) == 1).ShouldBeFalse();
+        (new Key(2L) == 1L).ShouldBeFalse();
+        (new Key("a") == "b").ShouldBeFalse();
+    }
+
+    [Fact(Skip="TODO: removed when refactoring LocalContext")]
+    public void throw_on_setting_child_key_twice() =>
+        Should.Throw<ArgumentException>(() =>
         {
-            (new Key(1) == 1).ShouldBeTrue();
-            (new Key(1L) == 1L).ShouldBeTrue();
-            (new Key("a") == "a").ShouldBeTrue();
+            var _ = new StackLayout {["1"] = new Label(), ["1"] = new Label()};
+        }).Message.ShouldBe("An item with the same key has already been added. Key: 1");
 
-            (new Key(2) == 1).ShouldBeFalse();
-            (new Key(2L) == 1L).ShouldBeFalse();
-            (new Key("a") == "b").ShouldBeFalse();
-        }
-
-        [Fact(Skip="TODO: removed when refactoring LocalContext")]
-        public void throw_on_setting_child_key_twice() =>
-            Should.Throw<ArgumentException>(() =>
-            {
-                var _ = new StackLayout {["1"] = new Label(), ["1"] = new Label()};
-            }).Message.ShouldBe("An item with the same key has already been added. Key: 1");
-
-        [Fact]
-        public void Signal_deconstruction()
-        {
-            var g1 = new Signal("a", "b");
-            var (a, b) = g1;
-            a.ShouldBe("a");
-            b.ShouldBe("b");
+    [Fact]
+    public void Signal_deconstruction()
+    {
+        var g1 = new Signal("a", "b");
+        var (a, b) = g1;
+        a.ShouldBe("a");
+        b.ShouldBe("b");
             
-            // TODO: Does it even make sense?
-            var g2 = new Signal("c");
-            var (c, d) = g2;
-            c.ShouldBe("c");
-            d.ShouldBeNull();
-        }
+        // TODO: Does it even make sense?
+        var g2 = new Signal("c");
+        var (c, d) = g2;
+        c.ShouldBe("c");
+        d.ShouldBeNull();
     }
 }

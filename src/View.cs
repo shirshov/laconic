@@ -1,24 +1,20 @@
-using System.Collections.Generic;
-using xf = Xamarin.Forms;
+namespace Laconic;
 
-namespace Laconic
+public interface View 
 {
-    public interface View 
-    {
-        Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; }
+    Dictionary<Key, IGestureRecognizer> GestureRecognizers { get; }
+}
+public abstract class View<T> : VisualElement<T>, View where T : xf.View, new()
+{
+    public LayoutOptions HorizontalOptions {
+        init => SetValue(xf.View.HorizontalOptionsProperty, value);
     }
-    public abstract class View<T> : VisualElement<T>, View where T : xf.View, new()
-    {
-        public LayoutOptions HorizontalOptions {
-            init => SetValue(xf.View.HorizontalOptionsProperty, value);
-        }
 
-        public LayoutOptions VerticalOptions {
-            init => SetValue(xf.View.VerticalOptionsProperty, value);
-        }
+    public LayoutOptions VerticalOptions {
+        init => SetValue(xf.View.VerticalOptionsProperty, value);
+    }
 
-        public Thickness Margin {
-            init => SetValue(xf.View.MarginProperty, value);
-        }
+    public Thickness Margin {
+        init => SetValue(xf.View.MarginProperty, value);
     }
 }

@@ -1,7 +1,5 @@
-using System;
 using ChanceNET;
 using Xamarin.Forms.Internals;
-using xf = Xamarin.Forms;
 
 [assembly: xf.ExportFont("DIN Condensed Bold.ttf", Alias = "DINBold")]
 [assembly: xf.ExportFont("Font Awesome 5 Free-Solid-900.otf", Alias = "IconFont")]

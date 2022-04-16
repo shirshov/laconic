@@ -1,77 +1,70 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using xf = Xamarin.Forms;
+namespace Laconic;
 
-namespace Laconic
+class ElementListInfo
 {
-    
-    class ElementListInfo
-    {
-        public readonly ElementList List;
-        public readonly Func<xf.BindableObject, IList> ListGetter;
+    public readonly ElementList List;
+    public readonly Func<xf.BindableObject, IList> ListGetter;
         
-        public ElementListInfo(ElementList list, Func<xf.BindableObject, IList> listGetter)
-        {
-            List = list;
-            ListGetter = listGetter;
-        }
-    }
-    
-    public class ElementList : Dictionary<Key, Element>
+    public ElementListInfo(ElementList list, Func<xf.BindableObject, IList> listGetter)
     {
-        public static implicit operator ElementList(Dictionary<int, Element> source)
-        {
-            var res = new ElementList();
-            foreach (var p in source)
-                res.Add(p.Key, p.Value);
-
-            return res;
-        }
-        
-        public static implicit operator ElementList(Dictionary<string, Element> source)
-        {
-            var res = new ElementList();
-            foreach (var p in source)
-                res.Add(p.Key, p.Value);
-
-            return res;
-        }
+        List = list;
+        ListGetter = listGetter;
     }
+}
     
-    public class ElementListCollection : IDictionary<string, ElementList>
+public class ElementList : Dictionary<Key, Element>
+{
+    public static implicit operator ElementList(Dictionary<int, Element> source)
     {
-        internal readonly Dictionary<string, ElementListInfo>  Inner = new();
+        var res = new ElementList();
+        foreach (var p in source)
+            res.Add(p.Key, p.Value);
 
-        public ElementList Add<TListOwner>(string listName, Func<TListOwner, IList> listGetter)
-            where TListOwner : xf.BindableObject
-        {
-            var ret = new ElementList();
-            Inner.Add(listName, new ElementListInfo(ret, el => listGetter((TListOwner) el)));
-            return ret;
-        }
-
-        public ElementList this[string key] {
-            get => Inner[key].List;
-            set => Inner[key] = new ElementListInfo(value, Inner[key].ListGetter);
-        }
-
-        bool IDictionary<string, ElementList>.ContainsKey(string key) => Inner.ContainsKey(key);
-        
-        int ICollection<KeyValuePair<string, ElementList>>.Count => Inner.Count;
-
-        IEnumerator IEnumerable.GetEnumerator() => (this as IDictionary<string, ElementList>).GetEnumerator();
-        IEnumerator<KeyValuePair<string, ElementList>> IEnumerable<KeyValuePair<string, ElementList>>.GetEnumerator() => throw new NotSupportedException();
-        void ICollection<KeyValuePair<string, ElementList>>.Add(KeyValuePair<string, ElementList> item) => throw new InvalidOperationException("Use Add(string, ElementList) method instead");
-        void ICollection<KeyValuePair<string, ElementList>>.Clear() => throw new NotSupportedException();
-        bool ICollection<KeyValuePair<string, ElementList>>.Contains(KeyValuePair<string, ElementList> item) => throw new NotSupportedException();
-        void ICollection<KeyValuePair<string, ElementList>>.CopyTo(KeyValuePair<string, ElementList>[] array, int arrayIndex) => throw new NotSupportedException();
-        bool ICollection<KeyValuePair<string, ElementList>>.Remove(KeyValuePair<string, ElementList> item) => throw new NotSupportedException();
-        public bool IsReadOnly => false;
-        void IDictionary<string, ElementList>.Add(string key, ElementList value) => throw new NotSupportedException();
-        bool IDictionary<string, ElementList>.Remove(string key) => throw new NotSupportedException();
-        bool IDictionary<string, ElementList>.TryGetValue(string key, out ElementList value) => throw new NotSupportedException();
-        ICollection<string> IDictionary<string, ElementList>.Keys => throw new NotSupportedException();
-        ICollection<ElementList> IDictionary<string, ElementList>.Values => throw new NotSupportedException();
+        return res;
     }
+        
+    public static implicit operator ElementList(Dictionary<string, Element> source)
+    {
+        var res = new ElementList();
+        foreach (var p in source)
+            res.Add(p.Key, p.Value);
+
+        return res;
+    }
+}
+    
+public class ElementListCollection : IDictionary<string, ElementList>
+{
+    internal readonly Dictionary<string, ElementListInfo>  Inner = new();
+
+    public ElementList Add<TListOwner>(string listName, Func<TListOwner, IList> listGetter)
+        where TListOwner : xf.BindableObject
+    {
+        var ret = new ElementList();
+        Inner.Add(listName, new ElementListInfo(ret, el => listGetter((TListOwner) el)));
+        return ret;
+    }
+
+    public ElementList this[string key] {
+        get => Inner[key].List;
+        set => Inner[key] = new ElementListInfo(value, Inner[key].ListGetter);
+    }
+
+    bool IDictionary<string, ElementList>.ContainsKey(string key) => Inner.ContainsKey(key);
+        
+    int ICollection<KeyValuePair<string, ElementList>>.Count => Inner.Count;
+
+    IEnumerator IEnumerable.GetEnumerator() => (this as IDictionary<string, ElementList>).GetEnumerator();
+    IEnumerator<KeyValuePair<string, ElementList>> IEnumerable<KeyValuePair<string, ElementList>>.GetEnumerator() => throw new NotSupportedException();
+    void ICollection<KeyValuePair<string, ElementList>>.Add(KeyValuePair<string, ElementList> item) => throw new InvalidOperationException("Use Add(string, ElementList) method instead");
+    void ICollection<KeyValuePair<string, ElementList>>.Clear() => throw new NotSupportedException();
+    bool ICollection<KeyValuePair<string, ElementList>>.Contains(KeyValuePair<string, ElementList> item) => throw new NotSupportedException();
+    void ICollection<KeyValuePair<string, ElementList>>.CopyTo(KeyValuePair<string, ElementList>[] array, int arrayIndex) => throw new NotSupportedException();
+    bool ICollection<KeyValuePair<string, ElementList>>.Remove(KeyValuePair<string, ElementList> item) => throw new NotSupportedException();
+    public bool IsReadOnly => false;
+    void IDictionary<string, ElementList>.Add(string key, ElementList value) => throw new NotSupportedException();
+    bool IDictionary<string, ElementList>.Remove(string key) => throw new NotSupportedException();
+    bool IDictionary<string, ElementList>.TryGetValue(string key, out ElementList value) => throw new NotSupportedException();
+    ICollection<string> IDictionary<string, ElementList>.Keys => throw new NotSupportedException();
+    ICollection<ElementList> IDictionary<string, ElementList>.Values => throw new NotSupportedException();
 }

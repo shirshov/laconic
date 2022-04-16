@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using xf = Xamarin.Forms;
-
 namespace Laconic
 {
     interface DiffOperation {}

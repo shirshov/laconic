@@ -1,74 +1,70 @@
-using Shouldly;
-using Xunit;
+namespace Laconic.Tests;
 
-namespace Laconic.Tests
+public class MiddlewareTests
 {
-    public class MiddlewareTests
+    [Fact]
+    public void middleware_is_called()
     {
-        [Fact]
-        public void middleware_is_called()
+        var binder = Binder.Create("", (s, g) => s);
+        var isCalled = false;
+        binder.UseMiddleware((context,  next) =>
         {
-            var binder = Binder.Create("", (s, g) => s);
-            var isCalled = false;
-            binder.UseMiddleware((context,  next) =>
-            {
-                isCalled = true;
-                return next(context);
-            });
+            isCalled = true;
+            return next(context);
+        });
             
-            binder.ProcessSignal(new Signal("_"));
+        binder.ProcessSignal(new Signal("_"));
 
-            isCalled.ShouldBeTrue();
-        }
+        isCalled.ShouldBeTrue();
+    }
 
-        [Fact]
-        public void middleware_modifies_state_before_reducer()
+    [Fact]
+    public void middleware_modifies_state_before_reducer()
+    {
+        var binder = Binder.Create("initial", (s, g) => s +  " - reducer");
+        binder.UseMiddleware((context, next) =>
         {
-            var binder = Binder.Create("initial", (s, g) => s +  " - reducer");
-            binder.UseMiddleware((context, next) =>
-            {
-                var modified = context.WithState(context.State + " - modified");
-                return next(modified);
-            });
+            var modified = context.WithState(context.State + " - modified");
+            return next(modified);
+        });
             
-            binder.ProcessSignal(new Signal("_"));
+        binder.ProcessSignal(new Signal("_"));
 
-            binder.State.ShouldBe("initial - modified - reducer");
-        }
+        binder.State.ShouldBe("initial - modified - reducer");
+    }
         
-        [Fact]
-        public void middleware_modifies_state_after_reducer()
+    [Fact]
+    public void middleware_modifies_state_after_reducer()
+    {
+        var binder = Binder.Create("initial", (s, g) => "reducer");
+        binder.UseMiddleware((context, next) =>
         {
-            var binder = Binder.Create("initial", (s, g) => "reducer");
-            binder.UseMiddleware((context, next) =>
-            {
-                var ctx = next(context);
-                return ctx.WithState(ctx.State + " - modified");
-            });
+            var ctx = next(context);
+            return ctx.WithState(ctx.State + " - modified");
+        });
             
-            binder.ProcessSignal(new Signal("_"));
+        binder.ProcessSignal(new Signal("_"));
 
-            binder.State.ShouldBe("reducer - modified");
-        }
+        binder.State.ShouldBe("reducer - modified");
+    }
 
-        [Fact]
-        public void middleware_can_be_chained()
+    [Fact]
+    public void middleware_can_be_chained()
+    {
+        var binder = Binder.Create("initial", (s, g) => "reducer");
+        binder.UseMiddleware((context, next) =>
         {
-            var binder = Binder.Create("initial", (s, g) => "reducer");
-            binder.UseMiddleware((context, next) =>
-            {
-                var ctx = next(context);
-                return ctx.WithState(ctx.State + " - outer");
-            });
-            binder.UseMiddleware((context, next) =>
-            {
-                var ctx = next(context);
-                return ctx.WithState(ctx.State + " - inner");
-            });
+            var ctx = next(context);
+            return ctx.WithState(ctx.State + " - outer");
+        });
+        binder.UseMiddleware((context, next) =>
+        {
+            var ctx = next(context);
+            return ctx.WithState(ctx.State + " - inner");
+        });
             
-            binder.ProcessSignal(new Signal("_"));
+        binder.ProcessSignal(new Signal("_"));
 
-            binder.State.ShouldBe("reducer - inner - outer");
-        }
+        binder.State.ShouldBe("reducer - inner - outer");
     }
 }

@@ -124,7 +124,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\app\Maps.Demo.csproj">
