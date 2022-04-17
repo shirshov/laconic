@@ -60,25 +60,30 @@ public partial class Button : View<xf.Button>
         internal get => GetValue<FontAttributes>(xf.Button.FontAttributesProperty);
         init => SetValue(xf.Button.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.Button.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.Button.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.Button.FontFamilyProperty);
         init => SetValue(xf.Button.FontFamilyProperty, value);
-    }
-    public xf.Font Font
-    {
-        internal get => GetValue<xf.Font>(xf.Button.FontProperty);
-        init => SetValue(xf.Button.FontProperty, value);
     }
     public Double FontSize
     {
         internal get => GetValue<Double>(xf.Button.FontSizeProperty);
         init => SetValue(xf.Button.FontSizeProperty, value);
     }
-    public ImageSource Image
+    public ImageSource ImageSource
     {
         internal get => GetValue<ImageSource>(xf.Button.ImageSourceProperty);
         init => SetValue(xf.Button.ImageSourceProperty, value);
+    }
+    public LineBreakMode LineBreakMode
+    {
+        internal get => GetValue<LineBreakMode>(xf.Button.LineBreakModeProperty);
+        init => SetValue(xf.Button.LineBreakModeProperty, value);
     }
     public Thickness Padding
     {
@@ -131,9 +136,9 @@ public partial class CarouselView
         internal get => GetValue<Boolean>(xf.CarouselView.IsSwipeEnabledProperty);
         init => SetValue(xf.CarouselView.IsSwipeEnabledProperty, value);
     }
-    public xf.LinearItemsLayout ItemsLayout
+    public LinearItemsLayout ItemsLayout
     {
-        internal get => GetValue<xf.LinearItemsLayout>(xf.CarouselView.ItemsLayoutProperty);
+        internal get => GetValue<LinearItemsLayout>(xf.CarouselView.ItemsLayoutProperty);
         init => SetValue(xf.CarouselView.ItemsLayoutProperty, value);
     }
     public Boolean Loop
@@ -184,6 +189,11 @@ public partial class DatePicker : View<xf.DatePicker>
         internal get => GetValue<FontAttributes>(xf.DatePicker.FontAttributesProperty);
         init => SetValue(xf.DatePicker.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.DatePicker.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.DatePicker.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.DatePicker.FontFamilyProperty);
@@ -228,10 +238,20 @@ public partial class Editor
         internal get => GetValue<EditorAutoSizeOption>(xf.Editor.AutoSizeProperty);
         init => SetValue(xf.Editor.AutoSizeProperty, value);
     }
+    public Int32 CursorPosition
+    {
+        internal get => GetValue<Int32>(xf.Editor.CursorPositionProperty);
+        init => SetValue(xf.Editor.CursorPositionProperty, value);
+    }
     public FontAttributes FontAttributes
     {
         internal get => GetValue<FontAttributes>(xf.Editor.FontAttributesProperty);
         init => SetValue(xf.Editor.FontAttributesProperty, value);
+    }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.Editor.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.Editor.FontAutoScalingEnabledProperty, value);
     }
     public String FontFamily
     {
@@ -243,10 +263,25 @@ public partial class Editor
         internal get => GetValue<Double>(xf.Editor.FontSizeProperty);
         init => SetValue(xf.Editor.FontSizeProperty, value);
     }
+    public TextAlignment HorizontalTextAlignment
+    {
+        internal get => GetValue<TextAlignment>(xf.Editor.HorizontalTextAlignmentProperty);
+        init => SetValue(xf.Editor.HorizontalTextAlignmentProperty, value);
+    }
     public Boolean IsTextPredictionEnabled
     {
         internal get => GetValue<Boolean>(xf.Editor.IsTextPredictionEnabledProperty);
         init => SetValue(xf.Editor.IsTextPredictionEnabledProperty, value);
+    }
+    public Int32 SelectionLength
+    {
+        internal get => GetValue<Int32>(xf.Editor.SelectionLengthProperty);
+        init => SetValue(xf.Editor.SelectionLengthProperty, value);
+    }
+    public TextAlignment VerticalTextAlignment
+    {
+        internal get => GetValue<TextAlignment>(xf.Editor.VerticalTextAlignmentProperty);
+        init => SetValue(xf.Editor.VerticalTextAlignmentProperty, value);
     }
     public Func<Signal> Completed
     {
@@ -270,6 +305,11 @@ public partial class Entry
     {
         internal get => GetValue<FontAttributes>(xf.Entry.FontAttributesProperty);
         init => SetValue(xf.Entry.FontAttributesProperty, value);
+    }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.Entry.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.Entry.FontAutoScalingEnabledProperty, value);
     }
     public String FontFamily
     {
@@ -295,6 +335,11 @@ public partial class Entry
     {
         internal get => GetValue<Boolean>(xf.Entry.IsTextPredictionEnabledProperty);
         init => SetValue(xf.Entry.IsTextPredictionEnabledProperty, value);
+    }
+    public Keyboard Keyboard
+    {
+        internal get => GetValue<Keyboard>(xf.Entry.KeyboardProperty);
+        init => SetValue(xf.Entry.KeyboardProperty, value);
     }
     public ReturnType ReturnType
     {
@@ -355,6 +400,11 @@ public partial class FontImageSource
     {
         internal get => GetValue<Color>(xf.FontImageSource.ColorProperty);
         init => SetValue(xf.FontImageSource.ColorProperty, value);
+    }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.FontImageSource.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.FontImageSource.FontAutoScalingEnabledProperty, value);
     }
     public String FontFamily
     {
@@ -586,9 +636,9 @@ public abstract partial class ItemsView<T>
         internal get => GetValue<Object>(xf.ItemsView.EmptyViewProperty);
         init => SetValue(xf.ItemsView.EmptyViewProperty, value);
     }
-    public xf.DataTemplate EmptyViewTemplate
+    public DataTemplate EmptyViewTemplate
     {
-        internal get => GetValue<xf.DataTemplate>(xf.ItemsView.EmptyViewTemplateProperty);
+        internal get => GetValue<DataTemplate>(xf.ItemsView.EmptyViewTemplateProperty);
         init => SetValue(xf.ItemsView.EmptyViewTemplateProperty, value);
     }
     public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -625,15 +675,15 @@ public partial class Label : View<xf.Label>
         internal get => GetValue<FontAttributes>(xf.Label.FontAttributesProperty);
         init => SetValue(xf.Label.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.Label.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.Label.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.Label.FontFamilyProperty);
         init => SetValue(xf.Label.FontFamilyProperty, value);
-    }
-    public xf.Font Font
-    {
-        internal get => GetValue<xf.Font>(xf.Label.FontProperty);
-        init => SetValue(xf.Label.FontProperty, value);
     }
     public Double FontSize
     {
@@ -774,6 +824,11 @@ public partial class Picker : View<xf.Picker>
         internal get => GetValue<FontAttributes>(xf.Picker.FontAttributesProperty);
         init => SetValue(xf.Picker.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.Picker.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.Picker.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.Picker.FontFamilyProperty);
@@ -872,6 +927,11 @@ public partial class RadioButton : View<xf.RadioButton>
         internal get => GetValue<FontAttributes>(xf.RadioButton.FontAttributesProperty);
         init => SetValue(xf.RadioButton.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.RadioButton.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.RadioButton.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.RadioButton.FontFamilyProperty);
@@ -954,10 +1014,20 @@ public partial class SearchBar : View<xf.SearchBar>
         internal get => GetValue<Double>(xf.SearchBar.CharacterSpacingProperty);
         init => SetValue(xf.SearchBar.CharacterSpacingProperty, value);
     }
+    public Int32 CursorPosition
+    {
+        internal get => GetValue<Int32>(xf.SearchBar.CursorPositionProperty);
+        init => SetValue(xf.SearchBar.CursorPositionProperty, value);
+    }
     public FontAttributes FontAttributes
     {
         internal get => GetValue<FontAttributes>(xf.SearchBar.FontAttributesProperty);
         init => SetValue(xf.SearchBar.FontAttributesProperty, value);
+    }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.SearchBar.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.SearchBar.FontAutoScalingEnabledProperty, value);
     }
     public String FontFamily
     {
@@ -974,6 +1044,11 @@ public partial class SearchBar : View<xf.SearchBar>
         internal get => GetValue<TextAlignment>(xf.SearchBar.HorizontalTextAlignmentProperty);
         init => SetValue(xf.SearchBar.HorizontalTextAlignmentProperty, value);
     }
+    public Boolean IsTextPredictionEnabled
+    {
+        internal get => GetValue<Boolean>(xf.SearchBar.IsTextPredictionEnabledProperty);
+        init => SetValue(xf.SearchBar.IsTextPredictionEnabledProperty, value);
+    }
     public Color PlaceholderColor
     {
         internal get => GetValue<Color>(xf.SearchBar.PlaceholderColorProperty);
@@ -983,6 +1058,11 @@ public partial class SearchBar : View<xf.SearchBar>
     {
         internal get => GetValue<String>(xf.SearchBar.PlaceholderProperty);
         init => SetValue(xf.SearchBar.PlaceholderProperty, value);
+    }
+    public Int32 SelectionLength
+    {
+        internal get => GetValue<Int32>(xf.SearchBar.SelectionLengthProperty);
+        init => SetValue(xf.SearchBar.SelectionLengthProperty, value);
     }
     public Color TextColor
     {
@@ -1083,6 +1163,11 @@ public partial class Span
         internal get => GetValue<FontAttributes>(xf.Span.FontAttributesProperty);
         init => SetValue(xf.Span.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.Span.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.Span.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.Span.FontFamilyProperty);
@@ -1097,6 +1182,11 @@ public partial class Span
     {
         internal get => GetValue<Double>(xf.Span.LineHeightProperty);
         init => SetValue(xf.Span.LineHeightProperty, value);
+    }
+    public Style Style
+    {
+        internal get => GetValue<Style>(xf.Span.StyleProperty);
+        init => SetValue(xf.Span.StyleProperty, value);
     }
     public Color TextColor
     {
@@ -1126,11 +1216,6 @@ public partial class StackLayout
     {
         internal get => GetValue<StackOrientation>(xf.StackLayout.OrientationProperty);
         init => SetValue(xf.StackLayout.OrientationProperty, value);
-    }
-    public Double Spacing
-    {
-        internal get => GetValue<Double>(xf.StackLayout.SpacingProperty);
-        init => SetValue(xf.StackLayout.SpacingProperty, value);
     }
 }
 
@@ -1175,9 +1260,9 @@ public partial class StructuredItemsView : View<xf.StructuredItemsView>
         internal get => GetValue<ItemSizingStrategy>(xf.StructuredItemsView.ItemSizingStrategyProperty);
         init => SetValue(xf.StructuredItemsView.ItemSizingStrategyProperty, value);
     }
-    public xf.IItemsLayout ItemsLayout
+    public IItemsLayout ItemsLayout
     {
-        internal get => GetValue<xf.IItemsLayout>(xf.StructuredItemsView.ItemsLayoutProperty);
+        internal get => GetValue<IItemsLayout>(xf.StructuredItemsView.ItemsLayoutProperty);
         init => SetValue(xf.StructuredItemsView.ItemsLayoutProperty, value);
     }
 }
@@ -1265,6 +1350,11 @@ public partial class TimePicker : View<xf.TimePicker>
         internal get => GetValue<FontAttributes>(xf.TimePicker.FontAttributesProperty);
         init => SetValue(xf.TimePicker.FontAttributesProperty, value);
     }
+    public Boolean FontAutoScalingEnabled
+    {
+        internal get => GetValue<Boolean>(xf.TimePicker.FontAutoScalingEnabledProperty);
+        init => SetValue(xf.TimePicker.FontAutoScalingEnabledProperty, value);
+    }
     public String FontFamily
     {
         internal get => GetValue<String>(xf.TimePicker.FontFamilyProperty);
@@ -1314,9 +1404,9 @@ public partial class VisualElement<T>
         internal get => GetValue<Color>(xf.VisualElement.BackgroundColorProperty);
         init => SetValue(xf.VisualElement.BackgroundColorProperty, value);
     }
-    public Geometry Clip
+    public Laconic.Shapes.Geometry Clip
     {
-        internal get => GetValue<Geometry>(xf.VisualElement.ClipProperty);
+        internal get => GetValue<Laconic.Shapes.Geometry>(xf.VisualElement.ClipProperty);
         init => SetValue(xf.VisualElement.ClipProperty, value);
     }
     public FlowDirection FlowDirection
@@ -1339,15 +1429,20 @@ public partial class VisualElement<T>
         internal get => GetValue<Boolean>(xf.VisualElement.IsEnabledProperty);
         init => SetValue(xf.VisualElement.IsEnabledProperty, value);
     }
-    public Boolean IsTabStop
-    {
-        internal get => GetValue<Boolean>(xf.VisualElement.IsTabStopProperty);
-        init => SetValue(xf.VisualElement.IsTabStopProperty, value);
-    }
     public Boolean IsVisible
     {
         internal get => GetValue<Boolean>(xf.VisualElement.IsVisibleProperty);
         init => SetValue(xf.VisualElement.IsVisibleProperty, value);
+    }
+    public Double MaximumHeightRequest
+    {
+        internal get => GetValue<Double>(xf.VisualElement.MaximumHeightRequestProperty);
+        init => SetValue(xf.VisualElement.MaximumHeightRequestProperty, value);
+    }
+    public Double MaximumWidthRequest
+    {
+        internal get => GetValue<Double>(xf.VisualElement.MaximumWidthRequestProperty);
+        init => SetValue(xf.VisualElement.MaximumWidthRequestProperty, value);
     }
     public Double MinimumHeightRequest
     {
@@ -1394,15 +1489,15 @@ public partial class VisualElement<T>
         internal get => GetValue<Double>(xf.VisualElement.ScaleYProperty);
         init => SetValue(xf.VisualElement.ScaleYProperty, value);
     }
-    public xf.Style Style
+    public Shadow Shadow
     {
-        internal get => GetValue<xf.Style>(xf.VisualElement.StyleProperty);
-        init => SetValue(xf.VisualElement.StyleProperty, value);
+        internal get => GetValue<Shadow>(xf.VisualElement.ShadowProperty);
+        init => SetValue(xf.VisualElement.ShadowProperty, value);
     }
-    public Int32 TabIndex
+    public Style Style
     {
-        internal get => GetValue<Int32>(xf.VisualElement.TabIndexProperty);
-        init => SetValue(xf.VisualElement.TabIndexProperty, value);
+        internal get => GetValue<Style>(xf.VisualElement.StyleProperty);
+        init => SetValue(xf.VisualElement.StyleProperty, value);
     }
     public Double TranslationX
     {
@@ -1428,21 +1523,9 @@ public partial class WebView : View<xf.WebView>
         internal get => GetValue<CookieContainer>(xf.WebView.CookiesProperty);
         init => SetValue(xf.WebView.CookiesProperty, value);
     }
-    public xf.WebViewSource Source
+    public WebViewSource Source
     {
-        internal get => GetValue<xf.WebViewSource>(xf.WebView.SourceProperty);
+        internal get => GetValue<WebViewSource>(xf.WebView.SourceProperty);
         init => SetValue(xf.WebView.SourceProperty, value);
-    }
-    public Func<Signal> GoBackRequested
-    {
-        init => SetEvent(nameof(GoBackRequested), value, (ctl, handler) => ctl.GoBackRequested += handler, (ctl, handler) => ctl.GoBackRequested -= handler);
-    }
-    public Func<Signal> GoForwardRequested
-    {
-        init => SetEvent(nameof(GoForwardRequested), value, (ctl, handler) => ctl.GoForwardRequested += handler, (ctl, handler) => ctl.GoForwardRequested -= handler);
-    }
-    public Func<Signal> ReloadRequested
-    {
-        init => SetEvent(nameof(ReloadRequested), value, (ctl, handler) => ctl.ReloadRequested += handler, (ctl, handler) => ctl.ReloadRequested -= handler);
     }
 }

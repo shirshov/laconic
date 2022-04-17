@@ -1,4 +1,4 @@
-using PropDict = System.Collections.Generic.Dictionary<Xamarin.Forms.BindableProperty, object?>;
+using PropDict = System.Collections.Generic.Dictionary<Microsoft.Maui.Controls.BindableProperty, object?>;
 using EventDict = System.Collections.Generic.Dictionary<string, Laconic.EventInfo>;
 
 namespace Laconic;

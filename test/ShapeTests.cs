@@ -21,7 +21,7 @@ public class ShapeTests
     [Fact]
     public void Clip_property_is_set()
     {
-        var img = new Image {Clip = new EllipseGeometry {Center = new xf.Point(10, 10), RadiusX = 3, RadiusY = 5}};
+        var img = new Image {Clip = new EllipseGeometry {Center = new Maui.Graphics.Point(10, 10), RadiusX = 3, RadiusY = 5}};
         var diff = Diff.Calculate(null, img).ToArray();
 
         diff[0].ShouldBeOfType<SetChildElement>();
@@ -30,9 +30,9 @@ public class ShapeTests
     [Fact]
     public void Clip_property_not_set_if_value_is_identical()
     {
-        var img = new Image {Clip = new EllipseGeometry {Center = new xf.Point(10, 10), RadiusX = 3, RadiusY = 5}};
+        var img = new Image {Clip = new EllipseGeometry {Center = new Maui.Graphics.Point(10, 10), RadiusX = 3, RadiusY = 5}};
         var diff = Diff.Calculate(img,
-            new Image {Clip = new EllipseGeometry {Center = new xf.Point(10, 10), RadiusX = 3, RadiusY = 5}});
+            new Image {Clip = new EllipseGeometry {Center = new Maui.Graphics.Point(10, 10), RadiusX = 3, RadiusY = 5}});
         diff.ShouldBeEmpty();
     }
 

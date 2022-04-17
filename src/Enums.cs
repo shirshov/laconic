@@ -156,9 +156,9 @@ public enum FlowDirection
 
 public enum TextAlignment
 {
-    Start = xf.TextAlignment.Start,
-    End = xf.TextAlignment.End,
-    Center = xf.TextAlignment.Center
+    Start = Maui.TextAlignment.Start,
+    End = Maui.TextAlignment.End,
+    Center = Maui.TextAlignment.Center
 }
     
 public enum TextTransform

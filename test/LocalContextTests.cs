@@ -178,7 +178,7 @@ public class LocalContextTests
     [Fact]
     public void ToolBarItems_on_page()
     {
-        static VisualElement<Xamarin.Forms.ContentPage> TestPage(int state) => Element.WithContext(_ => {
+        static VisualElement<xf.ContentPage> TestPage(int state) => Element.WithContext(_ => {
             return new ContentPage {
                 ToolbarItems = {["save"] = new ToolbarItem {Text = "Save", Clicked = () => new Signal(null)}},
             };

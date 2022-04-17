@@ -87,7 +87,7 @@ static class Patch
                 },
                 UpdateContent uc => () => newWithContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
                 UpdateChildViews uc => () => newWithContext.AddRange(ViewListPatch.Apply(
-                    ((xf.Layout<xf.View>) element).Children, uc.Operations, dispatch)),
+                    ((xf.Layout) element).Children.Cast<xf.BindableObject>().ToList(), uc.Operations, dispatch)),
                 UpdateChildElementList uc => () => newWithContext.AddRange(ViewListPatch.ApplyToChildElements(uc.GetList(element), uc.Operations, dispatch)),
                 RowDefinitionsChange rdc => () => {
                     var grid = (xf.Grid) element;
@@ -112,8 +112,8 @@ static class Patch
                     change(element, gpc.Value);
                 },
                 SetAbsoluteLayoutPositioning (var bounds, var flags) => () => {
-                    xf.AbsoluteLayout.SetLayoutBounds(element, new xf.Rectangle(bounds.X, bounds.Y, bounds.Width, bounds.Height));
-                    xf.AbsoluteLayout.SetLayoutFlags(element, (xf.AbsoluteLayoutFlags)ConvertToNative(flags));
+                    xf.AbsoluteLayout.SetLayoutBounds(element, new Maui.Graphics.Rect(bounds.X, bounds.Y, bounds.Width, bounds.Height));
+                    xf.AbsoluteLayout.SetLayoutFlags(element, (Maui.Layouts.AbsoluteLayoutFlags)ConvertToNative(flags));
                 },
                 WireEvent evt => () => {
                     var subs = (Dictionary<string, EventSubscription>?)element.GetValue(EventSubscription.EventSubscriptionsProperty);
@@ -211,24 +211,24 @@ static class Patch
     }
 
     internal static object ConvertToNative(object value) => value switch {
-        AbsoluteLayoutFlags _ => (xf.AbsoluteLayoutFlags)value,
+        AbsoluteLayoutFlags _ => (Maui.Layouts.AbsoluteLayoutFlags)value,
         FontAttributes _ => (xf.FontAttributes) value,
-        ReturnType _ => (xf.ReturnType) value,
+        ReturnType _ => (Maui.ReturnType) value,
         IndicatorShape _ => (xf.IndicatorShape) value,
-        ScrollBarVisibility _ => (xf.ScrollBarVisibility) value,
+        ScrollBarVisibility _ => (Maui.ScrollBarVisibility) value,
         ItemsUpdatingScrollMode _ => (xf.ItemsUpdatingScrollMode) value,
-        LineBreakMode _ => (xf.LineBreakMode) value,
-        TextDecorations _ => (xf.TextDecorations) value,
-        TextType _ => (xf.TextType) value,
-        ScrollOrientation _ => (xf.ScrollOrientation) value,
+        LineBreakMode _ => (Maui.LineBreakMode) value,
+        TextDecorations _ => (Maui.TextDecorations) value,
+        TextType _ => (Maui.TextType) value,
+        ScrollOrientation _ => (Maui.ScrollOrientation) value,
         SelectionMode _ => (xf.SelectionMode) value,
         StackOrientation _ => (xf.StackOrientation) value,
         ItemSizingStrategy _ => (xf.ItemSizingStrategy) value,
-        FlowDirection _ => (xf.FlowDirection) value,
-        TextAlignment _ => (xf.TextAlignment) value,
-        TextTransform _ => (xf.TextTransform) value,
-        Aspect _ => (xf.Aspect) value,
-        ClearButtonVisibility _ => (xf.ClearButtonVisibility) value,
+        FlowDirection _ => (Maui.FlowDirection) value,
+        TextAlignment _ => (Maui.TextAlignment) value,
+        TextTransform _ => (Maui.TextTransform) value,
+        Aspect _ => (Maui.Aspect) value,
+        ClearButtonVisibility _ => (Maui.ClearButtonVisibility) value,
         EditorAutoSizeOption _ => (xf.EditorAutoSizeOption) value,
         LayoutAlignment _ => (xf.LayoutAlignment) value,
         Stretch _ => (xf.Stretch)value,
@@ -241,29 +241,29 @@ static class Patch
         },
         // Easing is a class in Xamarin.Forms
         Easing e => e switch {
-            Easing.Linear => xf.Easing.Linear,
-            Easing.BounceIn => xf.Easing.BounceIn,
-            Easing.BounceOut => xf.Easing.BounceOut,
-            Easing.CubicIn => xf.Easing.CubicIn,
-            Easing.CubicOut => xf.Easing.CubicOut,
-            Easing.SinIn => xf.Easing.SinIn,
-            Easing.SinOut => xf.Easing.SinOut,
-            Easing.SpringIn => xf.Easing.SpringIn,
-            Easing.SpringOut => xf.Easing.SpringOut,
-            Easing.CubicInOut => xf.Easing.CubicInOut,
-            Easing.SinInOut => xf.Easing.SinInOut,
+            Easing.Linear => Maui.Easing.Linear,
+            Easing.BounceIn => Maui.Easing.BounceIn,
+            Easing.BounceOut => Maui.Easing.BounceOut,
+            Easing.CubicIn => Maui.Easing.CubicIn,
+            Easing.CubicOut => Maui.Easing.CubicOut,
+            Easing.SinIn => Maui.Easing.SinIn,
+            Easing.SinOut => Maui.Easing.SinOut,
+            Easing.SpringIn => Maui.Easing.SpringIn,
+            Easing.SpringOut => Maui.Easing.SpringOut,
+            Easing.CubicInOut => Maui.Easing.CubicInOut,
+            Easing.SinInOut => Maui.Easing.SinInOut,
             _ => throw new NotImplementedException($"Support for Easing.{e} is not implemented")
         },
         // Keyboard is a class in Xamarin.Forms
         Keyboard k => k switch {
-            Keyboard.Plain => xf.Keyboard.Plain,
-            Keyboard.Chat => xf.Keyboard.Chat,
-            Keyboard.Default => xf.Keyboard.Default,
-            Keyboard.Email => xf.Keyboard.Email,
-            Keyboard.Numeric => xf.Keyboard.Numeric,
-            Keyboard.Telephone => xf.Keyboard.Telephone,
-            Keyboard.Text => xf.Keyboard.Text,
-            Keyboard.Url => xf.Keyboard.Url,
+            Keyboard.Plain => Maui.Keyboard.Plain,
+            Keyboard.Chat => Maui.Keyboard.Chat,
+            Keyboard.Default => Maui.Keyboard.Default,
+            Keyboard.Email => Maui.Keyboard.Email,
+            Keyboard.Numeric => Maui.Keyboard.Numeric,
+            Keyboard.Telephone => Maui.Keyboard.Telephone,
+            Keyboard.Text => Maui.Keyboard.Text,
+            Keyboard.Url => Maui.Keyboard.Url,
             _ => throw new NotImplementedException($"Support for Keyboard.{k} is not implemented")
         },
         // Shapes enums
@@ -280,7 +280,7 @@ static class Patch
         LayoutOptions l when l == LayoutOptions.EndAndExpand => xf.LayoutOptions.EndAndExpand,
         LayoutOptions l when l == LayoutOptions.FillAndExpand => xf.LayoutOptions.FillAndExpand,
         // custom types 
-        Thickness t => new xf.Thickness(t.Left, t.Top, t.Right, t.Bottom),
+        Thickness t => new Maui.Thickness(t.Left, t.Top, t.Right, t.Bottom),
         IConvert c => c.ToNative(),
         _ => value
     };

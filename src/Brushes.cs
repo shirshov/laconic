@@ -7,7 +7,7 @@ public interface IBrush
     
 public abstract class Brush
 {
-    public static IBrush Default => new SolidColorBrush(Color.Default);
+    public static IBrush Default => new SolidColorBrush(null);
 
     public static readonly SolidColorBrush AliceBlue = new(Color.AliceBlue);
     public static readonly SolidColorBrush AntiqueWhite = new(Color.AntiqueWhite);

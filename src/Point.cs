@@ -23,7 +23,7 @@ public readonly struct Point : IConvert
     public override string ToString() =>
         $"{{X={X.ToString(CultureInfo.InvariantCulture)} Y={Y.ToString(CultureInfo.InvariantCulture)}}}";
 
-    public object ToNative() => new Xamarin.Forms.Point(X, Y);
+    public object ToNative() => new Maui.Graphics.Point(X, Y);
 
     public Point(double x, double y)
     {

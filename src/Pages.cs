@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Laconic;
 
 // TODO: MenuItem etc.
@@ -26,7 +28,7 @@ public interface Page
         
 }
     
-public abstract partial class Page<T> : VisualElement<T>, Page where T : Xamarin.Forms.Page, new()
+public abstract partial class Page<T> : VisualElement<T>, Page where T : Microsoft.Maui.Controls.Page, new()
 {
     public IDictionary<Key, ToolbarItem> ToolbarItems { get; } = new Dictionary<Key, ToolbarItem>();
 }

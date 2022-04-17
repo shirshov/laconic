@@ -123,11 +123,11 @@ public class Timer : IDisposable
     void StartTimer()
     {
         var signal = new TimerSignal(_contextKey);
-        Xamarin.Forms.Device.StartTimer(_timer, () => {
-            if (_isRunning)
-                _callback(signal);
-            return _isRunning;
-        });
+        // Microsoft.Maui.Essentials.Device.StartTimer(_timer, () => {
+        //     if (_isRunning)
+        //         _callback(signal);
+        //     return _isRunning;
+        // });
     }
         
     public TimerSignal? Start()

@@ -44,7 +44,7 @@ public class ContextExpanderTests
     [Fact]
     public void Context_is_reused()
     {
-        ContextElement<Xamarin.Forms.Label> MakeView() => Element.WithContext(ctx => {
+        ContextElement<xf.Label> MakeView() => Element.WithContext(ctx => {
             var (state, _) = ctx.UseLocalState("a");
             return new Label {Text = state};
         });

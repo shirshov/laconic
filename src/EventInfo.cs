@@ -3,12 +3,12 @@ namespace Laconic;
 public class EventInfo
 {
     public readonly Func<EventArgs, Signal> SignalMaker;
-    public readonly Action<Xamarin.Forms.BindableObject, EventHandler> Subscribe;
-    public readonly Action<Xamarin.Forms.BindableObject, EventHandler> Unsubscribe;
+    public readonly Action<xf.BindableObject, EventHandler> Subscribe;
+    public readonly Action<xf.BindableObject, EventHandler> Unsubscribe;
 
     public EventInfo(Func<EventArgs, Signal> signalMaker, 
-        Action<Xamarin.Forms.BindableObject, EventHandler> subscribe,
-        Action<Xamarin.Forms.BindableObject, EventHandler> unsubscribe)
+        Action<xf.BindableObject, EventHandler> subscribe,
+        Action<xf.BindableObject, EventHandler> unsubscribe)
     {
         SignalMaker = signalMaker;
         Subscribe = subscribe;

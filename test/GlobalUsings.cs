@@ -5,4 +5,5 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using Shouldly;
 global using Xunit;
-global using xf = Xamarin.Forms;
+global using xf = Microsoft.Maui.Controls;
+global using Maui = Microsoft.Maui;

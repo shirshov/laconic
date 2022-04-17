@@ -4,7 +4,7 @@ namespace Laconic;
 
 static class ViewListPatch
 {
-    internal static List<(string? ContextKey, xf.BindableObject View)> Apply(IList<xf.View> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
+    internal static List<(string? ContextKey, xf.BindableObject View)> Apply(IList<xf.BindableObject> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
     {
         var withContext = new List<(string?, xf.BindableObject)>();
             

@@ -71,6 +71,6 @@ public readonly struct CornerRadius : IConvert
 
     object IConvert.ToNative() =>
         _isParameterized
-            ? new Xamarin.Forms.CornerRadius(TopLeft, TopRight, BottomLeft, BottomRight)
-            : new Xamarin.Forms.CornerRadius(TopLeft);
+            ? new Maui.CornerRadius(TopLeft, TopRight, BottomLeft, BottomRight)
+            : new Maui.CornerRadius(TopLeft);
 }

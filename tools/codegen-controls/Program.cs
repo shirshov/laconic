@@ -1,10 +1,12 @@
-﻿global using Xamarin.Forms;
+﻿global using Microsoft.Maui.Controls;
 global using System;
 global using System.Linq;
 global using System.Collections.Generic;
 
 using System.IO;
 using System.Reflection;
+using Microsoft.Maui.Controls.Compatibility;
+using Layout = Microsoft.Maui.Controls.Layout;
 
 namespace Laconic.CodeGen;
 
@@ -59,7 +61,7 @@ class Program
                     "CornerRadius", "Easing", "View", "Brush"
                 };
 
-                return type.Namespace == "Xamarin.Forms" &&
+                return type.Namespace == "Microsoft.Maui.Control" &&
                        !(providedByLaconic.Contains(type.Name) || type.IsEnum)
                     ? "xf." + type.Name
                     : type.Name;
@@ -67,19 +69,19 @@ class Program
 
             foreach (var c in all.Select(x => x.Type))
             {
-                yield return "    public " + (c.IsAbstract ? "abstract " : "") + $"partial class {c.Name}"
+                yield return "public " + (c.IsAbstract ? "abstract " : "") + $"partial class {c.Name}"
                              + (Definitions.Defs[c].HasGenericParameter ? "<T>" : "")
-                             + (Definitions.Defs[c].DoNotInherit ? "\n    {" : $" : View<xf.{c.Name}>\n    {{");
+                             + (Definitions.Defs[c].DoNotInherit ? "\n{" : $" : View<xf.{c.Name}>\n{{");
                 foreach (var p in GetProps(c))
                 {
                     var bindableProperty = (BindableProperty) p.GetValue(null);
                     var propName = bindableProperty.PropertyName;
                     var propType = bindableProperty.ReturnType;
-                    yield return $"        public {WithXfPrefix(propType)} {propName}";
-                    yield return  "        {";
-                    yield return $"            internal get => GetValue<{WithXfPrefix(propType)}>(xf.{c.Name}.{p.Name});";
-                    yield return $"            init => SetValue(xf.{c.Name}.{p.Name}, value);";
-                    yield return  "        }";
+                    yield return $"    public {WithXfPrefix(propType)} {propName}";
+                    yield return  "    {";
+                    yield return $"        internal get => GetValue<{WithXfPrefix(propType)}>(xf.{c.Name}.{p.Name});";
+                    yield return $"        init => SetValue(xf.{c.Name}.{p.Name}, value);";
+                    yield return  "    }";
                 }
 
                 foreach (var e in GetEvents(c))
@@ -95,12 +97,12 @@ class Program
                         genericParam += type.Name + ",";
                     }
 
-                    yield return $"        public Func<{genericParam}Signal> {e.Name}";
-                    yield return  "        {";
-                    yield return $"            init => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
-                    yield return  "        }";
+                    yield return $"    public Func<{genericParam}Signal> {e.Name}";
+                    yield return  "    {";
+                    yield return $"        init => SetEvent(nameof({e.Name}), value, (ctl, handler) => ctl.{e.Name} += handler, (ctl, handler) => ctl.{e.Name} -= handler);";
+                    yield return  "    }";
                 }
-                yield return "    }\n";
+                yield return "}\n";
             }
         }
 
@@ -129,7 +131,7 @@ class Program
         var flatList = new List<(Type Type, Type Base)>();
 
         AddDirectDescendants(typeof(BindableObject), flatList);
-        AddDirectDescendants(typeof(Layout<View>), flatList);
+        AddDirectDescendants(typeof(Layout), flatList);
 
         var res = "";
 

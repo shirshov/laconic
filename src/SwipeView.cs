@@ -4,10 +4,10 @@ public partial class SwipeView : IContentHost
 {
     public SwipeView()
     {
-        ElementLists.Add<Xamarin.Forms.SwipeView>(nameof(LeftItems), v => new SwipeItemsAdapter(v.LeftItems));
-        ElementLists.Add<Xamarin.Forms.SwipeView>(nameof(RightItems), v => new SwipeItemsAdapter(v.RightItems));
-        ElementLists.Add<Xamarin.Forms.SwipeView>(nameof(TopItems), v => new SwipeItemsAdapter(v.TopItems));
-        ElementLists.Add<Xamarin.Forms.SwipeView>(nameof(BottomItems), v => new SwipeItemsAdapter(v.BottomItems));
+        ElementLists.Add<xf.SwipeView>(nameof(LeftItems), v => new SwipeItemsAdapter(v.LeftItems));
+        ElementLists.Add<xf.SwipeView>(nameof(RightItems), v => new SwipeItemsAdapter(v.RightItems));
+        ElementLists.Add<xf.SwipeView>(nameof(TopItems), v => new SwipeItemsAdapter(v.TopItems));
+        ElementLists.Add<xf.SwipeView>(nameof(BottomItems), v => new SwipeItemsAdapter(v.BottomItems));
     }
 
     public ElementList LeftItems => ElementLists[nameof(LeftItems)];
@@ -17,31 +17,31 @@ public partial class SwipeView : IContentHost
 
     public View? Content { get; set; }
 
-    public Func<Xamarin.Forms.SwipeStartedEventArgs, Signal> SwipeStarted {
+    public Func<xf.SwipeStartedEventArgs, Signal> SwipeStarted {
         init => SetEvent(nameof(SwipeStarted), value,
             (ctl, handler) => ctl.SwipeStarted += handler,
             (ctl, handler) => ctl.SwipeStarted -= handler);
     }
 
-    public Func<Xamarin.Forms.SwipeEndedEventArgs, Signal> SwipeEnded {
+    public Func<xf.SwipeEndedEventArgs, Signal> SwipeEnded {
         init => SetEvent(nameof(SwipeEnded), value,
             (ctl, handler) => ctl.SwipeEnded += handler,
             (ctl, handler) => ctl.SwipeEnded -= handler);
     }
 
-    public Func<Xamarin.Forms.SwipeChangingEventArgs, Signal> SwipeChanging {
+    public Func<xf.SwipeChangingEventArgs, Signal> SwipeChanging {
         init => SetEvent(nameof(SwipeChanging), value,
             (ctl, handler) => ctl.SwipeChanging += handler,
             (ctl, handler) => ctl.SwipeChanging -= handler);
     }
 
-    public Func<Xamarin.Forms.OpenRequestedEventArgs, Signal> OpenRequested {
+    public Func<Maui.Controls.OpenRequestedEventArgs, Signal> OpenRequested {
         init => SetEvent(nameof(OpenRequested), value, 
             (ctl, handler) => ctl.OpenRequested += handler,
             (ctl, handler) => ctl.OpenRequested -= handler);
     }
         
-    public Func<Xamarin.Forms.CloseRequestedEventArgs, Signal> CloseRequested {
+    public Func<Maui.Controls.CloseRequestedEventArgs, Signal> CloseRequested {
         init => SetEvent(nameof(CloseRequested), value, 
             (ctl, handler) => ctl.CloseRequested += handler,
             (ctl, handler) => ctl.CloseRequested -= handler);

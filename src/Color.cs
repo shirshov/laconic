@@ -2,8 +2,8 @@ namespace Laconic;
 
 interface ColorSource { }
 
-class Default : ColorSource {};
-class Accent : ColorSource {};
+// class Default : ColorSource {};
+// class Accent : ColorSource {};
 record Hex(string Value) : ColorSource;
 record Hsla(double H, double S, double L, double A = 1.0) : ColorSource;
 record Rgba(byte R, byte G, byte B, byte A = 255) : ColorSource;
@@ -152,8 +152,8 @@ public readonly struct Color : IConvert, IEquatable<Color>
     public static readonly Color Yellow = (255, 255, 0);
     public static readonly Color YellowGreen = (154, 205, 50);
 
-    public static Color Default => new(new Default());
-    public static Color Accent => new(new Accent());
+    // public static Color Default => new(new Default());
+    // public static Color Accent => new(new Accent());
 
     public static implicit operator Color(string hexValue) => new(new Hex(hexValue));
 
@@ -171,12 +171,12 @@ public readonly struct Color : IConvert, IEquatable<Color>
 
     object IConvert.ToNative() => ToXamarinFormsColor();
         
-    public Xamarin.Forms.Color ToXamarinFormsColor() => _value switch {
-        Default _ => Xamarin.Forms.Color.Default,
-        Accent _ => Xamarin.Forms.Color.Accent,
-        Hex h => Xamarin.Forms.Color.FromHex(h.Value),
-        Hsla(var h, var s, var l, var a) => Xamarin.Forms.Color.FromHsla(h, s, l, a),
-        Rgba x => Xamarin.Forms.Color.FromRgba(x.R, x.G, x.B, x.A),
+    public Maui.Graphics.Color ToXamarinFormsColor() => _value switch {
+        // Default _ => Maui.Graphics.Color..Default,
+        // Accent _ => Maui.Graphics.Color..Accent,
+        Hex h => Maui.Graphics.Color.FromHex(h.Value),
+        Hsla(var h, var s, var l, var a) => Maui.Graphics.Color.FromHsla(h, s, l, a),
+        Rgba x => Maui.Graphics.Color.FromRgba(x.R, x.G, x.B, x.A),
         _ => throw new NotImplementedException($"Support for the color value '{_value}' is not implemented")
     };
 

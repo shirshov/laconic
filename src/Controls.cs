@@ -65,7 +65,7 @@ public partial class Picker
     }
 }
 
-public abstract partial class InputView<T> : VisualElement<T>, View where T : Xamarin.Forms.InputView, new()
+public abstract partial class InputView<T> : VisualElement<T>, View where T : Microsoft.Maui.Controls.InputView, new()
 {
     public Func<xf.TextChangedEventArgs, Signal> TextChanged {
         init => SetEvent(nameof(TextChanged), value,

@@ -90,7 +90,7 @@ public partial class NavigationPage : Page<xf.NavigationPage>, IDoDispatch
     {
         Behaviors.Add("swipe-back", new SwipeBackGestureBehavior(stack, s => _dispatch!(s)));
 
-        var pages = ElementLists.Add<Xamarin.Forms.NavigationPage>( "Pages", real => new RealPagesAdapter(stack, real));
+        var pages = ElementLists.Add<xf.NavigationPage>( "Pages", real => new RealPagesAdapter(stack, real));
         foreach (var f in stack.Frames) {
             var p = pageFactory(f.Data);
             p.ProvidedValues[LaconicNavigationMetadataProperty] = f;
@@ -113,7 +113,7 @@ class RealPagesAdapter : IList
     }
 
     public object this[int index] {
-        get => _page.Pages.ElementAt(index);
+        get => _page.Navigation.NavigationStack.ElementAt(index);
         set => throw new NotSupportedException();
     }
     // TODO: Insert and Add should be handled differently: Add should call PushAsync, Insert use InsertPageBefore
@@ -144,7 +144,7 @@ class RealPagesAdapter : IList
         }
                 
         // Swipe back, stack modified by the GestureBehavior:
-        else if (index == _page.Pages.Count())
+        else if (index == _page.Navigation.NavigationStack.Count)
             return;
             
         // Pop requested in code

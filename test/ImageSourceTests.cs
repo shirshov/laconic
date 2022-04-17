@@ -20,7 +20,7 @@ public class ImageSourceTests
         imgSource.FontFamily.ShouldBe("Arial");
         imgSource.Glyph.ShouldBe("a");
         imgSource.Size.ShouldBe(13);
-        imgSource.Color.ShouldBe(xf.Color.Red);
+        imgSource.Color.ShouldBe(Maui.Graphics.Colors.Red);
             
         binder.Send(new Signal(null));
 
@@ -29,6 +29,6 @@ public class ImageSourceTests
         imgSource.FontFamily.ShouldBe("Helvetica");
         imgSource.Glyph.ShouldBe("h");
         imgSource.Size.ShouldBe(15);
-        imgSource.Color.ShouldBe(xf.Color.Green);
+        imgSource.Color.ShouldBe(Maui.Graphics.Colors.Green);
     }
 }

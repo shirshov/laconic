@@ -61,7 +61,7 @@ public class NavigationPageTests
 
         var real = b.CreateElement(_ => new NavigationPage(new NavigationStack("root"), _ => new ContentPage()));
 
-        real.Pages.Count().ShouldBe(1);
+        real.Navigation.NavigationStack.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -76,17 +76,17 @@ public class NavigationPageTests
         var real = b.CreateElement(s => new NavigationPage(stack, _ => new ContentPage()));
 
         stack.Frames.Count.ShouldBe(1);
-        real.Pages.Count().ShouldBe(1);
+        real.Navigation.NavigationStack.Count.ShouldBe(1);
             
         b.Send(new("open-details"));
             
         stack.Frames.Count.ShouldBe(2);
-        real.Pages.Count().ShouldBe(2);
+        real.Navigation.NavigationStack.Count.ShouldBe(2);
             
         b.Send(new("close-details"));
             
         stack.Frames.Count.ShouldBe(1);
-        real.Pages.Count().ShouldBe(1);
+        real.Navigation.NavigationStack.Count.ShouldBe(1);
     }
         
     [Fact]

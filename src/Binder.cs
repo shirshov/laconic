@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 [assembly: InternalsVisibleTo("LaconicTests")]
 [assembly: InternalsVisibleTo("MapTests")]

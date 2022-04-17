@@ -1,6 +1,6 @@
 namespace Laconic;
 
-public abstract class Layout<T> : View<T> where T : xf.Layout, new()
+public abstract class Layout<T> : View<T>  where T: xf.VisualElement, xf.IPaddingElement, new() //where T : xf.Layout, new()
 {
     public Thickness Padding
     {
@@ -73,20 +73,20 @@ public class RowDefinitionCollection : List<xf.RowDefinition>
             var trimmed = part.Trim();
             if (trimmed.ToLower() == "auto")
             {
-                res.Add(new xf.RowDefinition {Height = xf.GridLength.Auto});
+                res.Add(new xf.RowDefinition {Height = GridLength.Auto});
             }
             else if (trimmed == "*")
             {
-                res.Add(new xf.RowDefinition {Height = xf.GridLength.Star});
+                res.Add(new xf.RowDefinition {Height = GridLength.Star});
             }
             else if (trimmed.EndsWith("*"))
             {
                 var val = Double.Parse(trimmed.Substring(0, trimmed.Length - 1));
-                res.Add(new xf.RowDefinition {Height = new xf.GridLength(val, xf.GridUnitType.Star)});
+                res.Add(new xf.RowDefinition {Height = new GridLength(val, GridUnitType.Star)});
             }
             else
             {
-                res.Add(new xf.RowDefinition {Height = new xf.GridLength(Double.Parse(trimmed))});
+                res.Add(new xf.RowDefinition {Height = new GridLength(Double.Parse(trimmed))});
             }
         }
 
@@ -120,20 +120,20 @@ public class ColumnDefinitionCollection : List<xf.ColumnDefinition>
             var trimmed = part.Trim();
             if (trimmed.ToLower() == "auto")
             {
-                res.Add(new xf.ColumnDefinition {Width = xf.GridLength.Auto});
+                res.Add(new ColumnDefinition {Width = GridLength.Auto});
             }
             else if (trimmed == "*")
             {
-                res.Add(new xf.ColumnDefinition {Width = xf.GridLength.Star});
+                res.Add(new ColumnDefinition {Width = GridLength.Star});
             }
             else if (trimmed.EndsWith("*"))
             {
                 var val = Double.Parse(trimmed.Substring(0, trimmed.Length - 1));
-                res.Add(new xf.ColumnDefinition {Width = new xf.GridLength(val, xf.GridUnitType.Star)});
+                res.Add(new xf.ColumnDefinition {Width = new GridLength(val, Maui.GridUnitType.Star)});
             }
             else
             {
-                res.Add(new xf.ColumnDefinition {Width = new xf.GridLength(Double.Parse(trimmed))});
+                res.Add(new xf.ColumnDefinition {Width = new Maui.GridLength(Double.Parse(trimmed))});
             }
         }
 

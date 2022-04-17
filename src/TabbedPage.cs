@@ -7,9 +7,9 @@ public class CurrentPageChangedEventArgs : EventArgs
     public CurrentPageChangedEventArgs(int index) => Index = index;
 }
     
-public partial class TabbedPage : Page<Xamarin.Forms.TabbedPage>
+public partial class TabbedPage : Page<Maui.Controls.TabbedPage>
 {
-    public TabbedPage() => ElementLists.Add<Xamarin.Forms.TabbedPage>(nameof(Children), tp => (IList) tp.Children);
+    public TabbedPage() => ElementLists.Add<xf.TabbedPage>(nameof(Children), tp => (IList) tp.Children);
         
     public ElementList Children => ElementLists[nameof(Children)];
 
@@ -28,7 +28,7 @@ public partial class TabbedPage : Page<Xamarin.Forms.TabbedPage>
 
     void OnCurrentPageChanged(object sender, EventArgs args)
     {
-        var page = (Xamarin.Forms.TabbedPage) sender;
+        var page = (xf.TabbedPage) sender;
         var index = page.Children.IndexOf(page.CurrentPage);
         if (index != -1)
             _handler!(page, new CurrentPageChangedEventArgs(index));

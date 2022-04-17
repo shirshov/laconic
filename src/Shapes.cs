@@ -1,4 +1,4 @@
-using Xamarin.Forms.Shapes;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace Laconic.Shapes;
 
@@ -32,7 +32,7 @@ public class Geometry<T> : Element<T>, Geometry where T : xf.Shapes.Geometry, ne
 
 public class EllipseGeometry : Geometry<xf.Shapes.EllipseGeometry>
 {
-    public xf.Point Center {
+    public Maui.Graphics.Point Center {
         set => SetValue(xf.Shapes.EllipseGeometry.CenterProperty, value);
     }
 
@@ -65,18 +65,18 @@ public class PathGeometry : Geometry<xf.Shapes.PathGeometry>
 
 public class LineGeometry : Geometry<xf.Shapes.LineGeometry>
 {
-    public xf.Point StartPoint {
+    public Maui.Graphics.Point StartPoint {
         set => SetValue(xf.Shapes.LineGeometry.StartPointProperty, value);
     }
 
-    public xf.Point EndPoint {
+    public Maui.Graphics.Point EndPoint {
         set => SetValue(xf.Shapes.LineGeometry.EndPointProperty, value);
     }
 }
 
 public class RectangleGeometry : Geometry<xf.Shapes.RectangleGeometry>
 {
-    public xf.Rectangle Rect;
+    public Rectangle Rect;
 }
 
 public abstract class Shape<T> : View<T> where T : xf.View, new()

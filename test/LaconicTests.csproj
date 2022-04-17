@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
+    <UseMaui>true</UseMaui>
   </PropertyGroup>
 
   <ItemGroup>

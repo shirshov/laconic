@@ -1,5 +1,8 @@
 using System;
-using Xamarin.Forms.Shapes;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Maui.Graphics;
+using Geometry = Microsoft.Maui.Graphics.Geometry;
 
 namespace Laconic.CodeGen;
 
@@ -83,7 +86,7 @@ class Definitions
         [typeof(GestureElement)] = NotUsed,
         [typeof(GestureRecognizer)] = WrittenManually,
         [typeof(GradientBrush)] = WrittenManually,
-        [typeof(GradientStop)] = WrittenManually,
+        [typeof(Microsoft.Maui.Controls.GradientStop)] = WrittenManually,
         [typeof(Grid)] = All
             .WithoutBaseDeclaration()
             .ExceptWrittenManually(
@@ -126,19 +129,17 @@ class Definitions
         [typeof(ItemsView<>)] = WrittenManually,
         [typeof(Label)] = All,
         [typeof(Layout)] = WrittenManually,
-        [typeof(Layout<>)] = WrittenManually,
+        // [typeof(Layout<>)] = WrittenManually,
         [typeof(LinearGradientBrush)] = WrittenManually,
         [typeof(LinearItemsLayout)] = NotImplemented,
-#pragma warning disable CS0618 // Type or member is obsolete
-        [typeof(MasterDetailPage)] = NotUsed, // Obsolete in XF 5.0
-#pragma warning restore CS0618 // Type or member is obsolete
-        [typeof(Menu)] = NotImplemented,
+        // [typeof(Menu)] = NotImplemented,
         [typeof(MenuItem)] = NotImplemented,
         [typeof(MultiPage<>)] = NotUsed,
         [typeof(MultiTrigger)] = NotUsed,
         [typeof(NavigableElement)] = NotUsed,
         [typeof(NavigationPage)] = All
             .WithoutBaseDeclaration()
+            
             // Attached properties:
             .ExceptNotUsed(
                 NavigationPage.BackButtonTitleProperty,
@@ -148,17 +149,22 @@ class Definitions
                 NavigationPage.IconColorProperty,
                 NavigationPage.TitleViewProperty)
             .ExceptManuallyWrittenEvents(
-                nameof(NavigationPage.InsertPageBeforeRequested),
+                // nameof(NavigationPage.InsertPageBeforeRequested),
                 nameof(NavigationPage.Popped),
                 nameof(NavigationPage.PoppedToRoot),
-                nameof(NavigationPage.PopRequested),
-                nameof(NavigationPage.PopToRootRequested),
-                nameof(NavigationPage.Pushed),
-                nameof(NavigationPage.PushRequested),
-                nameof(NavigationPage.RemovePageRequested)),
+                // nameof(NavigationPage.PopRequested),
+                // nameof(NavigationPage.PopToRootRequested),
+                nameof(NavigationPage.Pushed)),
+                // nameof(NavigationPage.PushRequested),
+                // nameof(NavigationPage.RemovePageRequested)),
         [typeof(OpenGLView)] = NotImplemented,
         [typeof(OrientationStateTrigger)] = NotUsed,
-        [typeof(Page)] = All.TakeGenericParameter().WithoutBaseDeclaration(),
+        [typeof(Page)] = All.TakeGenericParameter().WithoutBaseDeclaration().ExceptManuallyWrittenEvents(
+            // TODO: 
+            nameof(NavigationPage.NavigatedFrom),
+            nameof(NavigationPage.NavigatedTo),
+            nameof(NavigationPage.NavigatingFrom)
+        ),
         [typeof(PanGestureRecognizer)] = NotImplemented,
         [typeof(Picker)] = All
             .ExceptNotUsed(Picker.ItemsSourceProperty)
@@ -172,7 +178,7 @@ class Definitions
                 RefreshView.CommandParameterProperty)
             .ExceptManuallyWrittenEvents(nameof(RefreshView.Refreshing)),
         [typeof(RowDefinition)] = WrittenManually,
-        [typeof(RelativeLayout)] = NotImplemented,
+        // [typeof(RelativeLayout)] = NotImplemented,
         [typeof(ScrollView)] = All
             .WithoutBaseDeclaration()
             .ExceptManuallyWrittenEvents(nameof(ScrollView.Scrolled), nameof(ScrollView.ScrollToRequested)),
@@ -195,8 +201,8 @@ class Definitions
             .ExceptNotUsedEvents(nameof(Slider.ValueChanged)),
         [typeof(SolidColorBrush)] = WrittenManually,
         [typeof(Span)] = All
-            .WithoutBaseDeclaration()
-            .ExceptNotUsed(Span.FontProperty, Span.StyleProperty),
+            .WithoutBaseDeclaration(),
+            // .ExceptNotUsed(Span.FontProperty, Span.StyleProperty),
             
         [typeof(StackLayout)] = All.WithoutBaseDeclaration(),
         [typeof(StateTrigger)] = NotUsed,
@@ -259,10 +265,10 @@ class Definitions
             ),
         [typeof(WebView)] = All
             .ExceptManuallyWrittenEvents(
-                nameof(WebView.EvalRequested), 
+                // nameof(WebView.EvalRequested), 
                 nameof(WebView.Navigated),
-                nameof(WebView.Navigating))
-            .ExceptNotUsedEvents(nameof(WebView.EvaluateJavaScriptRequested)),
+                nameof(WebView.Navigating)),
+            // .ExceptNotUsedEvents(nameof(WebView.EvaluateJavaScriptRequested)),
         [typeof(WebViewSource)] = NotUsed,
         // Shapes
         [typeof(Ellipse)] = WrittenManually,
@@ -276,7 +282,7 @@ class Definitions
         [typeof(PathFigure)] = WrittenManually,
         [typeof(Polygon)] = WrittenManually,
         [typeof(Polyline)] = WrittenManually,
-        [typeof(Xamarin.Forms.Shapes.Rectangle)] = WrittenManually,
+        [typeof(Rect)] = WrittenManually,
         [typeof(Shape)] = WrittenManually,
         [typeof(ArcSegment)] = NotImplemented,
         [typeof(BezierSegment)] = NotImplemented,
@@ -296,7 +302,7 @@ class Definitions
         [typeof(TransformGroup)] = NotImplemented,
         [typeof(TranslateTransform)] = NotImplemented,
         // Misc
-        [typeof(Xamarin.Forms.Internals.TemplatedItemsList<,>)] = NotUsed,
+        // [typeof(Xamarin.Forms.Internals.TemplatedItemsList<,>)] = NotUsed,
     };
 
     Definitions ExceptNotUsed(params BindableProperty[] props) => NewWithMore(props);

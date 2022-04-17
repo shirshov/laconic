@@ -20,6 +20,8 @@ EventTrigger
 
 FlexLayout
 
+FlexLayout
+
 GestureElement
 
 GroupableItemsView
@@ -27,8 +29,6 @@ GroupableItemsView
 HtmlWebViewSource
 
 ImageCell
-
-MasterDetailPage
 
 MultiPage`1
 
@@ -51,8 +51,6 @@ TableSectionBase
 TableSectionBase`1
 
 TableView
-
-TemplatedItemsList`2
 
 TemplatedPage
 
@@ -106,8 +104,6 @@ LineSegment
 
 MatrixTransform
 
-Menu
-
 MenuItem
 
 OpenGLView
@@ -129,8 +125,6 @@ PolyQuadraticBezierSegment
 QuadraticBezierSegment
 
 RectangleGeometry
-
-RelativeLayout
 
 RotateTransform
 
@@ -166,9 +160,51 @@ TranslateTransform
 
 ## Undefined
 
+Border
+
 DragGestureRecognizer
 
 DropGestureRecognizer
 
+Geometry
+
+GraphicsView
+
+HorizontalStackLayout
+
+HorizontalStackLayout
+
+Layout
+
+Layout`1
+
+MenuBar
+
+MenuBarItem
+
+MenuFlyoutItem
+
+MenuFlyoutSubItem
+
+Rectangle
+
+ReorderableItemsView
+
+RoundRectangle
+
 RoundRectangleGeometry
+
+Shadow
+
+StackBase
+
+StackBase
+
+TemplatedItemsList`2
+
+VerticalStackLayout
+
+VerticalStackLayout
+
+Window
 
