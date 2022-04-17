@@ -87,7 +87,7 @@ static class Patch
                 },
                 UpdateContent uc => () => newWithContext.AddRange(Apply(GetRealViewContent(), uc.Operations, dispatch)),
                 UpdateChildViews uc => () => newWithContext.AddRange(ViewListPatch.Apply(
-                    ((xf.Layout) element).Children.Cast<xf.BindableObject>().ToList(), uc.Operations, dispatch)),
+                    ((xf.Layout) element).Children, uc.Operations, dispatch)),
                 UpdateChildElementList uc => () => newWithContext.AddRange(ViewListPatch.ApplyToChildElements(uc.GetList(element), uc.Operations, dispatch)),
                 RowDefinitionsChange rdc => () => {
                     var grid = (xf.Grid) element;

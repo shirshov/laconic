@@ -4,14 +4,14 @@ namespace Laconic;
 
 static class ViewListPatch
 {
-    internal static List<(string? ContextKey, xf.BindableObject View)> Apply(IList<xf.BindableObject> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
+    internal static List<(string? ContextKey, xf.BindableObject View)> Apply(IList<Maui.IView> list, IEnumerable<ListOperation> operations, Action<Signal> dispatch)
     {
         var withContext = new List<(string?, xf.BindableObject)>();
             
         foreach (var op in operations) {
             Action patchAction = op switch {
                 RemoveChild rc => () => list.RemoveAt(rc.Index),
-                UpdateChild uc => () => Patch.Apply(list[uc.Index], uc.Operations, dispatch),
+                UpdateChild uc => () => Patch.Apply((xf.BindableObject)list[uc.Index], uc.Operations, dispatch),
                 ReplaceChild rc => () => {
                     var real = (xf.View) Patch.CreateView(rc.NewView, dispatch);
                     // TODO: add to withContext here and below
