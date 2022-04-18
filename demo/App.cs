@@ -94,14 +94,3 @@ public class App : Microsoft.Maui.Controls.Application
         });
     }
 }
-
-
-
-
-// Records won't work without this 
-// namespace System.Runtime.CompilerServices
-// {
-//     sealed class IsExternalInit
-//     {
-//     }
-// }

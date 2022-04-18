@@ -51,21 +51,32 @@ static class DancingBars
         return state;
     }
 
+    static GridViewList StateToGridChildren(BarInfo[] bars)
+    {
+        GridViewList ret = new();
+        
+        foreach (var x in bars.Select((b, i) => (Bar: b, Column: i)))
+        {
+            ret.Add(
+                x.Column, 
+                new BoxView {
+                   BackgroundColor = Color.FromHsla(x.Bar.Hue, 1, 0.5),
+                   HeightRequest = 10 + 100 * x.Bar.Height,
+                   VerticalOptions = LayoutOptions.End
+               }, 
+               column: x.Column);
+        }
+
+        return ret;
+    }
+    
     static Grid Row(BarInfo[] bars) => new() {
         HeightRequest = 120,
         Padding = 0,
         Margin = 20,
         ColumnSpacing = 1,
-        Children = bars
-            .Select((b, i) => (Bar: b, Column: i))
-            .ToGridViewList(
-                x => (x.Column, 0, x.Column),
-                x => new BoxView
-                {
-                    BackgroundColor = Color.FromHsla(x.Bar.Hue, 1, 0.5),
-                    HeightRequest = 10 + 100 * x.Bar.Height,
-                    VerticalOptions = LayoutOptions.End
-                })
+        ColumnDefinitions = string.Join("," , new string('*', bars.Length).ToArray()),
+        Children = StateToGridChildren(bars)
     };
 
     static ItemsViewList CreateRows(BarInfo[,] bars)

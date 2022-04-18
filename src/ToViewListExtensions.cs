@@ -6,10 +6,6 @@ public static class ToViewListExtensions
         Func<T, Key> keySelector, Func<T, View> itemSelector) =>
         source.ToDictionary(keySelector, itemSelector);
 
-    public static Dictionary<(Key, int Row, int Column), View> ToGridViewList<T>(this IEnumerable<T> source,
-        Func<T, (Key Key, int Row, int Column)> keySelector, Func<T, View> itemSelector) =>
-        source.ToDictionary(keySelector, itemSelector);
-
     public static ItemsViewList ToItemsList<T>(this IEnumerable<T> source,
         Func<T, string> reuseKeySelector, Func<T, Key> keySelector, Func<T, View> viewSelector)
     {
