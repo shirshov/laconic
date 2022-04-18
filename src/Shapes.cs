@@ -32,6 +32,8 @@ public class Geometry<T> : Element<T>, Geometry where T : xf.Shapes.Geometry, ne
 
 public class EllipseGeometry : Geometry<xf.Shapes.EllipseGeometry>
 {
+    
+    // TODO: why not use Point from Laconic namespace?
     public Maui.Graphics.Point Center {
         set => SetValue(xf.Shapes.EllipseGeometry.CenterProperty, value);
     }

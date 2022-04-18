@@ -40,6 +40,12 @@ interface ILayout
 
 public partial class StackLayout : Layout<xf.StackLayout>, ILayout
 {
+    public double Spacing
+    {
+        get => GetValue<double>(xf.StackBase.SpacingProperty);
+        init => SetValue(xf.StackBase.SpacingProperty, value);
+    }
+    
     public ViewList Children { get; set; } = new();
 
     ViewList ILayout.Children {
