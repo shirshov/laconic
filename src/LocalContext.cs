@@ -102,38 +102,40 @@ public class TimerSignal : Signal, ILocalContextSignal
         
 public class Timer : IDisposable
 {
-    readonly TimeSpan _timer;
     readonly string _contextKey;
+    readonly TimeSpan _period;
     readonly Action<Signal> _callback;
-    bool _isRunning;
+    PeriodicTimer _timer;
     DateTimeOffset _startTime;
 
-    internal Timer(TimeSpan timer, string contextKey, Action<Signal> callback, bool start)
+    internal Timer(TimeSpan period, string contextKey, Action<Signal> callback, bool start)
     {
-        _timer = timer;
+        _period = period;
         _contextKey = contextKey;
         _callback = callback;
         if (start) {
             _startTime = DateTimeOffset.Now;
-            _isRunning = true;
             StartTimer();
         }
     }
         
     void StartTimer()
     {
+        Console.WriteLine("StartTimer");
+        Stop();
+        
         var signal = new TimerSignal(_contextKey);
-        // Microsoft.Maui.Essentials.Device.StartTimer(_timer, () => {
-        //     if (_isRunning)
-        //         _callback(signal);
-        //     return _isRunning;
-        // });
+        _timer = new PeriodicTimer(_period);
+        Task.Run(async () => {
+            while (await _timer.WaitForNextTickAsync()) {
+                _callback(signal);
+            }
+        });
     }
         
     public TimerSignal? Start()
     {
-        if (!_isRunning) {
-            _isRunning = true;
+        if (_timer == null) {
             _startTime = DateTimeOffset.Now;
             StartTimer();
             return new TimerSignal(_contextKey);
@@ -144,19 +146,25 @@ public class Timer : IDisposable
 
     public TimerSignal? Stop()
     {
-        if (_isRunning) {
-            _isRunning = false;
+        if (_timer != null) {
+        Console.WriteLine("Disposing Timer");
             _startTime = DateTimeOffset.MinValue;
+            _timer.Dispose();
+            _timer = null;
             return new TimerSignal(_contextKey);
         }
 
         return null;
     }
 
-    public bool IsRunning => _isRunning;
-    public TimeSpan Elapsed => _isRunning ? DateTimeOffset.Now  - _startTime : TimeSpan.Zero;
-        
-    public void Dispose() => _isRunning = false;
+    public bool IsRunning => _timer != null;
+    public TimeSpan Elapsed => IsRunning ? DateTimeOffset.Now  - _startTime : TimeSpan.Zero;
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+        _timer = null;
+    }
 }
 
 public static partial class LocalContextExtensions
