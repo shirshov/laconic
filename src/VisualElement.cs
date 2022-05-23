@@ -12,7 +12,7 @@ public class Shadow : Element<xf.Shadow>
         init => SetValue(xf.Shadow.OpacityProperty, value);
     }
 
-    public Brush Brush {
+    public IBrush Brush {
         init => SetValue(xf.Shadow.BrushProperty, value);
     }
 

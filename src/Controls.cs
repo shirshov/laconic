@@ -92,3 +92,11 @@ public partial class RadioButton
             (ctl, handler) => ctl.CheckedChanged -= handler);
     }
 }
+
+public partial class Border
+{
+    public IBrush Stroke {
+        internal get => GetValue<IBrush>(xf.Border.StrokeProperty);
+        init => SetValue(xf.Border.StrokeProperty, value);
+    }
+}

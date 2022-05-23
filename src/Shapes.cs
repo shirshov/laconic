@@ -174,6 +174,16 @@ public class Rectangle : Shape<xfs.Rectangle>
     }
 }
 
+public class RoundRectangle : Shape<xf.Shapes.RoundRectangle>, IShape
+{
+    public CornerRadius CornerRadius
+    {
+        internal get => GetValue<CornerRadius>(xf.Shapes.RoundRectangle.CornerRadiusProperty);
+        init => SetValue(xf.Shapes.RoundRectangle.CornerRadiusProperty, value);
+    }
+}
+
+
 public class Polygon : Shape<xfs.Polygon>
 {
     public xf.PointCollection Points {

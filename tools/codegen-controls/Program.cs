@@ -58,7 +58,7 @@ class Program
             {
                 var providedByLaconic = new[] {
                     "Color", "Thickness", "ImageSource", "Keyboard", "FormattedString", 
-                    "CornerRadius", "Easing", "View", "Brush"
+                    "CornerRadius", "Easing", "View", "Brush", "IBrush", "Shadow", "Geometry"
                 };
 
                 if (providedByLaconic.Contains(type.Name))
@@ -70,12 +70,9 @@ class Program
                 return type.Namespace switch {
                     "Microsoft.Maui" => "Maui." + type.Name,
                     "Microsoft.Maui.Controls" => "xf." + type.Name,
+                    "Microsoft.Maui.Controls.Shapes" => "xf.Shapes." + type.Name,
                      _ => type.Name
                 };
-                return type.Namespace == "Microsoft.Maui.Controls" &&
-                       !(providedByLaconic.Contains(type.Name) || type.IsEnum)
-                    ? "xf." + type.Name
-                    : type.Name;
             }
 
             foreach (var c in all.Select(x => x.Type))

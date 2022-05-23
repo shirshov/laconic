@@ -23,7 +23,7 @@ class Definitions
         [typeof(BaseShellItem)] = NotImplemented,
         [typeof(Behavior)] = NotImplemented,
         [typeof(Behavior<>)] = NotImplemented,
-        [typeof(Border)] = All,
+        [typeof(Border)] = All.ExceptWrittenManually(Border.StrokeProperty),
         [typeof(BoxView)] = All,
         [typeof(Brush)] = WrittenManually,
         [typeof(Button)] = All
@@ -181,7 +181,7 @@ class Definitions
                 RefreshView.CommandParameterProperty)
             .ExceptManuallyWrittenEvents(nameof(RefreshView.Refreshing)),
         [typeof(ReorderableItemsView)] = All.WithoutBaseDeclaration().TakeGenericParameter(),
-        [typeof(RoundRectangle)] = All,
+        [typeof(RoundRectangle)] = WrittenManually,
         [typeof(RowDefinition)] = WrittenManually,
         // [typeof(RelativeLayout)] = NotUsed,
         [typeof(ScrollView)] = All
@@ -196,6 +196,7 @@ class Definitions
                 SelectableItemsView.SelectionChangedCommandParameterProperty)
             .ExceptWrittenManually(SelectableItemsView.SelectedItemsProperty)
             .ExceptManuallyWrittenEvents(nameof(SelectableItemsView.SelectionChanged)),
+        // [typeof(Shadow)] = All,
         [typeof(Shell)] = NotImplemented,
         [typeof(ShellContent)] = NotImplemented,
         [typeof(ShellGroupItem)] = NotImplemented,

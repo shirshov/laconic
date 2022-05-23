@@ -18,7 +18,6 @@ public partial class ActivityIndicator : View<xf.ActivityIndicator>
         init => SetValue(xf.ActivityIndicator.IsRunningProperty, value);
     }
 }
-
 public partial class Border : View<xf.Border>
 {
     public View Content
@@ -56,17 +55,11 @@ public partial class Border : View<xf.Border>
         internal get => GetValue<Double>(xf.Border.StrokeMiterLimitProperty);
         init => SetValue(xf.Border.StrokeMiterLimitProperty, value);
     }
-    public IBrush Stroke
-    {
-        internal get => GetValue<IBrush>(xf.Border.StrokeProperty);
-        init => SetValue(xf.Border.StrokeProperty, value);
-    }
     public IShape StrokeShape
     {
         internal get => GetValue<IShape>(xf.Border.StrokeShapeProperty);
         init => SetValue(xf.Border.StrokeShapeProperty, value);
     }
-    
     public Double StrokeThickness
     {
         internal get => GetValue<Double>(xf.Border.StrokeThicknessProperty);
@@ -1091,15 +1084,6 @@ public partial class ReorderableItemsView<T>
     }
 }
 
-public partial class RoundRectangle : View<Maui.Controls.Shapes.RoundRectangle>, IShape
-{
-    public CornerRadius CornerRadius
-    {
-        internal get => GetValue<CornerRadius>(xf.Shapes.RoundRectangle.CornerRadiusProperty);
-        init => SetValue(xf.Shapes.RoundRectangle.CornerRadiusProperty, value);
-    }
-}
-
 public partial class ScrollView
 {
     public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -1596,9 +1580,9 @@ public partial class VisualElement<T>
         internal get => GetValue<Double>(xf.VisualElement.ScaleYProperty);
         init => SetValue(xf.VisualElement.ScaleYProperty, value);
     }
-    public xf.Shadow Shadow
+    public Shadow Shadow
     {
-        internal get => GetValue<xf.Shadow>(xf.VisualElement.ShadowProperty);
+        internal get => GetValue<Shadow>(xf.VisualElement.ShadowProperty);
         init => SetValue(xf.VisualElement.ShadowProperty, value);
     }
     public Double TranslationX

@@ -94,26 +94,4 @@ public class App : Microsoft.Maui.Controls.Application
                 : new NavigationPage(new NavigationStack("root"), _ => MakeDemoPage(state))
         });
     }
-
-    static class BorderAndShadow
-    {
-        public static VerticalStackLayout Content() => new() {
-            ["border"] = new Border {
-                Stroke = Color.FromArgb("#C49B33"),
-                Background = Color.FromArgb("#2B0B98"),
-                StrokeThickness = 4,
-                Padding = (16, 8),
-                HorizontalOptions = LayoutOptions.Center,
-                StrokeShape = new RoundRectangle {
-                    CornerRadius = (40, 0, 0, 40)
-                },
-                Content = new Label {
-                    Text = ".NET MAUI",
-                    TextColor = Color.White,
-                    FontSize = 18,
-                    FontAttributes = FontAttributes.Bold
-                }
-            }
-        };
-    }
 }
