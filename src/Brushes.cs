@@ -150,9 +150,10 @@ public abstract class Brush
     public static readonly SolidColorBrush WhiteSmoke = new(Color.WhiteSmoke);
     public static readonly SolidColorBrush Yellow = new(Color.Yellow);
     public static readonly SolidColorBrush YellowGreen = new(Color.YellowGreen);
+    
 }
 
-public abstract class Brush<T> : Element<T> where T : xf.BindableObject, new()
+public abstract class Brush<T> : Element<T> where T : xf.Brush, new()
 {
     protected internal override xf.BindableObject CreateView() => new T();
 }
@@ -185,7 +186,7 @@ public class GradientStop : Element<xf.GradientStop>
     protected internal override xf.BindableObject CreateView() => new xf.GradientStop();
 }
 
-public abstract class GradientBrush<T> : Brush<T> where T : xf.BindableObject, new()
+public abstract class GradientBrush<T> : Brush<T> where T : xf.GradientBrush, new()
 {
     public GradientBrush() => ElementLists.Add<xf.GradientBrush>(nameof(GradientStops), brush => brush.GradientStops);
 

@@ -81,7 +81,12 @@ public class RectangleGeometry : Geometry<xfs.RectangleGeometry>
     public Rectangle Rect;
 }
 
-public abstract class Shape<T> : View<T> where T : xf.View, new()
+public interface IShape
+{
+    
+}
+
+public abstract class Shape<T> : View<T>, IShape where T : xf.View, new()
 {
     public Stretch Aspect {
         get => GetValue<Stretch>(xfs.Shape.AspectProperty);

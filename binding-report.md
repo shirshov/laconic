@@ -158,8 +158,6 @@ TranslateTransform
 
 ## Undefined
 
-Border
-
 DragGestureRecognizer
 
 DropGestureRecognizer
@@ -181,8 +179,6 @@ MenuFlyoutItem
 MenuFlyoutSubItem
 
 Rectangle
-
-RoundRectangle
 
 RoundRectangleGeometry
 

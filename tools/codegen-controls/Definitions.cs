@@ -23,6 +23,7 @@ class Definitions
         [typeof(BaseShellItem)] = NotImplemented,
         [typeof(Behavior)] = NotImplemented,
         [typeof(Behavior<>)] = NotImplemented,
+        [typeof(Border)] = All,
         [typeof(BoxView)] = All,
         [typeof(Brush)] = WrittenManually,
         [typeof(Button)] = All
@@ -180,6 +181,7 @@ class Definitions
                 RefreshView.CommandParameterProperty)
             .ExceptManuallyWrittenEvents(nameof(RefreshView.Refreshing)),
         [typeof(ReorderableItemsView)] = All.WithoutBaseDeclaration().TakeGenericParameter(),
+        [typeof(RoundRectangle)] = All,
         [typeof(RowDefinition)] = WrittenManually,
         // [typeof(RelativeLayout)] = NotUsed,
         [typeof(ScrollView)] = All

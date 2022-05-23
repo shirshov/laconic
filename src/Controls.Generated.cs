@@ -19,6 +19,61 @@ public partial class ActivityIndicator : View<xf.ActivityIndicator>
     }
 }
 
+public partial class Border : View<xf.Border>
+{
+    public View Content
+    {
+        internal get => GetValue<View>(xf.Border.ContentProperty);
+        init => SetValue(xf.Border.ContentProperty, value);
+    }
+    public Thickness Padding
+    {
+        internal get => GetValue<Thickness>(xf.Border.PaddingProperty);
+        init => SetValue(xf.Border.PaddingProperty, value);
+    }
+    public xf.DoubleCollection StrokeDashArray
+    {
+        internal get => GetValue<xf.DoubleCollection>(xf.Border.StrokeDashArrayProperty);
+        init => SetValue(xf.Border.StrokeDashArrayProperty, value);
+    }
+    public Double StrokeDashOffset
+    {
+        internal get => GetValue<Double>(xf.Border.StrokeDashOffsetProperty);
+        init => SetValue(xf.Border.StrokeDashOffsetProperty, value);
+    }
+    public PenLineCap StrokeLineCap
+    {
+        internal get => GetValue<PenLineCap>(xf.Border.StrokeLineCapProperty);
+        init => SetValue(xf.Border.StrokeLineCapProperty, value);
+    }
+    public PenLineJoin StrokeLineJoin
+    {
+        internal get => GetValue<PenLineJoin>(xf.Border.StrokeLineJoinProperty);
+        init => SetValue(xf.Border.StrokeLineJoinProperty, value);
+    }
+    public Double StrokeMiterLimit
+    {
+        internal get => GetValue<Double>(xf.Border.StrokeMiterLimitProperty);
+        init => SetValue(xf.Border.StrokeMiterLimitProperty, value);
+    }
+    public IBrush Stroke
+    {
+        internal get => GetValue<IBrush>(xf.Border.StrokeProperty);
+        init => SetValue(xf.Border.StrokeProperty, value);
+    }
+    public IShape StrokeShape
+    {
+        internal get => GetValue<IShape>(xf.Border.StrokeShapeProperty);
+        init => SetValue(xf.Border.StrokeShapeProperty, value);
+    }
+    
+    public Double StrokeThickness
+    {
+        internal get => GetValue<Double>(xf.Border.StrokeThicknessProperty);
+        init => SetValue(xf.Border.StrokeThicknessProperty, value);
+    }
+}
+
 public partial class BoxView : View<xf.BoxView>
 {
     public Color Color
@@ -1033,6 +1088,15 @@ public partial class ReorderableItemsView<T>
     public Func<Signal> ReorderCompleted
     {
         init => SetEvent(nameof(ReorderCompleted), value, (ctl, handler) => ctl.ReorderCompleted += handler, (ctl, handler) => ctl.ReorderCompleted -= handler);
+    }
+}
+
+public partial class RoundRectangle : View<Maui.Controls.Shapes.RoundRectangle>, IShape
+{
+    public CornerRadius CornerRadius
+    {
+        internal get => GetValue<CornerRadius>(xf.Shapes.RoundRectangle.CornerRadiusProperty);
+        init => SetValue(xf.Shapes.RoundRectangle.CornerRadiusProperty, value);
     }
 }
 

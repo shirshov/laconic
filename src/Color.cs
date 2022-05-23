@@ -8,7 +8,7 @@ record Hex(string Value) : ColorSource;
 record Hsla(double H, double S, double L, double A = 1.0) : ColorSource;
 record Rgba(byte R, byte G, byte B, byte A = 255) : ColorSource;
 
-public readonly struct Color : IConvert, IEquatable<Color>
+public readonly struct Color : IConvert, IEquatable<Color>, IBrush
 {
     public static readonly Color AliceBlue = (240, 248, 255);
     public static readonly Color AntiqueWhite = (250, 235, 215);
@@ -169,12 +169,14 @@ public readonly struct Color : IConvert, IEquatable<Color>
 
     public static Color FromHsla(double h, double s, double l, double a = 1.0) => new(new Hsla(h, s, l, a));
 
+    public static Color FromArgb(string value) => new (new Hex(value));
+
     object IConvert.ToNative() => ToXamarinFormsColor();
         
-    public Maui.Graphics.Color ToXamarinFormsColor() => _value switch {
+    Maui.Graphics.Color ToXamarinFormsColor() => _value switch {
         // Default _ => Maui.Graphics.Color..Default,
         // Accent _ => Maui.Graphics.Color..Accent,
-        Hex h => Maui.Graphics.Color.FromHex(h.Value),
+        Hex h => Maui.Graphics.Color.FromArgb(h.Value),
         Hsla(var h, var s, var l, var a) => Maui.Graphics.Color.FromHsla(h, s, l, a),
         Rgba x => Maui.Graphics.Color.FromRgba(x.R, x.G, x.B, x.A),
         _ => throw new NotImplementedException($"Support for the color value '{_value}' is not implemented")
