@@ -52,7 +52,7 @@ public static class Navigation
                 IconImageSource = FontIcon("\uf0f3")
             }
         },
-        Content = new StackLayout {
+        Content = new VerticalStackLayout {
             Padding = 20,
             ["push-modeless"] = Button("Push", () => new Signal(SignalType.Push)),
             ["push-modal"] = Button("Push Modal", () => new Signal(SignalType.PushModal)),
@@ -63,7 +63,7 @@ public static class Navigation
     static ContentPage DetailsPage(string subtitle) => new() {
         Title = $"Details/{subtitle}",
         BackButtonTitle = "",
-        Content = new StackLayout {
+        Content = new VerticalStackLayout {
             Padding = 20,
             ["push-modeless"] = Button("Push", () => new Signal(SignalType.Push)),
             ["push-modal"] = Button("Push Modal", () => new Signal(SignalType.PushModal)),

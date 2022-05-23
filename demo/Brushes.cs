@@ -2,19 +2,19 @@ namespace Laconic.Demo;
 
 static class Brushes
 {
-    public static StackLayout Content() => new() {
+    public static VerticalStackLayout Content() => new() {
         Padding = 50,
-        ["solid"] = new Frame {
+        ["solid"] = new BoxView {
             Background = Brush.DarkBlue,
-            BorderColor = Color.LightGray,
-            HasShadow = true,
+            // BorderColor = Color.LightGray,
+            // HasShadow = true,
             CornerRadius = 12,
             HeightRequest = 120,
             WidthRequest = 120
         },
-        ["linear"] = new Frame {
-            BorderColor = Color.LightGray,
-            HasShadow = true,
+        ["linear"] = new BoxView {
+            // BorderColor = Color.LightGray,
+            // HasShadow = true,
             CornerRadius = 12,
             HeightRequest = 120, 
             WidthRequest = 120,
@@ -27,9 +27,9 @@ static class Brushes
                 }
             }
         },
-        ["radial"] = new Frame {
-            BorderColor = Color.LightGray,
-            HasShadow = true,
+        ["radial"] = new BoxView {
+            // BorderColor = Color.LightGray,
+            // HasShadow = true,
             CornerRadius = 12,
             HeightRequest = 120, 
             WidthRequest = 120,

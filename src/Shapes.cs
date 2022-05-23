@@ -1,4 +1,4 @@
-using Microsoft.Maui.Controls.Shapes;
+using xfs = Microsoft.Maui.Controls.Shapes;
 
 namespace Laconic.Shapes;
 
@@ -25,58 +25,58 @@ public interface Geometry
 {
 }
 
-public class Geometry<T> : Element<T>, Geometry where T : xf.Shapes.Geometry, new()
+public class Geometry<T> : Element<T>, Geometry where T : xfs.Geometry, new()
 {
     protected internal override xf.BindableObject CreateView() => new T();
 }
 
-public class EllipseGeometry : Geometry<xf.Shapes.EllipseGeometry>
+public class EllipseGeometry : Geometry<xfs.EllipseGeometry>
 {
     
     // TODO: why not use Point from Laconic namespace?
     public Maui.Graphics.Point Center {
-        set => SetValue(xf.Shapes.EllipseGeometry.CenterProperty, value);
+        set => SetValue(xfs.EllipseGeometry.CenterProperty, value);
     }
 
     public double RadiusX {
-        set => SetValue(xf.Shapes.EllipseGeometry.RadiusXProperty, value);
+        set => SetValue(xfs.EllipseGeometry.RadiusXProperty, value);
     }
 
     public double RadiusY {
-        set => SetValue(xf.Shapes.EllipseGeometry.RadiusYProperty, value);
+        set => SetValue(xfs.EllipseGeometry.RadiusYProperty, value);
     }
 }
 
-public class PathGeometry : Geometry<xf.Shapes.PathGeometry>
+public class PathGeometry : Geometry<xfs.PathGeometry>
 {
     public PathGeometry(string data)
     {
-        var figures = new PathFigureCollection();
-        PathFigureCollectionConverter.ParseStringToPathFigureCollection(figures, data);
+        var figures = new xfs.PathFigureCollection();
+        xfs.PathFigureCollectionConverter.ParseStringToPathFigureCollection(figures, data);
         Figures = figures;
     }
 
     public FillRule FillRule {
-        set => SetValue(xf.Shapes.PathGeometry.FillRuleProperty, value);
+        set => SetValue(xfs.PathGeometry.FillRuleProperty, value);
     }
 
-    public PathFigureCollection Figures {
-        set => SetValue(xf.Shapes.PathGeometry.FiguresProperty, value);
+    public xfs.PathFigureCollection Figures {
+        set => SetValue(xfs.PathGeometry.FiguresProperty, value);
     }
 }
 
-public class LineGeometry : Geometry<xf.Shapes.LineGeometry>
+public class LineGeometry : Geometry<xfs.LineGeometry>
 {
     public Maui.Graphics.Point StartPoint {
-        set => SetValue(xf.Shapes.LineGeometry.StartPointProperty, value);
+        set => SetValue(xfs.LineGeometry.StartPointProperty, value);
     }
 
     public Maui.Graphics.Point EndPoint {
-        set => SetValue(xf.Shapes.LineGeometry.EndPointProperty, value);
+        set => SetValue(xfs.LineGeometry.EndPointProperty, value);
     }
 }
 
-public class RectangleGeometry : Geometry<xf.Shapes.RectangleGeometry>
+public class RectangleGeometry : Geometry<xfs.RectangleGeometry>
 {
     public Rectangle Rect;
 }
@@ -84,109 +84,109 @@ public class RectangleGeometry : Geometry<xf.Shapes.RectangleGeometry>
 public abstract class Shape<T> : View<T> where T : xf.View, new()
 {
     public Stretch Aspect {
-        get => GetValue<Stretch>(Shape.AspectProperty);
-        set => SetValue(Shape.AspectProperty, value);
+        get => GetValue<Stretch>(xfs.Shape.AspectProperty);
+        set => SetValue(xfs.Shape.AspectProperty, value);
     }
 
     public IBrush Fill {
-        get => GetValue<IBrush>(Shape.FillProperty);
-        set => SetValue(Shape.FillProperty, value);
+        get => GetValue<IBrush>(xfs.Shape.FillProperty);
+        set => SetValue(xfs.Shape.FillProperty, value);
     }
 
     public xf.DoubleCollection StrokeDashArray {
-        get => GetValue<xf.DoubleCollection>(Shape.StrokeDashArrayProperty);
-        set => SetValue(Shape.StrokeDashArrayProperty, value);
+        get => GetValue<xf.DoubleCollection>(xfs.Shape.StrokeDashArrayProperty);
+        set => SetValue(xfs.Shape.StrokeDashArrayProperty, value);
     }
 
     public double StrokeDashOffset {
-        get => GetValue<double>(Shape.StrokeDashOffsetProperty);
-        set => SetValue(Shape.StrokeDashOffsetProperty, value);
+        get => GetValue<double>(xfs.Shape.StrokeDashOffsetProperty);
+        set => SetValue(xfs.Shape.StrokeDashOffsetProperty, value);
     }
 
     public PenLineCap StrokeLineCap {
-        get => GetValue<PenLineCap>(Shape.StrokeLineCapProperty);
-        set => SetValue(Shape.StrokeLineCapProperty, value);
+        get => GetValue<PenLineCap>(xfs.Shape.StrokeLineCapProperty);
+        set => SetValue(xfs.Shape.StrokeLineCapProperty, value);
     }
 
     public PenLineJoin StrokeLineJoin {
-        get => GetValue<PenLineJoin>(Shape.StrokeLineJoinProperty);
-        set => SetValue(Shape.StrokeLineJoinProperty, value);
+        get => GetValue<PenLineJoin>(xfs.Shape.StrokeLineJoinProperty);
+        set => SetValue(xfs.Shape.StrokeLineJoinProperty, value);
     }
 
     public IBrush Stroke {
-        get => GetValue<IBrush>(Shape.StrokeProperty);
-        set => SetValue(Shape.StrokeProperty, value);
+        get => GetValue<IBrush>(xfs.Shape.StrokeProperty);
+        set => SetValue(xfs.Shape.StrokeProperty, value);
     }
 
     public double StrokeThickness {
-        get => GetValue<double>(Shape.StrokeThicknessProperty);
-        set => SetValue(Shape.StrokeThicknessProperty, value);
+        get => GetValue<double>(xfs.Shape.StrokeThicknessProperty);
+        set => SetValue(xfs.Shape.StrokeThicknessProperty, value);
     }
 }
 
-public class Ellipse : Shape<xf.Shapes.Ellipse>
+public class Ellipse : Shape<xfs.Ellipse>
 {
 }
 
-public class Path : Shape<xf.Shapes.Path>
+public class Path : Shape<xfs.Path>
 {
     public string Data {
         set {
-            var geom = new xf.Shapes.PathGeometry();
-            PathFigureCollectionConverter.ParseStringToPathFigureCollection(geom.Figures, value);
-            SetValue(xf.Shapes.Path.DataProperty, geom);
+            var geom = new xfs.PathGeometry();
+            xfs.PathFigureCollectionConverter.ParseStringToPathFigureCollection(geom.Figures, value);
+            SetValue(xfs.Path.DataProperty, geom);
         }
     }
 }
 
-public class Line : Shape<xf.Shapes.Line>
+public class Line : Shape<xfs.Line>
 {
     public double X1 {
-        set => SetValue(xf.Shapes.Line.X1Property, value);
+        set => SetValue(xfs.Line.X1Property, value);
     }
 
     public double Y1 {
-        set => SetValue(xf.Shapes.Line.Y1Property, value);
+        set => SetValue(xfs.Line.Y1Property, value);
     }
 
     public double X2 {
-        set => SetValue(xf.Shapes.Line.X2Property, value);
+        set => SetValue(xfs.Line.X2Property, value);
     }
 
     public double Y2 {
-        set => SetValue(xf.Shapes.Line.Y2Property, value);
+        set => SetValue(xfs.Line.Y2Property, value);
     }
 }
 
-public class Rectangle : Shape<xf.Shapes.Rectangle>
+public class Rectangle : Shape<xfs.Rectangle>
 {
     public double RadiusX {
-        set => SetValue(xf.Shapes.Rectangle.RadiusXProperty, value);
+        set => SetValue(xfs.Rectangle.RadiusXProperty, value);
     }
 
     public double RadiusY {
-        set => SetValue(xf.Shapes.Rectangle.RadiusYProperty, value);
+        set => SetValue(xfs.Rectangle.RadiusYProperty, value);
     }
 }
 
-public class Polygon : Shape<xf.Shapes.Polygon>
+public class Polygon : Shape<xfs.Polygon>
 {
-    public PointCollection Points {
-        set => SetValue(xf.Shapes.Polygon.PointsProperty, value);
+    public xf.PointCollection Points {
+        set => SetValue(xfs.Polygon.PointsProperty, value);
     }
 
     public FillRule FillRule {
-        set => SetValue(xf.Shapes.Polygon.FillRuleProperty, value);
+        set => SetValue(xfs.Polygon.FillRuleProperty, value);
     }
 }
 
-public class Polyline : Shape<xf.Shapes.Polyline>
+public class Polyline : Shape<xfs.Polyline>
 {
-    public PointCollection Points {
-        set => SetValue(xf.Shapes.Polyline.PointsProperty, value);
+    public xf.PointCollection Points {
+        set => SetValue(xfs.Polyline.PointsProperty, value);
     }
 
     public FillRule FillRule {
-        set => SetValue(xf.Shapes.Polyline.FillRuleProperty, value);
+        set => SetValue(xfs.Polyline.FillRuleProperty, value);
     }
 }

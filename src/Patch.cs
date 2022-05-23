@@ -239,6 +239,8 @@ static class Patch
             VisualMarker.MatchParent => xf.VisualMarker.MatchParent,
             _ => throw new NotImplementedException($"Support for VisualMarker.{vm} is not implemented")
         },
+        SnapPointsAlignment => (xf.SnapPointsAlignment)value,
+        SnapPointsType => (xf.SnapPointsType)value,
         // Easing is a class in Xamarin.Forms
         Easing e => e switch {
             Easing.Linear => Maui.Easing.Linear,
@@ -271,14 +273,14 @@ static class Patch
         Shapes.PenLineCap _ => (xf.Shapes.PenLineCap)value,
         Shapes.PenLineJoin _ => (xf.Shapes.PenLineJoin)value,
         // LayoutOptions is a struct in Xamarin.Forms
-        LayoutOptions l when l == LayoutOptions.Start => xf.LayoutOptions.Start,
-        LayoutOptions l when l == LayoutOptions.Center => xf.LayoutOptions.Center,
-        LayoutOptions l when l == LayoutOptions.End => xf.LayoutOptions.End,
-        LayoutOptions l when l == LayoutOptions.Fill => xf.LayoutOptions.Fill,
-        LayoutOptions l when l == LayoutOptions.StartAndExpand => xf.LayoutOptions.StartAndExpand,
-        LayoutOptions l when l == LayoutOptions.CenterAndExpand => xf.LayoutOptions.CenterAndExpand,     
-        LayoutOptions l when l == LayoutOptions.EndAndExpand => xf.LayoutOptions.EndAndExpand,
-        LayoutOptions l when l == LayoutOptions.FillAndExpand => xf.LayoutOptions.FillAndExpand,
+        LayoutOptions.Start => xf.LayoutOptions.Start,
+        LayoutOptions.Center => xf.LayoutOptions.Center,
+        LayoutOptions.End => xf.LayoutOptions.End,
+        LayoutOptions.Fill => xf.LayoutOptions.Fill,
+        LayoutOptions.StartAndExpand => xf.LayoutOptions.StartAndExpand,
+        LayoutOptions.CenterAndExpand => xf.LayoutOptions.CenterAndExpand,     
+        LayoutOptions.EndAndExpand => xf.LayoutOptions.EndAndExpand,
+        LayoutOptions.FillAndExpand => xf.LayoutOptions.FillAndExpand,
         // custom types 
         Thickness t => new Maui.Thickness(t.Left, t.Top, t.Right, t.Bottom),
         IConvert c => c.ToNative(),

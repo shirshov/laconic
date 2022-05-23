@@ -26,9 +26,8 @@ static class GroupedCollectionView
         }
     };
 
-    static View ItemRow(string name, string phone) => new StackLayout
+    static View ItemRow(string name, string phone) => new HorizontalStackLayout
     {
-        Orientation = StackOrientation.Horizontal,
         Padding = (30, 0),
         HeightRequest = 30,
         ["name"] = new Label {Text = name},
@@ -58,7 +57,7 @@ static class GroupedCollectionView
         return Enumerable.Range(1, 200).Select(_ => chance.Person()).ToArray();
     }
         
-    public static StackLayout Content(IEnumerable<Person> state) => new() {
+    public static VerticalStackLayout Content(IEnumerable<Person> state) => new() {
         ["list"] = new CollectionView
         {
             Items = GroupedItems(state).ToItemsList(x => x.ReuseKey, x => x.Key, x => x.View)

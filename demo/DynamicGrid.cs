@@ -42,7 +42,7 @@ static class DynamicGrid
         return ret;
     }
     
-    public static StackLayout Content((int Rows, int Columns) state) => new() {
+    public static VerticalStackLayout Content((int Rows, int Columns) state) => new() {
         BackgroundColor = Color.Bisque,
         Padding = 50,
         ["rowsLabel"] = new Label {Text = "Rows:"},

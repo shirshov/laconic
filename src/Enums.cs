@@ -223,3 +223,24 @@ public enum Keyboard
     Text,
     Url
 }
+
+public enum ItemsLayoutOrientation
+{
+    Vertical,
+    Horizontal,
+}
+
+
+  public enum SnapPointsAlignment
+  {
+    Start,
+    Center,
+    End,
+  }
+
+  public enum SnapPointsType
+  {
+    None,
+    Mandatory,
+    MandatorySingle,
+  }

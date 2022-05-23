@@ -2,7 +2,7 @@ namespace Laconic.Demo;
 
 static class Counter
 {
-    public static StackLayout Content(int state) => new() {
+    public static VerticalStackLayout Content(int state) => new() {
         Padding = 50,
         ["lbl"] = new Label
         {

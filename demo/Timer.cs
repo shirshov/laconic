@@ -2,7 +2,7 @@ namespace Laconic.Demo;
 
 static class Timer
 {
-    static StackLayout View(TimeSpan elapsed, string buttonTitle, Func<Signal> buttonAction) => new() {
+    static VerticalStackLayout View(TimeSpan elapsed, string buttonTitle, Func<Signal> buttonAction) => new() {
         Spacing = 30,
         Padding = 30,
         ["display"] = new Label {
@@ -26,7 +26,7 @@ static class Timer
         }
     };
 
-    public static VisualElement<xf.StackLayout> Content() => Element.WithContext("timer", ctx => {
+    public static VisualElement<xf.VerticalStackLayout> Content() => Element.WithContext("timer", ctx => {
         var timer = ctx.UseTimer(TimeSpan.FromMilliseconds(100), start: false);
 
         return View(timer.Elapsed,

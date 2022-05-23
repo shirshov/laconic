@@ -8,12 +8,15 @@ interface IConvert
 
 public abstract class Element : IEquatable<Element>
 {
+    // TODO: why the value is nullable? 
     internal Dictionary<xf.BindableProperty, object?> ProvidedValues { get; } = new();
 
     internal Dictionary<string, EventInfo> Events { get; } = new();
 
+    // TODO: return property.DefaultValue?
     protected T GetValue<T>(xf.BindableProperty property) => (T) ProvidedValues[property]!;
 
+    // TODO: why the value is nullable? 
     protected void SetValue(xf.BindableProperty property, object? value) => ProvidedValues[property] = value;
 
     protected internal readonly ElementListCollection ElementLists = new();
@@ -28,6 +31,7 @@ public abstract class Element : IEquatable<Element>
         set => SetValue(xf.Element.ClassIdProperty, value);
     }
 
+    // TODO: should it be CreateElement?
     protected internal abstract xf.BindableObject CreateView();
 
     public static ContextElement<T> WithContext<T>(Func<LocalContext, VisualElement<T>> maker)

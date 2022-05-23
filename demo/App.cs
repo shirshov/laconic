@@ -36,7 +36,7 @@ public class App : Microsoft.Maui.Controls.Application
         IconImageSource = new FontImageSource {Glyph = "\uf0c9", FontFamily = "IconFont", Color = Color.Chocolate},
         Title = "Laconic Demo",
         Content = new ScrollView {
-            Content = new StackLayout {
+            Content = new VerticalStackLayout {
                 Padding = (10, 100, 10, 10),
                 Children = state.Items.ToViewList(
                     x => x.Title,

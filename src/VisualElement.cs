@@ -1,4 +1,27 @@
+using Microsoft.Maui.Controls;
+
 namespace Laconic;
+
+public class Shadow : Element<xf.Shadow>
+{
+    public float Radius {
+        init => SetValue(xf.Shadow.RadiusProperty, value);
+    }
+
+    public float Opacity {
+        init => SetValue(xf.Shadow.OpacityProperty, value);
+    }
+
+    public Brush Brush {
+        init => SetValue(xf.Shadow.BrushProperty, value);
+    }
+
+    public Point Offset {
+        init => SetValue(xf.Shadow.OffsetProperty, value);
+    }
+
+    protected internal override BindableObject CreateView() => new xf.Shadow();
+}
 
 public abstract partial class VisualElement<T> : Element<T> where T : xf.VisualElement, new()
 {

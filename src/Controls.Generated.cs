@@ -136,9 +136,9 @@ public partial class CarouselView
         internal get => GetValue<Boolean>(xf.CarouselView.IsSwipeEnabledProperty);
         init => SetValue(xf.CarouselView.IsSwipeEnabledProperty, value);
     }
-    public LinearItemsLayout ItemsLayout
+    public xf.LinearItemsLayout ItemsLayout
     {
-        internal get => GetValue<LinearItemsLayout>(xf.CarouselView.ItemsLayoutProperty);
+        internal get => GetValue<xf.LinearItemsLayout>(xf.CarouselView.ItemsLayoutProperty);
         init => SetValue(xf.CarouselView.ItemsLayoutProperty, value);
     }
     public Boolean Loop
@@ -170,6 +170,10 @@ public partial class CheckBox
         internal get => GetValue<Boolean>(xf.CheckBox.IsCheckedProperty);
         init => SetValue(xf.CheckBox.IsCheckedProperty, value);
     }
+}
+
+public partial class CollectionView
+{
 }
 
 public partial class DatePicker : View<xf.DatePicker>
@@ -423,25 +427,6 @@ public partial class FontImageSource
     }
 }
 
-public partial class Frame
-{
-    public Color BorderColor
-    {
-        internal get => GetValue<Color>(xf.Frame.BorderColorProperty);
-        init => SetValue(xf.Frame.BorderColorProperty, value);
-    }
-    public Single CornerRadius
-    {
-        internal get => GetValue<Single>(xf.Frame.CornerRadiusProperty);
-        init => SetValue(xf.Frame.CornerRadiusProperty, value);
-    }
-    public Boolean HasShadow
-    {
-        internal get => GetValue<Boolean>(xf.Frame.HasShadowProperty);
-        init => SetValue(xf.Frame.HasShadowProperty, value);
-    }
-}
-
 public partial class Grid
 {
     public Double ColumnSpacing
@@ -454,6 +439,38 @@ public partial class Grid
         internal get => GetValue<Double>(xf.Grid.RowSpacingProperty);
         init => SetValue(xf.Grid.RowSpacingProperty, value);
     }
+}
+
+public partial class GridItemsLayout
+{
+    public Double HorizontalItemSpacing
+    {
+        internal get => GetValue<Double>(xf.GridItemsLayout.HorizontalItemSpacingProperty);
+        init => SetValue(xf.GridItemsLayout.HorizontalItemSpacingProperty, value);
+    }
+    public Int32 Span
+    {
+        internal get => GetValue<Int32>(xf.GridItemsLayout.SpanProperty);
+        init => SetValue(xf.GridItemsLayout.SpanProperty, value);
+    }
+    public Double VerticalItemSpacing
+    {
+        internal get => GetValue<Double>(xf.GridItemsLayout.VerticalItemSpacingProperty);
+        init => SetValue(xf.GridItemsLayout.VerticalItemSpacingProperty, value);
+    }
+}
+
+public partial class GroupableItemsView<T>
+{
+    public Boolean IsGrouped
+    {
+        internal get => GetValue<Boolean>(xf.GroupableItemsView.IsGroupedProperty);
+        init => SetValue(xf.GroupableItemsView.IsGroupedProperty, value);
+    }
+}
+
+public partial class HorizontalStackLayout
+{
 }
 
 public partial class Image : View<xf.Image>
@@ -629,17 +646,26 @@ public partial class InputView<T>
     }
 }
 
+public abstract partial class ItemsLayout<T>
+{
+    public SnapPointsAlignment SnapPointsAlignment
+    {
+        internal get => GetValue<SnapPointsAlignment>(xf.ItemsLayout.SnapPointsAlignmentProperty);
+        init => SetValue(xf.ItemsLayout.SnapPointsAlignmentProperty, value);
+    }
+    public SnapPointsType SnapPointsType
+    {
+        internal get => GetValue<SnapPointsType>(xf.ItemsLayout.SnapPointsTypeProperty);
+        init => SetValue(xf.ItemsLayout.SnapPointsTypeProperty, value);
+    }
+}
+
 public abstract partial class ItemsView<T>
 {
     public Object EmptyView
     {
         internal get => GetValue<Object>(xf.ItemsView.EmptyViewProperty);
         init => SetValue(xf.ItemsView.EmptyViewProperty, value);
-    }
-    public DataTemplate EmptyViewTemplate
-    {
-        internal get => GetValue<DataTemplate>(xf.ItemsView.EmptyViewTemplateProperty);
-        init => SetValue(xf.ItemsView.EmptyViewTemplateProperty, value);
     }
     public ScrollBarVisibility HorizontalScrollBarVisibility
     {
@@ -749,6 +775,15 @@ public partial class Label : View<xf.Label>
     {
         internal get => GetValue<TextAlignment>(xf.Label.VerticalTextAlignmentProperty);
         init => SetValue(xf.Label.VerticalTextAlignmentProperty, value);
+    }
+}
+
+public partial class LinearItemsLayout
+{
+    public Double ItemSpacing
+    {
+        internal get => GetValue<Double>(xf.LinearItemsLayout.ItemSpacingProperty);
+        init => SetValue(xf.LinearItemsLayout.ItemSpacingProperty, value);
     }
 }
 
@@ -983,6 +1018,24 @@ public partial class RefreshView
     }
 }
 
+public partial class ReorderableItemsView<T>
+{
+    public Boolean CanMixGroups
+    {
+        internal get => GetValue<Boolean>(xf.ReorderableItemsView.CanMixGroupsProperty);
+        init => SetValue(xf.ReorderableItemsView.CanMixGroupsProperty, value);
+    }
+    public Boolean CanReorderItems
+    {
+        internal get => GetValue<Boolean>(xf.ReorderableItemsView.CanReorderItemsProperty);
+        init => SetValue(xf.ReorderableItemsView.CanReorderItemsProperty, value);
+    }
+    public Func<Signal> ReorderCompleted
+    {
+        init => SetEvent(nameof(ReorderCompleted), value, (ctl, handler) => ctl.ReorderCompleted += handler, (ctl, handler) => ctl.ReorderCompleted -= handler);
+    }
+}
+
 public partial class ScrollView
 {
     public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -1183,11 +1236,6 @@ public partial class Span
         internal get => GetValue<Double>(xf.Span.LineHeightProperty);
         init => SetValue(xf.Span.LineHeightProperty, value);
     }
-    public Style Style
-    {
-        internal get => GetValue<Style>(xf.Span.StyleProperty);
-        init => SetValue(xf.Span.StyleProperty, value);
-    }
     public Color TextColor
     {
         internal get => GetValue<Color>(xf.Span.TextColorProperty);
@@ -1207,15 +1255,6 @@ public partial class Span
     {
         internal get => GetValue<TextTransform>(xf.Span.TextTransformProperty);
         init => SetValue(xf.Span.TextTransformProperty, value);
-    }
-}
-
-public partial class StackLayout
-{
-    public StackOrientation Orientation
-    {
-        internal get => GetValue<StackOrientation>(xf.StackLayout.OrientationProperty);
-        init => SetValue(xf.StackLayout.OrientationProperty, value);
     }
 }
 
@@ -1260,9 +1299,9 @@ public partial class StructuredItemsView : View<xf.StructuredItemsView>
         internal get => GetValue<ItemSizingStrategy>(xf.StructuredItemsView.ItemSizingStrategyProperty);
         init => SetValue(xf.StructuredItemsView.ItemSizingStrategyProperty, value);
     }
-    public IItemsLayout ItemsLayout
+    public xf.IItemsLayout ItemsLayout
     {
-        internal get => GetValue<IItemsLayout>(xf.StructuredItemsView.ItemsLayoutProperty);
+        internal get => GetValue<xf.IItemsLayout>(xf.StructuredItemsView.ItemsLayoutProperty);
         init => SetValue(xf.StructuredItemsView.ItemsLayoutProperty, value);
     }
 }
@@ -1387,6 +1426,10 @@ public partial class TimePicker : View<xf.TimePicker>
     }
 }
 
+public partial class VerticalStackLayout
+{
+}
+
 public partial class VisualElement<T>
 {
     public Double AnchorX
@@ -1404,9 +1447,9 @@ public partial class VisualElement<T>
         internal get => GetValue<Color>(xf.VisualElement.BackgroundColorProperty);
         init => SetValue(xf.VisualElement.BackgroundColorProperty, value);
     }
-    public Laconic.Shapes.Geometry Clip
+    public Geometry Clip
     {
-        internal get => GetValue<Laconic.Shapes.Geometry>(xf.VisualElement.ClipProperty);
+        internal get => GetValue<Geometry>(xf.VisualElement.ClipProperty);
         init => SetValue(xf.VisualElement.ClipProperty, value);
     }
     public FlowDirection FlowDirection
@@ -1489,15 +1532,10 @@ public partial class VisualElement<T>
         internal get => GetValue<Double>(xf.VisualElement.ScaleYProperty);
         init => SetValue(xf.VisualElement.ScaleYProperty, value);
     }
-    public Shadow Shadow
+    public xf.Shadow Shadow
     {
-        internal get => GetValue<Shadow>(xf.VisualElement.ShadowProperty);
+        internal get => GetValue<xf.Shadow>(xf.VisualElement.ShadowProperty);
         init => SetValue(xf.VisualElement.ShadowProperty, value);
-    }
-    public Style Style
-    {
-        internal get => GetValue<Style>(xf.VisualElement.StyleProperty);
-        init => SetValue(xf.VisualElement.StyleProperty, value);
     }
     public Double TranslationX
     {
@@ -1523,9 +1561,9 @@ public partial class WebView : View<xf.WebView>
         internal get => GetValue<CookieContainer>(xf.WebView.CookiesProperty);
         init => SetValue(xf.WebView.CookiesProperty, value);
     }
-    public WebViewSource Source
+    public xf.WebViewSource Source
     {
-        internal get => GetValue<WebViewSource>(xf.WebView.SourceProperty);
+        internal get => GetValue<xf.WebViewSource>(xf.WebView.SourceProperty);
         init => SetValue(xf.WebView.SourceProperty, value);
     }
 }

@@ -2,13 +2,13 @@ namespace Laconic;
 
 public abstract class Behavior : Element
 {
-    public static readonly BindableProperty ValueProperty = xf.BindableProperty.Create(
+    public static readonly xf.BindableProperty ValueProperty = xf.BindableProperty.Create(
         "Value",
         typeof(object),
         typeof(xf.Behavior));
 }
 
-public abstract class Behavior<T> : Behavior where T : VisualElement
+public abstract class Behavior<T> : Behavior where T : xf.VisualElement
 {
     protected Behavior()
     {
@@ -16,7 +16,7 @@ public abstract class Behavior<T> : Behavior where T : VisualElement
         
     protected Behavior(object? value) => SetValue(ValueProperty, value);
 
-    protected internal override BindableObject CreateView() => new BehaviorAdapter<T>(this);
+    protected internal override xf.BindableObject CreateView() => new BehaviorAdapter<T>(this);
 
     protected internal abstract void OnAttachedTo(T bindable);
 

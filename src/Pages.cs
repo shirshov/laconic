@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Laconic;
 
 // TODO: MenuItem etc.

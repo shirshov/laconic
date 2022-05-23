@@ -1,5 +1,3 @@
-using System;
-using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Graphics;
 using Geometry = Microsoft.Maui.Graphics.Geometry;
@@ -11,7 +9,6 @@ class Definitions
     public static readonly Definitions NotUsed = new();
     public static readonly Definitions WrittenManually = new();
     public static readonly Definitions NotImplemented = new();
-
 
     static readonly Definitions All = new();
 
@@ -47,7 +44,8 @@ class Definitions
             .WithoutBaseDeclaration()
             .ExceptManuallyWrittenEvents(nameof(CheckBox.CheckedChanged)),
         [typeof(ClickGestureRecognizer)] = NotImplemented,
-        [typeof(CollectionView)] = WrittenManually,
+        [typeof(CollectionView)] = All.WithoutBaseDeclaration()
+            .ExceptManuallyWrittenEvents(nameof(CollectionView.Scrolled), nameof(CollectionView.ScrollToRequested)),
         [typeof(ColumnDefinition)] = WrittenManually,
         [typeof(CompareStateTrigger)] = NotUsed,
         [typeof(ContentPage)] = WrittenManually,
@@ -82,7 +80,7 @@ class Definitions
             .ExceptManuallyWrittenEvents(nameof(FlyoutPage.BackButtonPressed)),
         [typeof(FontImageSource)] = All.WithoutBaseDeclaration(),
         [typeof(FormattedString)] = WrittenManually,
-        [typeof(Frame)] = All.WithoutBaseDeclaration(),
+        [typeof(Frame)] = NotUsed,
         [typeof(GestureElement)] = NotUsed,
         [typeof(GestureRecognizer)] = WrittenManually,
         [typeof(GradientBrush)] = WrittenManually,
@@ -96,8 +94,11 @@ class Definitions
                 Grid.ColumnProperty,
                 Grid.RowSpanProperty,
                 Grid.ColumnSpanProperty),
-        [typeof(GridItemsLayout)] = NotImplemented,
-        [typeof(GroupableItemsView)] = NotUsed,
+        [typeof(GridItemsLayout)] = All.WithoutBaseDeclaration(),
+        [typeof(GroupableItemsView)] = All
+            .WithoutBaseDeclaration().TakeGenericParameter()
+            .ExceptNotUsed(GroupableItemsView.GroupHeaderTemplateProperty, GroupableItemsView.GroupFooterTemplateProperty),
+        [typeof(HorizontalStackLayout)] = All.WithoutBaseDeclaration(),
         [typeof(HtmlWebViewSource)] = NotUsed,
         [typeof(Image)] = All,
         [typeof(ImageButton)] = All.ExceptNotUsed(
@@ -113,11 +114,12 @@ class Definitions
             .WithoutBaseDeclaration()
             .TakeGenericParameter()
             .ExceptManuallyWrittenEvents(nameof(InputView.TextChanged)),
-        [typeof(ItemsLayout)] = NotImplemented,
+        [typeof(ItemsLayout)] = All.WithoutBaseDeclaration().TakeGenericParameter(),
         [typeof(ItemsView)] = All
             .WithoutBaseDeclaration()
             .TakeGenericParameter()
             .ExceptNotUsed(
+                ItemsView.EmptyViewTemplateProperty,
                 ItemsView.ItemsSourceProperty,
                 ItemsView.ItemTemplateProperty,
                 ItemsView.RemainingItemsThresholdReachedCommandProperty,
@@ -125,13 +127,13 @@ class Definitions
             .ExceptManuallyWrittenEvents(
                 nameof(ItemsView.Scrolled),
                 nameof(ItemsView.ScrollToRequested),
-                "RemainingItemsThresholdReached"),
+                nameof(ItemsView.RemainingItemsThresholdReached)),
         [typeof(ItemsView<>)] = WrittenManually,
         [typeof(Label)] = All,
         [typeof(Layout)] = WrittenManually,
         // [typeof(Layout<>)] = WrittenManually,
         [typeof(LinearGradientBrush)] = WrittenManually,
-        [typeof(LinearItemsLayout)] = NotImplemented,
+        [typeof(LinearItemsLayout)] = All.WithoutBaseDeclaration(),
         // [typeof(Menu)] = NotImplemented,
         [typeof(MenuItem)] = NotImplemented,
         [typeof(MultiPage<>)] = NotUsed,
@@ -177,8 +179,9 @@ class Definitions
                 RefreshView.CommandProperty,
                 RefreshView.CommandParameterProperty)
             .ExceptManuallyWrittenEvents(nameof(RefreshView.Refreshing)),
+        [typeof(ReorderableItemsView)] = All.WithoutBaseDeclaration().TakeGenericParameter(),
         [typeof(RowDefinition)] = WrittenManually,
-        // [typeof(RelativeLayout)] = NotImplemented,
+        // [typeof(RelativeLayout)] = NotUsed,
         [typeof(ScrollView)] = All
             .WithoutBaseDeclaration()
             .ExceptManuallyWrittenEvents(nameof(ScrollView.Scrolled), nameof(ScrollView.ScrollToRequested)),
@@ -201,10 +204,9 @@ class Definitions
             .ExceptNotUsedEvents(nameof(Slider.ValueChanged)),
         [typeof(SolidColorBrush)] = WrittenManually,
         [typeof(Span)] = All
-            .WithoutBaseDeclaration(),
-            // .ExceptNotUsed(Span.FontProperty, Span.StyleProperty),
-            
-        [typeof(StackLayout)] = All.WithoutBaseDeclaration(),
+            .WithoutBaseDeclaration()
+            .ExceptNotUsed(Span.StyleProperty),
+        [typeof(StackLayout)] = NotUsed,
         [typeof(StateTrigger)] = NotUsed,
         [typeof(StateTriggerBase)] = NotUsed,
         [typeof(Stepper)] = All.ExceptManuallyWrittenEvents(nameof(Stepper.ValueChanged)),
@@ -249,10 +251,11 @@ class Definitions
         [typeof(TriggerBase)] = NotUsed,
         [typeof(UriImageSource)] = WrittenManually, // Requires calling Xamarin.Forms.Init()
         [typeof(UrlWebViewSource)] = NotUsed, 
+        [typeof(VerticalStackLayout)] = All.WithoutBaseDeclaration(),
         [typeof(View)] = WrittenManually,
         [typeof(ViewCell)] = NotUsed,
         [typeof(VisualElement)] = All.WithoutBaseDeclaration().TakeGenericParameter()
-            .ExceptNotUsed(VisualElement.BehaviorsProperty, VisualElement.TriggersProperty)
+            .ExceptNotUsed(VisualElement.BehaviorsProperty, VisualElement.TriggersProperty, VisualElement.StyleProperty)
             .ExceptWrittenManually(VisualElement.VisualProperty, VisualElement.BackgroundProperty)
             .ExceptNotUsedEvents(
                 nameof(VisualElement.BatchCommitted),

@@ -8,7 +8,7 @@ static class RadioButtonPage
 
     static RadioButton CalendarButton(string text, string iconGlyph, bool isChecked, Func<Signal> setState) => new() {
         CheckedChanged = e => setState(),
-        Content = new Frame {
+        Content = /*new Frame {
             BorderColor = isChecked ? "FF3300" : "F3F2F1",
             BackgroundColor = "F3F2F1",
             HasShadow = false,
@@ -17,8 +17,9 @@ static class RadioButtonPage
             HorizontalOptions = LayoutOptions.Start,
             VerticalOptions = LayoutOptions.Start,
             Padding = 0,
-            Content = new Grid {
+            Content =*/ new Grid {
                 Margin = 4,
+                
                 WidthRequest = 100,
                 ["indicator"] = new Grid {
                     WidthRequest = 18,
@@ -43,7 +44,7 @@ static class RadioButtonPage
                         HorizontalOptions = LayoutOptions.Center
                     }
                 },
-                ["img-lbl"] = new StackLayout {
+                ["img-lbl"] = new VerticalStackLayout {
                     HorizontalOptions = LayoutOptions.Center,
                     VerticalOptions = LayoutOptions.Center,
                     ["img"] = new Image {
@@ -54,13 +55,13 @@ static class RadioButtonPage
                     ["lbl"] = new Label {Text = text, TextColor = "323130"}
                 },
             }
-        }
+        //}
     };
 
-    public static VisualElement<xf.StackLayout> Content() => Element.WithContext("radio", ctx => {
+    public static VisualElement<xf.VerticalStackLayout> Content() => Element.WithContext("radio", ctx => {
         var (state, setState) = ctx.UseLocalState(new State("", ""));
             
-        return new StackLayout {
+        return new VerticalStackLayout {
             Padding = 20,
             [0] =
                 new RadioButton {
@@ -74,8 +75,7 @@ static class RadioButtonPage
                 new RadioButton {
                     Content = "Blue", CheckedChanged = e => e.Value ? setState(state with {Color = "Blue"}) : null
                 },
-            ["cal"] = new StackLayout {
-                Orientation = StackOrientation.Horizontal,
+            ["cal"] = new HorizontalStackLayout {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
                 ["day"] = CalendarButton("Day", "\uf783", state.Calendar == "Day", () => setState(state with { Calendar =  "Date" })),

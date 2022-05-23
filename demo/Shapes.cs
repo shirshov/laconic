@@ -6,7 +6,7 @@ static class Shapes
 {
     public static ScrollView Content() => new() {
         Padding = 20,
-        Content = new StackLayout {
+        Content = new VerticalStackLayout {
             ["line"] = new Line {
                 X1 = 40,
                 Y1 = 0,

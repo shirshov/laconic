@@ -1,3 +1,5 @@
+using Microsoft.Maui.Controls;
+
 namespace Laconic;
 
 public abstract class Layout<T> : View<T>  where T: xf.VisualElement, xf.IPaddingElement, new() //where T : xf.Layout, new()
@@ -23,11 +25,6 @@ public class ContentView : Layout<xf.ContentView>, IContentHost
     public View? Content { get; set; }
 }
 
-public partial class Frame : Layout<xf.Frame>, IContentHost
-{
-    public View? Content { get; set; }
-}
-
 public partial class ScrollView : Layout<xf.ScrollView>, IContentHost
 {
     public View? Content { get; set; }
@@ -38,7 +35,7 @@ interface ILayout
     ViewList Children { get; set; }
 }
 
-public partial class StackLayout : Layout<xf.StackLayout>, ILayout
+public partial class VerticalStackLayout : Layout<xf.VerticalStackLayout>, ILayout
 {
     public double Spacing
     {
@@ -60,13 +57,45 @@ public partial class StackLayout : Layout<xf.StackLayout>, ILayout
 
     public override string ToString()
     {
-        var res = "StackLayout{";
+        var res = "VerticalStackLayout{";
         foreach (var c in Children)
             res += $"[{c.Key}]={c.Value},";
         res += "}";
         return res;
     }
 }
+
+public partial class HorizontalStackLayout : Layout<xf.HorizontalStackLayout>, ILayout
+{
+    public double Spacing
+    {
+        get => GetValue<double>(xf.StackBase.SpacingProperty);
+        init => SetValue(xf.StackBase.SpacingProperty, value);
+    }
+    
+    public ViewList Children { get; set; } = new();
+
+    ViewList ILayout.Children {
+        get => Children;
+        set => Children = value;
+    }
+
+    public View this[Key key]
+    {
+        init => Children[key] = value;
+    }
+
+    public override string ToString()
+    {
+        var res = "HorizontalStackLayout{";
+        foreach (var c in Children)
+            res += $"[{c.Key}]={c.Value},";
+        res += "}";
+        return res;
+    }
+}
+
+
 
 public class RowDefinitionCollection : List<xf.RowDefinition>
 {
@@ -79,20 +108,20 @@ public class RowDefinitionCollection : List<xf.RowDefinition>
             var trimmed = part.Trim();
             if (trimmed.ToLower() == "auto")
             {
-                res.Add(new xf.RowDefinition {Height = GridLength.Auto});
+                res.Add(new xf.RowDefinition {Height = Microsoft.Maui.GridLength.Auto});
             }
             else if (trimmed == "*")
             {
-                res.Add(new xf.RowDefinition {Height = GridLength.Star});
+                res.Add(new xf.RowDefinition {Height = Maui.GridLength.Star});
             }
             else if (trimmed.EndsWith("*"))
             {
                 var val = Double.Parse(trimmed.Substring(0, trimmed.Length - 1));
-                res.Add(new xf.RowDefinition {Height = new GridLength(val, GridUnitType.Star)});
+                res.Add(new xf.RowDefinition {Height = new Maui.GridLength(val, Maui.GridUnitType.Star)});
             }
             else
             {
-                res.Add(new xf.RowDefinition {Height = new GridLength(Double.Parse(trimmed))});
+                res.Add(new xf.RowDefinition {Height = new Maui.GridLength(Double.Parse(trimmed))});
             }
         }
 
@@ -126,16 +155,16 @@ public class ColumnDefinitionCollection : List<xf.ColumnDefinition>
             var trimmed = part.Trim();
             if (trimmed.ToLower() == "auto")
             {
-                res.Add(new ColumnDefinition {Width = GridLength.Auto});
+                res.Add(new xf.ColumnDefinition {Width = Maui.GridLength.Auto});
             }
             else if (trimmed == "*")
             {
-                res.Add(new ColumnDefinition {Width = GridLength.Star});
+                res.Add(new xf.ColumnDefinition {Width = Maui.GridLength.Star});
             }
             else if (trimmed.EndsWith("*"))
             {
                 var val = Double.Parse(trimmed.Substring(0, trimmed.Length - 1));
-                res.Add(new xf.ColumnDefinition {Width = new GridLength(val, Maui.GridUnitType.Star)});
+                res.Add(new xf.ColumnDefinition {Width = new Maui.GridLength(val, Maui.GridUnitType.Star)});
             }
             else
             {
@@ -160,6 +189,15 @@ public class ColumnDefinitionCollection : List<xf.ColumnDefinition>
     }
 
     public override int GetHashCode() => base.GetHashCode();
+}
+
+public partial class GridItemsLayout : ItemsLayout<xf.GridItemsLayout>
+{
+    readonly ItemsLayoutOrientation _orientation;
+
+    public GridItemsLayout(ItemsLayoutOrientation orientation) => _orientation = orientation;
+
+    protected internal override xf.BindableObject CreateView() => new xf.GridItemsLayout((xf.ItemsLayoutOrientation)_orientation);
 }
 
 public partial class Grid : Layout<xf.Grid>, ILayout

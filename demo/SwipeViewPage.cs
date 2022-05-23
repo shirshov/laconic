@@ -2,10 +2,10 @@ namespace Laconic.Demo;
 
 static class SwipeViewPage
 {
-    public static VisualElement<xf.StackLayout> Content() => Element.WithContext(ctx => {
+    public static VisualElement<xf.VerticalStackLayout> Content() => Element.WithContext(ctx => {
         var (text, setText) = ctx.UseLocalState("");
             
-        return new StackLayout {
+        return new VerticalStackLayout {
             [0] = new SwipeView {
                 HeightRequest = 50,
                 VerticalOptions = LayoutOptions.CenterAndExpand,

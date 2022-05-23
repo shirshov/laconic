@@ -22,9 +22,9 @@ FlexLayout
 
 FlexLayout
 
-GestureElement
+Frame
 
-GroupableItemsView
+GestureElement
 
 HtmlWebViewSource
 
@@ -39,6 +39,10 @@ NavigableElement
 OrientationStateTrigger
 
 SearchHandler
+
+StackLayout
+
+StackLayout
 
 StateTrigger
 
@@ -93,12 +97,6 @@ CompositeTransform
 FlyoutItem
 
 GeometryGroup
-
-GridItemsLayout
-
-ItemsLayout
-
-LinearItemsLayout
 
 LineSegment
 
@@ -170,10 +168,6 @@ Geometry
 
 GraphicsView
 
-HorizontalStackLayout
-
-HorizontalStackLayout
-
 Layout
 
 Layout`1
@@ -188,8 +182,6 @@ MenuFlyoutSubItem
 
 Rectangle
 
-ReorderableItemsView
-
 RoundRectangle
 
 RoundRectangleGeometry
@@ -201,10 +193,6 @@ StackBase
 StackBase
 
 TemplatedItemsList`2
-
-VerticalStackLayout
-
-VerticalStackLayout
 
 Window
 

@@ -61,7 +61,18 @@ class Program
                     "CornerRadius", "Easing", "View", "Brush"
                 };
 
-                return type.Namespace == "Microsoft.Maui.Control" &&
+                if (providedByLaconic.Contains(type.Name))
+                    return type.Name;
+
+                if (type.IsEnum)
+                    return type.Name;
+                
+                return type.Namespace switch {
+                    "Microsoft.Maui" => "Maui." + type.Name,
+                    "Microsoft.Maui.Controls" => "xf." + type.Name,
+                     _ => type.Name
+                };
+                return type.Namespace == "Microsoft.Maui.Controls" &&
                        !(providedByLaconic.Contains(type.Name) || type.IsEnum)
                     ? "xf." + type.Name
                     : type.Name;

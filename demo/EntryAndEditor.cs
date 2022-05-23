@@ -2,9 +2,9 @@ namespace Laconic.Demo;
 
 static class EntryAndEditor
 {
-    public static VisualElement<xf.StackLayout> Content() => Element.WithContext("entry", ctx => {
+    public static VisualElement<xf.VerticalStackLayout> Content() => Element.WithContext("entry", ctx => {
         var (text, setState) = ctx.UseLocalState("");
-        return new StackLayout {
+        return new VerticalStackLayout {
             BackgroundColor = Color.Bisque,
             Padding = 20,
             Spacing = 20,
