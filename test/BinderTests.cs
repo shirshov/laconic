@@ -50,7 +50,7 @@ public class BinderTests
     public void child_view_change_after_signal()
     {
         var binder = Binder.Create("state", (state, signal) => (string) signal.Payload!);
-        var stackLayout = binder.CreateElement(state => new StackLayout {[1] = new Label {Text = state}});
+        var stackLayout = binder.CreateElement(state => new VerticalStackLayout {[1] = new Label {Text = state}});
         var label = (xf.Label) stackLayout.Children[0];
         label.Text.ShouldBe("state");
         binder.ProcessSignal(new TestSignal("new state"));
@@ -62,18 +62,18 @@ public class BinderTests
     {
         var one = Element.WithContext(ctx => {
             var (text, setText) = ctx.UseLocalState("");
-            return  new StackLayout {
+            return  new VerticalStackLayout {
                 [0] = new Button {Text = "Reveal", Clicked = () => setText("new element")},
                 [1] = text == "" ? null : new Label {Text = text}
             };
         });
             
-        var two = new StackLayout {[0] = new Label {Text = "Second View"}};
+        var two = new VerticalStackLayout {[0] = new Label {Text = "Second View"}};
 
         var binder = Binder.CreateForTest(1, (s, g) => (int)g.Payload);
             
         var page = binder.CreateElement(s => new ContentPage {Content = s == 1 ? one : two});
-        var sl = (xf.StackLayout) page.Content;
+        var sl = (xf.VerticalStackLayout) page.Content;
             
         sl.Children.Count.ShouldBe(1);
             

@@ -196,7 +196,7 @@ class Definitions
                 SelectableItemsView.SelectionChangedCommandParameterProperty)
             .ExceptWrittenManually(SelectableItemsView.SelectedItemsProperty)
             .ExceptManuallyWrittenEvents(nameof(SelectableItemsView.SelectionChanged)),
-        // [typeof(Shadow)] = All,
+        [typeof(Shadow)] = WrittenManually,
         [typeof(Shell)] = NotImplemented,
         [typeof(ShellContent)] = NotImplemented,
         [typeof(ShellGroupItem)] = NotImplemented,

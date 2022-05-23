@@ -32,7 +32,7 @@ public class BasicTests
     public void throw_on_setting_child_key_twice() =>
         Should.Throw<ArgumentException>(() =>
         {
-            var _ = new StackLayout {["1"] = new Label(), ["1"] = new Label()};
+            var _ = new VerticalStackLayout {["1"] = new Label(), ["1"] = new Label()};
         }).Message.ShouldBe("An item with the same key has already been added. Key: 1");
 
     [Fact]

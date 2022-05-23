@@ -54,13 +54,13 @@ public class PatchTests
     [Fact]
     public void remove_child_view()
     {
-        var blueprint = new StackLayout {["lbl"] = new Label()};
+        var blueprint = new VerticalStackLayout {["lbl"] = new Label()};
         var real = new xf.StackLayout();
         Patch.Apply(real, Diff.Calculate(null, blueprint), _ => { });
         real.Children.Count.ShouldBe(1);
         real.Children[0].ShouldBeOfType<xf.Label>();
 
-        var diff = Diff.Calculate(blueprint, new StackLayout());
+        var diff = Diff.Calculate(blueprint, new VerticalStackLayout());
         Patch.Apply(real, diff, _ => { });
 
         real.Children.Count.ShouldBe(0);
@@ -69,13 +69,13 @@ public class PatchTests
     [Fact]
     public void remove_child_view_by_setting_to_null()
     {
-        var blueprint = new StackLayout {["lbl"] = new Label()};
+        var blueprint = new VerticalStackLayout {["lbl"] = new Label()};
         var real = new xf.StackLayout();
         Patch.Apply(real, Diff.Calculate(null, blueprint), _ => { });
         real.Children.Count.ShouldBe(1);
         real.Children[0].ShouldBeOfType<xf.Label>();
 
-        var diff = Diff.Calculate(blueprint, new StackLayout {["lbl"] = null});
+        var diff = Diff.Calculate(blueprint, new VerticalStackLayout {["lbl"] = null});
         Patch.Apply(real, diff, _ => { });
 
         real.Children.Count.ShouldBe(0);
@@ -87,8 +87,8 @@ public class PatchTests
         var real = new xf.StackLayout {Children = {new xf.Label()}};
         Patch.Apply(real,
             Diff.Calculate(
-                new StackLayout {["one"] = new Label()},
-                new StackLayout {["one"] = new Button()}),
+                new VerticalStackLayout {["one"] = new Label()},
+                new VerticalStackLayout {["one"] = new Button()}),
             _ => { });
         real.Children[0].ShouldBeOfType<xf.Button>();
     }
@@ -136,7 +136,7 @@ public class PatchTests
         var sl = new xf.StackLayout();
         Patch.Apply(sl,
             Diff.Calculate(null,
-                new StackLayout {
+                new VerticalStackLayout {
                     GestureRecognizers = { [0] = new TapGestureRecognizer {
                             NumberOfTapsRequired = 2, Tapped = () => new Signal("foo")
                         }
@@ -153,7 +153,7 @@ public class PatchTests
     public void do_not_replace_GestureRecognizer_if_identical()
     {
         var sl = new xf.StackLayout();
-        var blueprint = new StackLayout {
+        var blueprint = new VerticalStackLayout {
             GestureRecognizers = {
                 [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")}
             }
@@ -164,7 +164,7 @@ public class PatchTests
 
         Patch.Apply(sl,
             Diff.Calculate(blueprint,
-                new StackLayout { 
+                new VerticalStackLayout { 
                     GestureRecognizers = {
                         [0] = new TapGestureRecognizer {
                             NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")
@@ -195,13 +195,13 @@ public class PatchTests
     [Fact]
     public void should_insert_child_view()
     {
-        var blueprint = new StackLayout {["10"] = new Label(), ["20"] = new Button()};
+        var blueprint = new VerticalStackLayout {["10"] = new Label(), ["20"] = new Button()};
 
         var real = new xf.StackLayout();
         Patch.Apply(real, Diff.Calculate(null, blueprint), _ => { });
 
         var diff = Diff.Calculate(blueprint,
-            new StackLayout {["10"] = new Label(), ["15"] = new Entry(), ["20"] = new Button()});
+            new VerticalStackLayout {["10"] = new Label(), ["15"] = new Entry(), ["20"] = new Button()});
 
         Patch.Apply(real, diff, _ => { });
 

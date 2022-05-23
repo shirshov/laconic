@@ -111,7 +111,7 @@ public class DiffTests
     [Fact]
     public void ignore_null_for_child_views()
     {
-        var diff = Diff.Calculate(null, new StackLayout {["ignored"] = null});
+        var diff = Diff.Calculate(null, new VerticalStackLayout {["ignored"] = null});
         diff.Count().ShouldBe(0);
     }
         
@@ -141,14 +141,14 @@ public class DiffTests
     [Fact]
     public void ignore_child_initially_set_to_null()
     {
-        var diff = Diff.Calculate(null, new StackLayout {["null"] = null});
+        var diff = Diff.Calculate(null, new VerticalStackLayout {["null"] = null});
         diff.Count().ShouldBe(0);
     }
 
     [Fact]
     public void remove_child_set_to_null()
     {
-        var diff = Diff.Calculate(new StackLayout {["1"] = new Label()}, new StackLayout {["1"] = null});
+        var diff = Diff.Calculate(new VerticalStackLayout {["1"] = new Label()}, new VerticalStackLayout {["1"] = null});
 
         diff.Count().ShouldBe(1);
         diff.First().ShouldBeOfType<UpdateChildViews>()
@@ -159,13 +159,13 @@ public class DiffTests
     [Fact]
     public void replace_null_view_with_instance()
     {
-        var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = new Label()});
+        var diff = Diff.Calculate(new VerticalStackLayout {["1"] = null}, new VerticalStackLayout {["1"] = new Label()});
     }
 
     [Fact]
     public void noop_if_null_child_replaces_null_child()
     {
-        var diff = Diff.Calculate(new StackLayout {["1"] = null}, new StackLayout {["1"] = null});
+        var diff = Diff.Calculate(new VerticalStackLayout {["1"] = null}, new VerticalStackLayout {["1"] = null});
 
         diff.Count().ShouldBe(0);
     }
@@ -175,7 +175,7 @@ public class DiffTests
     {
         var diff = Diff.Calculate(
             null,
-            new StackLayout {[1] = new Label(), [2] = new Label()}
+            new VerticalStackLayout {[1] = new Label(), [2] = new Label()}
         ).ToArray();
 
         var updateChildren = diff[0].ShouldBeOfType<UpdateChildViews>();
@@ -193,8 +193,8 @@ public class DiffTests
     public void add_second_child()
     {
         var diff = Diff.Calculate(
-            new StackLayout {["first"] = new Label()},
-            new StackLayout {["first"] = new Label(), ["second"] = new Button()}
+            new VerticalStackLayout {["first"] = new Label()},
+            new VerticalStackLayout {["first"] = new Label(), ["second"] = new Button()}
         ).ToArray();
 
         diff[0].ShouldBeOfType<UpdateChildViews>()

@@ -32,7 +32,7 @@ public class LocalContextTests
         });
             
         var binder = Binder.CreateForTest(0, (s, g) => s);
-        var sl = binder.CreateElement(s => new StackLayout {Children = {[1] = child1, [2] = child2}});
+        var sl = binder.CreateElement(s => new VerticalStackLayout {Children = {[1] = child1, [2] = child2}});
 
         var btn1 = (xf.Button) sl.Children[0];
         btn1.Text.ShouldBe("child1");
@@ -102,7 +102,7 @@ public class LocalContextTests
     {
         var counter = 0;
         var binder = Binder.CreateForTest(0, (s, g) => s + 1);
-        var sl = binder.CreateElement(s => new StackLayout {
+        var sl = binder.CreateElement(s => new VerticalStackLayout {
             ["a"] = Element.WithContext(ctx => {
                 var (state, setter) = ctx.UseLocalState(0);
                 counter++;
@@ -135,7 +135,7 @@ public class LocalContextTests
         var xfStackLayout = binder.CreateElement(s => Element.WithContext(ctx => {
             var (state, setter) = ctx.UseLocalState(0);
             counter = state;
-            var sl = new StackLayout();
+            var sl = new VerticalStackLayout();
             sl.Children["btn"] = new Button { Clicked = () => setter(state + 1)};
             for (var i = 0; i < state; i++) {
                 sl.Children[i]  = new Label { Text = i.ToString()};
@@ -164,10 +164,10 @@ public class LocalContextTests
     [Fact]
     public void elements_with_local_context_created_from_middleware()
     {
-        xf.StackLayout sl = null;
+        xf.VerticalStackLayout sl = null;
         var binder = Binder.CreateForTest(0, (s, g) => s);
         binder.UseMiddleware((ctx, next) => {
-            sl = binder.CreateElement(s => Element.WithContext(_ => new StackLayout {[0] = new Button()}));
+            sl = binder.CreateElement(s => Element.WithContext(_ => new VerticalStackLayout {[0] = new Button()}));
             return next(ctx);
         });
             
@@ -229,14 +229,14 @@ public class LocalContextTests
     [Fact]
     public void replacing_ContextElement_does_not_recycle_context()
     {
-        static VisualElement<xf.StackLayout> One() => Element.WithContext("one", ctx => {
+        static VisualElement<xf.VerticalStackLayout> One() => Element.WithContext("one", ctx => {
             var (state, setState) = ctx.UseLocalState("");
-            return new StackLayout { ["one"] = new Label {Text = "one"} };
+            return new VerticalStackLayout { ["one"] = new Label {Text = "one"} };
         });
             
-        static VisualElement<xf.StackLayout> Two() => Element.WithContext("two", ctx => {
+        static VisualElement<xf.VerticalStackLayout> Two() => Element.WithContext("two", ctx => {
             var (state, setState) = ctx.UseLocalState(0);
-            return new StackLayout { ["two"] = new Button {Text = "two"}};
+            return new VerticalStackLayout { ["two"] = new Button {Text = "two"}};
         });
 
         VisualElement<xf.ContentPage> Container(string s)
@@ -246,7 +246,7 @@ public class LocalContextTests
 
         var binder = Binder.CreateForTest("one", (s, g) => (string)g.Payload);
         var page = binder.CreateElement(Container);
-        var stackLayout = page.Content.ShouldBeOfType<xf.StackLayout>();
+        var stackLayout = page.Content.ShouldBeOfType<xf.VerticalStackLayout>();
             
         stackLayout.Children.Count.ShouldBe(1);
         stackLayout.Children.First().ShouldBeOfType<xf.Label>().Text = "one";

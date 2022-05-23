@@ -65,7 +65,7 @@ public class ContextExpanderTests
     [Fact]
     public void Context_is_keyed_to_child_key()
     {
-        var (el, contexts) = ContextExpander.Expand(new StackLayout {
+        var (el, contexts) = ContextExpander.Expand(new VerticalStackLayout {
             ["lbl"] = Element.WithContext(_ => new Label()),
             ["btn"] = Element.WithContext(_ => new Button())
         }, Enumerable.Empty<ExpansionInfo>(), _ => { });
@@ -74,7 +74,7 @@ public class ContextExpanderTests
         contexts.ShouldContain(x => x.Context.Key == "./lbl");
         contexts.ShouldContain(x => x.Context.Key == "./btn");
         
-        var sl = el.ShouldBeOfType<StackLayout>();
+        var sl = el.ShouldBeOfType<VerticalStackLayout>();
         sl.Children["lbl"].ShouldBeOfType<Label>();
         sl.Children["btn"].ShouldBeOfType<Button>();
     }
@@ -82,7 +82,7 @@ public class ContextExpanderTests
     [Fact]
     public void named_Contexts()
     {
-        var (el, contexts) = ContextExpander.Expand(new StackLayout {
+        var (el, contexts) = ContextExpander.Expand(new VerticalStackLayout {
             ["lbl"] = Element.WithContext("a", _ => new Label()),
             ["btn"] = Element.WithContext("b", _ => new Button())
         }, Enumerable.Empty<ExpansionInfo>(), _ => { });
@@ -90,7 +90,7 @@ public class ContextExpanderTests
         contexts.ShouldContain(x => x.Context.Key ==  "./a");
         contexts.ShouldContain(x => x.Context.Key ==  "./b");
         
-        var sl = el.ShouldBeOfType<StackLayout>();
+        var sl = el.ShouldBeOfType<VerticalStackLayout>();
         sl.Children["lbl"].ShouldBeOfType<Label>();
         sl.Children["btn"].ShouldBeOfType<Button>();
     }

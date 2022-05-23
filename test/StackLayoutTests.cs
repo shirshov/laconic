@@ -5,7 +5,7 @@ public class StackLayoutTests
     [Fact]
     public void can_add_children()
     {
-        var sl = new StackLayout {
+        var sl = new VerticalStackLayout {
             [1] = new Label { Text = "lbl1"},
             [2] = new Label { Text = "lbl2" }
         };
@@ -13,7 +13,7 @@ public class StackLayoutTests
         sl.Children.Count().ShouldBe(2);
 
         var binder = Binder.Create("state", (state, _) => state);
-        var real = binder.CreateElement(state => new StackLayout {
+        var real = binder.CreateElement(state => new VerticalStackLayout {
             ["1"] = new Label { Text = "lbl1"},
             ["2"] = new Label { Text = "lbl2" }
         });
@@ -26,7 +26,7 @@ public class StackLayoutTests
     [Fact]
     public void children_from_LINQ()
     {
-        var s = new StackLayout {
+        var s = new VerticalStackLayout {
             Children = Enumerable.Range(1, 5).ToViewList(i => i, i => new Label {Text = "Item " + i})
         };
     }

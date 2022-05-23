@@ -182,8 +182,6 @@ Rectangle
 
 RoundRectangleGeometry
 
-Shadow
-
 StackBase
 
 StackBase
