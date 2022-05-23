@@ -174,6 +174,11 @@ public class GradientStop : Element<xf.GradientStop>
         Color = color;
         Offset = offset;
     }
+
+    public GradientStop()
+    {
+        
+    }
         
     public Color Color {
         set => SetValue(xf.GradientStop.ColorProperty, value);
