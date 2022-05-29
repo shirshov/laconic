@@ -1,6 +1,5 @@
+using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Controls.Shapes;
-using Microsoft.Maui.Graphics;
-using Geometry = Microsoft.Maui.Graphics.Geometry;
 
 namespace Laconic.CodeGen;
 
@@ -13,7 +12,7 @@ class Definitions
     static readonly Definitions All = new();
 
     public static readonly Dictionary<Type, Definitions> Defs = new() {
-        [typeof(AbsoluteLayout)] = WrittenManually,
+        [typeof(Microsoft.Maui.Controls.AbsoluteLayout)] = WrittenManually,
         [typeof(ActivityIndicator)] = All,
         [typeof(AdaptiveTrigger)] = NotUsed,
         [typeof(Application)] = NotUsed,
@@ -21,8 +20,8 @@ class Definitions
         [typeof(BackButtonBehavior)] = NotImplemented,
         [typeof(BaseMenuItem)] = NotImplemented,
         [typeof(BaseShellItem)] = NotImplemented,
-        [typeof(Behavior)] = NotImplemented,
-        [typeof(Behavior<>)] = NotImplemented,
+        [typeof(Behavior)] = WrittenManually,
+        [typeof(Behavior<>)] = WrittenManually,
         [typeof(Border)] = All.ExceptWrittenManually(Border.StrokeProperty),
         [typeof(BoxView)] = All,
         [typeof(Brush)] = WrittenManually,
@@ -40,7 +39,7 @@ class Definitions
             .ExceptManuallyWrittenEvents(
                 nameof(CarouselView.CurrentItemChanged),
                 nameof(CarouselView.PositionChanged)),
-        [typeof(Cell)] = NotUsed,
+        [typeof(Cell)] = NotImplemented,
         [typeof(CheckBox)] = All
             .WithoutBaseDeclaration()
             .ExceptManuallyWrittenEvents(nameof(CheckBox.CheckedChanged)),
@@ -71,10 +70,10 @@ class Definitions
             Entry.PlaceholderProperty,
             Entry.TextColorProperty,
             Entry.TextProperty),
-        [typeof(EntryCell)] = NotUsed,
+        [typeof(EntryCell)] = NotImplemented,
         [typeof(EventTrigger)] = NotUsed,
         [typeof(FileImageSource)] = All.WithoutBaseDeclaration(),
-        [typeof(FlexLayout)] = NotUsed,
+        [typeof(Microsoft.Maui.Controls.FlexLayout)] = NotImplemented,
         [typeof(FlyoutItem)] = NotImplemented,
         [typeof(FlyoutPage)] = All
             .WithoutBaseDeclaration()
@@ -85,7 +84,7 @@ class Definitions
         [typeof(GestureElement)] = NotUsed,
         [typeof(GestureRecognizer)] = WrittenManually,
         [typeof(GradientBrush)] = WrittenManually,
-        [typeof(Microsoft.Maui.Controls.GradientStop)] = WrittenManually,
+        [typeof(GradientStop)] = WrittenManually,
         [typeof(Grid)] = All
             .WithoutBaseDeclaration()
             .ExceptWrittenManually(
@@ -105,7 +104,7 @@ class Definitions
         [typeof(ImageButton)] = All.ExceptNotUsed(
             ImageButton.CommandProperty,
             ImageButton.CommandParameterProperty),
-        [typeof(ImageCell)] = NotUsed,
+        [typeof(ImageCell)] = NotImplemented,
         [typeof(ImageSource)] = WrittenManually,
         [typeof(IndicatorView)] = All
             .ExceptNotUsed(
@@ -131,8 +130,8 @@ class Definitions
                 nameof(ItemsView.RemainingItemsThresholdReached)),
         [typeof(ItemsView<>)] = WrittenManually,
         [typeof(Label)] = All,
-        [typeof(Layout)] = WrittenManually,
-        // [typeof(Layout<>)] = WrittenManually,
+        [typeof(Microsoft.Maui.Controls.Layout)] = NotUsed,
+        [typeof(Microsoft.Maui.Controls.Compatibility.Layout<>)] = NotUsed,
         [typeof(LinearGradientBrush)] = WrittenManually,
         [typeof(LinearItemsLayout)] = All.WithoutBaseDeclaration(),
         // [typeof(Menu)] = NotImplemented,
@@ -176,6 +175,7 @@ class Definitions
         [typeof(ProgressBar)] = All,
         [typeof(RadialGradientBrush)] = WrittenManually,
         [typeof(RadioButton)] = All.ExceptManuallyWrittenEvents(nameof(RadioButton.CheckedChanged)),
+        [typeof(Rectangle)] = WrittenManually,
         [typeof(RefreshView)] = All.WithoutBaseDeclaration().ExceptNotUsed(
                 RefreshView.CommandProperty,
                 RefreshView.CommandParameterProperty)
@@ -209,7 +209,8 @@ class Definitions
         [typeof(Span)] = All
             .WithoutBaseDeclaration()
             .ExceptNotUsed(Span.StyleProperty),
-        [typeof(StackLayout)] = NotUsed,
+        [typeof(StackBase)] = NotUsed,
+        [typeof(Microsoft.Maui.Controls.StackLayout)] = NotUsed,
         [typeof(StateTrigger)] = NotUsed,
         [typeof(StateTriggerBase)] = NotUsed,
         [typeof(Stepper)] = All.ExceptManuallyWrittenEvents(nameof(Stepper.ValueChanged)),
@@ -237,26 +238,26 @@ class Definitions
                 nameof(SwipeView.SwipeStarted),
                 nameof(SwipeView.SwipeEnded)),
         [typeof(Switch)] = All.ExceptManuallyWrittenEvents(nameof(Switch.Toggled)),
-        [typeof(SwitchCell)] = NotUsed,
+        [typeof(SwitchCell)] = NotImplemented,
         [typeof(TabbedPage)] = All.WithoutBaseDeclaration(),
         [typeof(Tab)] = NotImplemented,
         [typeof(TabBar)] = NotImplemented,
         [typeof(TableSectionBase)] = NotUsed,
         [typeof(TableSectionBase<>)] = NotUsed,
-        [typeof(TableView)] = NotUsed,
+        [typeof(TableView)] = NotImplemented,
         [typeof(TapGestureRecognizer)] = WrittenManually,
         [typeof(TemplatedPage)] = NotUsed,
         [typeof(TemplatedView)] = NotUsed,
-        [typeof(TextCell)] = NotUsed,
+        [typeof(TextCell)] = NotImplemented,
         [typeof(TimePicker)] = All,
         [typeof(ToolbarItem)] = WrittenManually,
         [typeof(Trigger)] = NotUsed,
         [typeof(TriggerBase)] = NotUsed,
         [typeof(UriImageSource)] = WrittenManually, // Requires calling Xamarin.Forms.Init()
-        [typeof(UrlWebViewSource)] = NotUsed, 
+        [typeof(UrlWebViewSource)] = WrittenManually, 
         [typeof(VerticalStackLayout)] = All.WithoutBaseDeclaration(),
         [typeof(View)] = WrittenManually,
-        [typeof(ViewCell)] = NotUsed,
+        [typeof(ViewCell)] = NotImplemented,
         [typeof(VisualElement)] = All.WithoutBaseDeclaration().TakeGenericParameter()
             .ExceptNotUsed(VisualElement.BehaviorsProperty, VisualElement.TriggersProperty, VisualElement.StyleProperty)
             .ExceptWrittenManually(VisualElement.VisualProperty, VisualElement.BackgroundProperty)
@@ -275,11 +276,11 @@ class Definitions
                 nameof(WebView.Navigated),
                 nameof(WebView.Navigating)),
             // .ExceptNotUsedEvents(nameof(WebView.EvaluateJavaScriptRequested)),
-        [typeof(WebViewSource)] = NotUsed,
+        [typeof(WebViewSource)] = WrittenManually, // techincally, using Maui's WebViewSource
         // Shapes
         [typeof(Ellipse)] = WrittenManually,
         [typeof(EllipseGeometry)] = WrittenManually,
-        [typeof(Geometry)] = WrittenManually,
+        [typeof(Microsoft.Maui.Controls.Shapes.Geometry)] = WrittenManually,
         [typeof(GeometryGroup)] = NotImplemented,
         [typeof(Line)] = WrittenManually,
         [typeof(LineGeometry)] = WrittenManually,
@@ -288,7 +289,6 @@ class Definitions
         [typeof(PathFigure)] = WrittenManually,
         [typeof(Polygon)] = WrittenManually,
         [typeof(Polyline)] = WrittenManually,
-        [typeof(Rect)] = WrittenManually,
         [typeof(Shape)] = WrittenManually,
         [typeof(ArcSegment)] = NotImplemented,
         [typeof(BezierSegment)] = NotImplemented,
@@ -308,7 +308,7 @@ class Definitions
         [typeof(TransformGroup)] = NotImplemented,
         [typeof(TranslateTransform)] = NotImplemented,
         // Misc
-        // [typeof(Xamarin.Forms.Internals.TemplatedItemsList<,>)] = NotUsed,
+        [typeof(TemplatedItemsList<,>)] = NotUsed,
     };
 
     Definitions ExceptNotUsed(params BindableProperty[] props) => NewWithMore(props);

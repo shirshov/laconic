@@ -143,24 +143,19 @@ class Program
 
         var res = "";
 
+        var uniqueTypes = flatList.Select(x => x.Type).Distinct();
+        
         // res += "## WRITTEN MANUALLY\n\n";
         // res += flatList
         //     .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.WrittenManually)
         //     .Select(x => x.Type.Name)
         //     .OrderBy(x => x)
         //     .Aggregate("", (c, n) => c + n + "\n\n");
-
-        res += "## Not Used\n\n";
-        res += flatList
-            .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.NotUsed)
-            .Select(x => x.Type.Name)
-            .OrderBy(x => x)
-            .Aggregate("", (c, n) => c + n + "\n\n");
-
-        res += "## Not Implemented\n\n";
-        res += flatList
-            .Where(x => Definitions.Defs.ContainsKey(x.Type) && Definitions.Defs[x.Type] == Definitions.NotImplemented)
-            .Select(x => x.Type.Name)
+        
+        res += "## Not Implemented Yet\n\n";
+        res += uniqueTypes
+            .Where(x => Definitions.Defs.ContainsKey(x) && Definitions.Defs[x] == Definitions.NotImplemented)
+            .Select(x => x.Name)
             .OrderBy(x => x)
             .Aggregate("", (c, n) => c + n + "\n\n");
 
@@ -172,7 +167,15 @@ class Program
             res += "## Undefined\n\n";
             res += undefined.Aggregate("", (c, n) => c + n + "\n\n");
         }
+        
+        res += "## Not Needed When Using Laconic\n\n";
+        res += uniqueTypes
+            .Where(x => Definitions.Defs.ContainsKey(x) && Definitions.Defs[x] == Definitions.NotUsed)
+            .Select(x => x.Name)
+            .OrderBy(x => x)
+            .Aggregate("", (c, n) => c + n + "\n\n");
 
+        
         return res;
     }
 }

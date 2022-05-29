@@ -1,78 +1,4 @@
-## Not Used
-
-AdaptiveTrigger
-
-Application
-
-Cell
-
-CompareStateTrigger
-
-ContentPresenter
-
-DataTrigger
-
-DeviceStateTrigger
-
-EntryCell
-
-EventTrigger
-
-FlexLayout
-
-FlexLayout
-
-Frame
-
-GestureElement
-
-HtmlWebViewSource
-
-ImageCell
-
-MultiPage`1
-
-MultiTrigger
-
-NavigableElement
-
-OrientationStateTrigger
-
-SearchHandler
-
-StackLayout
-
-StackLayout
-
-StateTrigger
-
-StateTriggerBase
-
-SwitchCell
-
-TableSectionBase
-
-TableSectionBase`1
-
-TableView
-
-TemplatedPage
-
-TemplatedView
-
-TextCell
-
-Trigger
-
-TriggerBase
-
-UrlWebViewSource
-
-ViewCell
-
-WebViewSource
-
-## Not Implemented
+## Not Implemented Yet
 
 AppLinkEntry
 
@@ -84,19 +10,23 @@ BaseMenuItem
 
 BaseShellItem
 
-Behavior
-
-Behavior`1
-
 BezierSegment
+
+Cell
 
 ClickGestureRecognizer
 
 CompositeTransform
 
+EntryCell
+
+FlexLayout
+
 FlyoutItem
 
 GeometryGroup
+
+ImageCell
 
 LineSegment
 
@@ -146,9 +76,15 @@ SwipeGestureRecognizer
 
 SwipeItemView
 
+SwitchCell
+
 Tab
 
 TabBar
+
+TableView
+
+TextCell
 
 Transform
 
@@ -156,19 +92,17 @@ TransformGroup
 
 TranslateTransform
 
+ViewCell
+
 ## Undefined
 
 DragGestureRecognizer
 
 DropGestureRecognizer
 
-Geometry
-
 GraphicsView
 
 Layout
-
-Layout`1
 
 MenuBar
 
@@ -178,15 +112,65 @@ MenuFlyoutItem
 
 MenuFlyoutSubItem
 
-Rectangle
-
 RoundRectangleGeometry
 
-StackBase
+Window
+
+## Not Needed When Using Laconic
+
+AdaptiveTrigger
+
+Application
+
+CompareStateTrigger
+
+ContentPresenter
+
+DataTrigger
+
+DeviceStateTrigger
+
+EventTrigger
+
+Frame
+
+GestureElement
+
+HtmlWebViewSource
+
+Layout
+
+Layout`1
+
+MultiPage`1
+
+MultiTrigger
+
+NavigableElement
+
+OrientationStateTrigger
+
+SearchHandler
 
 StackBase
+
+StackLayout
+
+StateTrigger
+
+StateTriggerBase
+
+TableSectionBase
+
+TableSectionBase`1
 
 TemplatedItemsList`2
 
-Window
+TemplatedPage
+
+TemplatedView
+
+Trigger
+
+TriggerBase
 

@@ -1,5 +1,3 @@
-using Microsoft.Maui.Controls;
-
 namespace Laconic;
 
 public abstract class Layout<T> : View<T>  where T: xf.VisualElement, xf.IPaddingElement, new() //where T : xf.Layout, new()
