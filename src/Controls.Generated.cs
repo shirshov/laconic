@@ -18,6 +18,7 @@ public partial class ActivityIndicator : View<xf.ActivityIndicator>
         init => SetValue(xf.ActivityIndicator.IsRunningProperty, value);
     }
 }
+
 public partial class Border : View<xf.Border>
 {
     public View Content
@@ -275,11 +276,6 @@ public partial class DatePicker : View<xf.DatePicker>
     {
         internal get => GetValue<Color>(xf.DatePicker.TextColorProperty);
         init => SetValue(xf.DatePicker.TextColorProperty, value);
-    }
-    public TextTransform TextTransform
-    {
-        internal get => GetValue<TextTransform>(xf.DatePicker.TextTransformProperty);
-        init => SetValue(xf.DatePicker.TextTransformProperty, value);
     }
 }
 
@@ -942,11 +938,6 @@ public partial class Picker : View<xf.Picker>
         internal get => GetValue<Color>(xf.Picker.TextColorProperty);
         init => SetValue(xf.Picker.TextColorProperty, value);
     }
-    public TextTransform TextTransform
-    {
-        internal get => GetValue<TextTransform>(xf.Picker.TextTransformProperty);
-        init => SetValue(xf.Picker.TextTransformProperty, value);
-    }
     public Color TitleColor
     {
         internal get => GetValue<Color>(xf.Picker.TitleColorProperty);
@@ -1462,11 +1453,6 @@ public partial class TimePicker : View<xf.TimePicker>
         internal get => GetValue<Color>(xf.TimePicker.TextColorProperty);
         init => SetValue(xf.TimePicker.TextColorProperty, value);
     }
-    public TextTransform TextTransform
-    {
-        internal get => GetValue<TextTransform>(xf.TimePicker.TextTransformProperty);
-        init => SetValue(xf.TimePicker.TextTransformProperty, value);
-    }
     public TimeSpan Time
     {
         internal get => GetValue<TimeSpan>(xf.TimePicker.TimeProperty);
@@ -1599,6 +1585,14 @@ public partial class VisualElement<T>
     {
         internal get => GetValue<Double>(xf.VisualElement.WidthRequestProperty);
         init => SetValue(xf.VisualElement.WidthRequestProperty, value);
+    }
+    public Func<Signal> Loaded
+    {
+        init => SetEvent(nameof(Loaded), value, (ctl, handler) => ctl.Loaded += handler, (ctl, handler) => ctl.Loaded -= handler);
+    }
+    public Func<Signal> Unloaded
+    {
+        init => SetEvent(nameof(Unloaded), value, (ctl, handler) => ctl.Unloaded += handler, (ctl, handler) => ctl.Unloaded -= handler);
     }
 }
 

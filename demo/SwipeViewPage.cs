@@ -8,7 +8,7 @@ static class SwipeViewPage
         return new VerticalStackLayout {
             [0] = new SwipeView {
                 HeightRequest = 50,
-                VerticalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
                 LeftItems = {
                     ["fav"] = new SwipeItem {
                         Text = "Favourite",

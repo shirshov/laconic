@@ -26,14 +26,15 @@ static class GroupedCollectionView
         }
     };
 
-    static View ItemRow(string name, string phone) => new HorizontalStackLayout
+    static View ItemRow(string name, string phone) => new Grid
     {
+        ColumnDefinitions = "*, Auto",
         Padding = (30, 0),
         HeightRequest = 30,
         ["name"] = new Label {Text = name},
-        ["phone"] = new Label
+        ["phone", column: 1] = new Label
         {
-            Text = phone, TextColor = Color.Gray, HorizontalOptions = LayoutOptions.EndAndExpand
+            Text = phone, TextColor = Color.Gray, HorizontalOptions = LayoutOptions.End
         }
     };
 

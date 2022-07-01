@@ -235,7 +235,6 @@ static class Patch
         FlyoutLayoutBehavior _ => (xf.FlyoutLayoutBehavior)value,
         VisualMarker vm => vm switch {
             VisualMarker.Default => xf.VisualMarker.Default,
-            VisualMarker.Material => xf.VisualMarker.Material,
             VisualMarker.MatchParent => xf.VisualMarker.MatchParent,
             _ => throw new NotImplementedException($"Support for VisualMarker.{vm} is not implemented")
         },
@@ -277,10 +276,6 @@ static class Patch
         LayoutOptions.Center => xf.LayoutOptions.Center,
         LayoutOptions.End => xf.LayoutOptions.End,
         LayoutOptions.Fill => xf.LayoutOptions.Fill,
-        LayoutOptions.StartAndExpand => xf.LayoutOptions.StartAndExpand,
-        LayoutOptions.CenterAndExpand => xf.LayoutOptions.CenterAndExpand,     
-        LayoutOptions.EndAndExpand => xf.LayoutOptions.EndAndExpand,
-        LayoutOptions.FillAndExpand => xf.LayoutOptions.FillAndExpand,
         // custom types 
         Thickness t => new Maui.Thickness(t.Left, t.Top, t.Right, t.Bottom),
         IConvert c => c.ToNative(),

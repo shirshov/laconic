@@ -2,17 +2,17 @@ namespace Laconic.Demo;
 
 static class Counter
 {
-    public static VerticalStackLayout Content(int state) => new() {
+    public static Grid Content(int state) => new() {
         Padding = 50,
+        RowDefinitions = "*, Auto",
         ["lbl"] = new Label
         {
-            Text = $"You clicked {state} times",
+            Text = $"You clicked {state} time(s)",
             FontSize = 30,
             FontAttributes = FontAttributes.Bold,
-            VerticalOptions = LayoutOptions.CenterAndExpand,
             HorizontalOptions = LayoutOptions.Center
         },
-        ["btn"] = new Button
+        ["btn", row: 1] = new Button
         {
             Text = "Click Me",
             Clicked = () => new Signal("inc"),
@@ -22,6 +22,7 @@ static class Counter
             BorderColor = Color.Chocolate,
             BorderWidth = 2,
             CornerRadius = 20,
+            HeightRequest = 40,
             HorizontalOptions = LayoutOptions.Center,
             Padding = (30, 0)
         }

@@ -89,11 +89,7 @@ public enum LayoutOptions
     Start,
     Center,
     End,
-    Fill,
-    StartAndExpand,
-    CenterAndExpand,
-    EndAndExpand,
-    FillAndExpand
+    Fill
 }
     
 public enum LineBreakMode
@@ -208,8 +204,7 @@ public enum Stretch
 public enum VisualMarker
 {
     MatchParent,
-    Default,
-    Material
+    Default
 }
 
 public enum Keyboard
