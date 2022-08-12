@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Microsoft.Maui.Controls;
 
 namespace Laconic.Demo;
 
@@ -12,8 +13,7 @@ class AnimateTextSize : Behavior<Microsoft.Maui.Controls.Label>
     {
         if (e.PropertyName == xf.Label.TextProperty.PropertyName) {
             var lbl = (xf.Label)sender;
-            // TODO:
-            // lbl.Animate("text-size", s => lbl.Scale = s, 5.0, 1.0);
+            lbl.Animate("text-size", s => lbl.Scale = s, 5.0, 1.0);
         }
     }
 }
@@ -38,6 +38,7 @@ static class BehaviorPage
                 BorderColor = Color.Chocolate,
                 BorderWidth = 2,
                 CornerRadius = 20,
+                HeightRequest = 40,
                 Margin =  (0, 30),
                 Padding = (30, 0),
                 HorizontalOptions = LayoutOptions.Center,

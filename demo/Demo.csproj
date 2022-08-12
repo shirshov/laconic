@@ -60,6 +60,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Chance.NET" Version="2.2.0" />
+	  <PackageReference Include="LiveSharp" Version="2.0.35" />
 	</ItemGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<OutputType>WinExe</OutputType>

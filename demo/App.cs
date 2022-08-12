@@ -4,7 +4,7 @@ namespace Laconic.Demo;
 
 public class App : Microsoft.Maui.Controls.Application
 {
-    record State(
+    internal record State(
         int CurrentItem,
         bool IsFlyoutPresented,
         (string Title, Func<State, View> Maker)[] Items,
@@ -51,6 +51,8 @@ public class App : Microsoft.Maui.Controls.Application
         Content = state.Items[state.CurrentItem].Maker(state)
     };
 
+    internal static Binder<State> _binder;
+    
     public App()
     {
         var initialState = new State(
@@ -83,9 +85,9 @@ public class App : Microsoft.Maui.Controls.Application
             Navigation.InitialState()
         );
 
-        var binder = Binder.Create(initialState, MainReducer);
+        _binder = Binder.Create(initialState, MainReducer);
 
-        MainPage = binder.CreateElement(state => new FlyoutPage {
+        MainPage = _binder.CreateElement(state => new FlyoutPage {
             Flyout = Flyout(state),
             IsPresented = state.IsFlyoutPresented,
             IsPresentedChanged = () => new Signal("IsPresentedChanged"),

@@ -24,7 +24,7 @@ public static class Navigation
         };
     }
 
-    static FontImageSource FontIcon(string glyph) => new() { Glyph = glyph, FontFamily = "IconFont" };
+    static FontImageSource FontIcon(string glyph) => new() { Glyph = glyph, FontFamily = "IconFont", Color = Color.Chocolate};
         
     static Button Button(string text, Func<Signal> signal) => new() {
         Text = text,
@@ -32,8 +32,8 @@ public static class Navigation
         BorderColor = Color.Chocolate,
         BackgroundColor = Color.Chocolate,
         TextColor = Color.White,
-        CornerRadius = 10,
-        Padding = (10, 0)
+        CornerRadius = 20,
+        HeightRequest = 40,
     };
 
     static Label Legend(string text) => new() {
@@ -54,6 +54,7 @@ public static class Navigation
         },
         Content = new VerticalStackLayout {
             Padding = 20,
+            Spacing = 10,
             ["push-modeless"] = Button("Push", () => new Signal(SignalType.Push)),
             ["push-modal"] = Button("Push Modal", () => new Signal(SignalType.PushModal)),
             ["explain"] = Legend("This tab hosts a NavigationPage")
@@ -65,6 +66,7 @@ public static class Navigation
         BackButtonTitle = "",
         Content = new VerticalStackLayout {
             Padding = 20,
+            Spacing = 20,
             ["push-modeless"] = Button("Push", () => new Signal(SignalType.Push)),
             ["push-modal"] = Button("Push Modal", () => new Signal(SignalType.PushModal)),
             ["pop"] = Button("Pop", () => new Signal(SignalType.Pop)),
@@ -115,8 +117,9 @@ public static class Navigation
                         TextColor = Color.Chocolate,
                         BorderColor = Color.Chocolate,
                         BorderWidth = 1,
-                        Margin = 10,
-                        Padding = (10, 0)
+                        CornerRadius = 15,
+                        HeightRequest = 30,
+                        Margin = 10
                     }
                 }
             );

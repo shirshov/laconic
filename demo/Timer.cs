@@ -19,6 +19,7 @@ static class Timer
             Clicked = buttonAction,
             BackgroundColor = Color.Coral,
             BorderColor = Color.Chocolate,
+            HeightRequest = 40,
             BorderWidth = 2,
             CornerRadius = 20,
             HorizontalOptions = LayoutOptions.Center,
