@@ -96,8 +96,8 @@ static class DancingBars
     const int NumberOfBarsChangingAtOnce = 50;
 
     // These two are instantiated as static to avoid unnecessary allocations
-    static Random _random = new(23451234);
-    static State _initialState = CreateInitialState(100, 10, _random.NextDouble, _random.NextDouble);
+    static readonly Random _random = new(23451234);
+    static readonly State _initialState = CreateInitialState(100, 10, _random.NextDouble, _random.NextDouble);
         
     public static VisualElement<xf.CollectionView> Content() => Element.WithContext("bars", ctx => {
         ctx.UseTimer(TimeSpan.FromMilliseconds(30));

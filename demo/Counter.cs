@@ -15,16 +15,15 @@ static class Counter
         ["btn", row: 1] = new Button
         {
             Text = "Click Me",
-            Clicked = () => new Signal("inc"),
+            Clicked = () => new("inc"),
             TextColor = Color.White,
             FontSize = 20,
             BackgroundColor = Color.Coral,
             BorderColor = Color.Chocolate,
+            HeightRequest = 40,
             BorderWidth = 2,
             CornerRadius = 20,
-            HeightRequest = 40,
-            HorizontalOptions = LayoutOptions.Center,
-            Padding = (30, 0)
+            HorizontalOptions = LayoutOptions.Center
         }
     };
 }

@@ -47,8 +47,11 @@ public class LocalContext
 
     internal void Clear()
     {
-        foreach (var v in _values.Values.OfType<IDisposable>())
+        Console.WriteLine("Clearing LocalContext");
+        foreach (var v in _values.Values.OfType<IDisposable>()) {
+            Console.WriteLine($"Disposing {v.GetType()}");
             v.Dispose();
+        }
             
         _values.Clear();
     }
@@ -108,7 +111,7 @@ public class Timer : IDisposable
     readonly string _contextKey;
     readonly TimeSpan _period;
     readonly Action<Signal> _callback;
-    PeriodicTimer _timer;
+    PeriodicTimer? _timer;
     DateTimeOffset _startTime;
 
     internal Timer(TimeSpan period, string contextKey, Action<Signal> callback, bool start)
@@ -149,15 +152,15 @@ public class Timer : IDisposable
 
     public TimerSignal? Stop()
     {
-        if (_timer != null) {
+        if (_timer == null)
+            return null;
+        
         Console.WriteLine("Disposing Timer");
-            _startTime = DateTimeOffset.MinValue;
-            _timer.Dispose();
-            _timer = null;
-            return new TimerSignal(_contextKey);
-        }
+        _startTime = DateTimeOffset.MinValue;
+        _timer.Dispose();
+        _timer = null;
+        return new TimerSignal(_contextKey);
 
-        return null;
     }
 
     public bool IsRunning => _timer != null;

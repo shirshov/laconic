@@ -64,7 +64,7 @@ public class App : Microsoft.Maui.Controls.Application
                 ("Calculator (Grid)", s => Calculator.Content(s.Calculator)),
                 ("Collection View", s => GroupedCollectionView.Content(s.Persons)),
                 ("Entry and Editor",  _ => (View)EntryAndEditor.Content()),
-                ("Dancing Bars (Performance)", _ => (View)DancingBars.Content()),
+                // ("Dancing Bars (Performance)", _ => (View)DancingBars.Content()),
                 ("AbsoluteLayout", _ => AbsoluteLayoutPage.Content()),
                 ("FormattedString", _ => FormattedStringPage.Content()),
                 ("Shapes", _ => Shapes.Content()),

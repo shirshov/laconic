@@ -20,9 +20,9 @@ static class DynamicGrid
     {
         GridViewList ret = new();
         
-        var dict = (from r in Enumerable.Range(0, state.Rows)
+        var dict = from r in Enumerable.Range(0, state.Rows)
             from c in Enumerable.Range(0, state.Columns)
-            select (Row: r, Column: c));
+            select (Row: r, Column: c);
         
         foreach (var x in dict) {
             ret.Add($"R{x.Row}C{x.Column}",

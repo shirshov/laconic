@@ -28,7 +28,7 @@ interface IDoDispatch
 
 public class Binder<TState>
 {
-    record TrackedElement(WeakReference<xf.VisualElement> View, Element RenderedBlueprint, Func<TState, Element> BlueprintMaker);
+    record TrackedElement(WeakReference<VisualElement> View, Element RenderedBlueprint, Func<TState, Element> BlueprintMaker);
     record LocalContextInfo(LocalContext Context, Func<LocalContext, Element> BlueprintMaker, Element RenderedBlueprint, WeakReference<xf.BindableObject>? View);
         
     readonly Func<TState, Signal, TState> _mainReducer;
@@ -78,7 +78,7 @@ public class Binder<TState>
         var updatedContexts = new Dictionary<string, LocalContextInfo>();
             
         foreach (var info in activeContexts) {
-            BindableObject? realView = newElementsWithContext.FirstOrDefault(x => x.ContextKey == info.Context.Key).Element;
+            var realView = newElementsWithContext.FirstOrDefault(x => x.ContextKey == info.Context.Key).Element;
             if (realView == null) {
                 _elementContexts[info.Context.Key].View.TryGetTarget(out realView);
             }
@@ -88,7 +88,7 @@ public class Binder<TState>
                     info.Context,
                     info.BlueprintMaker,
                     info.Blueprint,
-                    new WeakReference<xf.BindableObject>(realView)
+                    new WeakReference<BindableObject>(realView)
                 )
             );
         }
@@ -124,7 +124,7 @@ public class Binder<TState>
             var diff = Diff.Calculate(info.RenderedBlueprint, expanded);
 
             _synchronizationContext.Send(_ => {
-                var isViewAlive = info.View.TryGetTarget(out BindableObject? view);
+                var isViewAlive = info.View.TryGetTarget(out var view);
                 if (!isViewAlive) {
                     info.Context.Clear();
                     _elementContexts.Remove(sig.ContextKey);
@@ -188,7 +188,7 @@ public class Binder<TState>
                                 info.Context,
                                 info.BlueprintMaker,
                                 info.Blueprint,
-                                new WeakReference<xf.BindableObject>(realView)
+                                new WeakReference<BindableObject>(realView)
                             )
                         );
                     }
