@@ -138,7 +138,7 @@ public class PatchTests
             Diff.Calculate(null,
                 new VerticalStackLayout {
                     GestureRecognizers = { [0] = new TapGestureRecognizer {
-                            NumberOfTapsRequired = 2, Tapped = () => new Signal("foo")
+                            NumberOfTapsRequired = 2, Tapped = _ => new Signal("foo")
                         }
                     }
                 }), 
@@ -155,7 +155,7 @@ public class PatchTests
         var sl = new xf.StackLayout();
         var blueprint = new VerticalStackLayout {
             GestureRecognizers = {
-                [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")}
+                [0] = new TapGestureRecognizer {NumberOfTapsRequired = 1, Tapped = _ => new Signal("foo")}
             }
         };
         Patch.Apply(sl, Diff.Calculate(null, blueprint), _ => { });
@@ -167,7 +167,7 @@ public class PatchTests
                 new VerticalStackLayout { 
                     GestureRecognizers = {
                         [0] = new TapGestureRecognizer {
-                            NumberOfTapsRequired = 1, Tapped = () => new Signal("foo")
+                            NumberOfTapsRequired = 1, Tapped = _ => new Signal("foo")
                         }
                     }
                 }), 

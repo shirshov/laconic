@@ -11,7 +11,7 @@ public class TapGestureRecognizer : Element<xf.TapGestureRecognizer>, IGestureRe
         set => SetValue(xf.TapGestureRecognizer.NumberOfTapsRequiredProperty, value);
     }
 
-    public System.Func<Signal> Tapped
+    public Func<xf.TappedEventArgs, Signal> Tapped
     {
         set => SetEvent(nameof(Tapped), value,
             (ctl, handler) => ctl.Tapped += handler,

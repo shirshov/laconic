@@ -452,7 +452,7 @@ public class DiffTests
         var view = binder.CreateElement(s => new ContentView {
             GestureRecognizers = {
                 [0] = new TapGestureRecognizer {
-                    Tapped = () => new Signal(s.Value)
+                    Tapped = _ => new Signal(s.Value)
                 }
             }
         });

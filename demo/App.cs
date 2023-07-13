@@ -28,7 +28,7 @@ public class App : Microsoft.Maui.Controls.Application
         TextColor = Color.White,
         FontAttributes = isSelected ? FontAttributes.Bold : FontAttributes.None,
         HeightRequest = 40,
-        GestureRecognizers = {["tap"] = new TapGestureRecognizer {Tapped = () => new Signal("ShowItem", index)}}
+        GestureRecognizers = {["tap"] = new TapGestureRecognizer {Tapped = e => new Signal("ShowItem", index)}}
     };
 
     static ContentPage Flyout(State state) => new() {
